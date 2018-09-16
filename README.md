@@ -31,10 +31,39 @@ This will run the webapp at http://127.0.0.1:8000
 
 ### Sample
 
-POST a road damage:
-```http://127.0.0.1:8000/api/road-damage/new?user_id=1&latitude=42.344605&longitude=-83.282709```
+POST a road damage, download.jpeg here is where you put the path to the image you're uploading
+```
+curl -X POST \
+  http://127.0.0.1:8000/api/road-damage/new \
+  -F image=@download.jpeg \
+  -F user_id=1008 \
+  -F latitude=42.344605 \
+  -F longitude=-83.282709
+```
+
+You will get the object in JSON form back:
+
+```
+{  
+   "data":{  
+      "id":34,
+      "user_id":"1008",
+      "latitude":"42.344605",
+      "longitude":"-83.282709",
+      "image":"http:\/\/localhost\/storage\/roaddamage\/G0ysuQZNcDx0Rxk5idb2qpn3DmAS58aIWwEJ4tgp.jpeg",
+      "created_at":{  
+         "date":"2018-09-16 20:39:26.000000",
+         "timezone_type":3,
+         "timezone":"UTC"
+      },
+      "updated_at":{  
+         "date":"2018-09-16 20:39:26.000000",
+         "timezone_type":3,
+         "timezone":"UTC"
+      }
+   }
+}
+```
 
 GET a road damage:
-```http://127.0.0.1:8000/api/road-damage/1```
-
-Images not implemented yet
+```curl http://127.0.0.1:8000/api/road-damage/1```
