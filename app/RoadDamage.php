@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class RoadDamage extends Model {
 
@@ -25,8 +25,16 @@ class RoadDamage extends Model {
    * @return \App\Image
    */
   public function getImage() {
-    return \App\Image::find($this->image_id);
+    return Image::where('roaddamage_id', $this->id)->first();
   }
 
+  /**
+   * Get the image URL
+   *
+   * @return string image URL
+   */
+  public function getImageUrl() {
+    return env('APP_URL') . Storage::url($this->getImage()->image_name);
+  }
 
 }
