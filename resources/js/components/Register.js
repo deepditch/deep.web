@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import InputGroup from "../components/input-group";
+import InputGroup from "./Util/input-group";
 
 class Register extends Component {
   render() {

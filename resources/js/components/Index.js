@@ -1,6 +1,6 @@
 
 import React, { Component } from "react";
-import InputGroup from "../components/input-group";
+import InputGroup from "./Util/input-group";
 import { Link } from 'react-router-dom'
 
 class LoginForm extends Component {

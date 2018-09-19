@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Index from "../pages/index";
-import Register from "../pages/register";
+import Index from "./Index";
+import Register from "./Register";
 
 class App extends Component {
   render() {
