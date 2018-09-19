@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-PHP 7, MySQL 5.7
+PHP 7, MySQL 5.7, Node.js >= 8.12.0
 
 ### Installing
 
@@ -67,3 +67,16 @@ You will get the object in JSON form back:
 
 GET a road damage:
 ```curl http://127.0.0.1:8000/api/road-damage/1```
+
+### Setup Front End
+From the root directory
+
+```
+npm install
+npm run dev
+```
+To auto-update things while you're making changes:
+
+```
+npm run watch
+```
