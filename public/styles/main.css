@@ -202,6 +202,9 @@ large, .large {
 .bg-gray {
   background-color: #2c3443; }
 
+.bg-medium-gray {
+  background-color: #8aa59b; }
+
 .bg-light-gray {
   background-color: #bababa; }
 
@@ -211,11 +214,17 @@ large, .large {
 .bg-white {
   background-color: #ffffff; }
 
+.bg-accent {
+  background-color: #89B6A5; }
+
 .text-black {
   color: #000; }
 
 .text-gray {
   color: #2c3443; }
+
+.text-medium-gray {
+  color: #8aa59b; }
 
 .text-light-gray {
   color: #bababa; }
@@ -226,11 +235,17 @@ large, .large {
 .text-white {
   color: #ffffff; }
 
+.text-accent {
+  color: #89B6A5; }
+
 .hover-black:hover, .hover-black:focus, .hover-black:active {
   color: #000; }
 
 .hover-gray:hover, .hover-gray:focus, .hover-gray:active {
   color: #2c3443; }
+
+.hover-medium-gray:hover, .hover-medium-gray:focus, .hover-medium-gray:active {
+  color: #8aa59b; }
 
 .hover-light-gray:hover, .hover-light-gray:focus, .hover-light-gray:active {
   color: #bababa; }
@@ -240,6 +255,9 @@ large, .large {
 
 .hover-white:hover, .hover-white:focus, .hover-white:active {
   color: #ffffff; }
+
+.hover-accent:hover, .hover-accent:focus, .hover-accent:active {
+  color: #89B6A5; }
 
 .divide-5 {
   width: 100%;
@@ -828,6 +846,13 @@ button {
     .btn.bg-gray:hover, .btn.bg-gray:focus, .btn.bg-gray:active {
       background-color: transparent;
       color: #2c3443; }
+  .btn.bg-medium-gray {
+    color: #000;
+    border-color: #8aa59b;
+    background-color: #8aa59b; }
+    .btn.bg-medium-gray:hover, .btn.bg-medium-gray:focus, .btn.bg-medium-gray:active {
+      background-color: transparent;
+      color: #8aa59b; }
   .btn.bg-light-gray {
     color: #000;
     border-color: #bababa;
@@ -849,6 +874,13 @@ button {
     .btn.bg-white:hover, .btn.bg-white:focus, .btn.bg-white:active {
       background-color: transparent;
       color: #ffffff; }
+  .btn.bg-accent {
+    color: #000;
+    border-color: #89B6A5;
+    background-color: #89B6A5; }
+    .btn.bg-accent:hover, .btn.bg-accent:focus, .btn.bg-accent:active {
+      background-color: transparent;
+      color: #89B6A5; }
   .btn.link {
     padding-right: 2.77778em; }
     .btn.link:after {
@@ -908,5 +940,46 @@ button {
   box-shadow: 0 0 15px 3px rgba(0, 0, 0, 0.15); }
   .login-form h1 {
     margin-top: 0; }
+
+/**
+ * Calculate the luminance for a color.
+ * See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+ */
+/**
+ * Calculate the contrast ratio between two colors.
+ * See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+ */
+/**
+ * Determine whether to use dark or light text on top of given color.
+ * Returns black for dark text and white for light text.
+ */
+.pill-radio {
+  display: flex;
+  flex-direction: row; }
+  .pill-radio > .pill {
+    cursor: pointer;
+    margin-right: -1px; }
+    .pill-radio > .pill input {
+      height: 0;
+      width: 0;
+      font-size: 0;
+      overflow: hidden; }
+    .pill-radio > .pill span {
+      font-weight: 400;
+      display: block;
+      border: 1px solid #bababa;
+      padding: 0.22222em 0.66667em;
+      color: rgba(44, 52, 67, 0.4); }
+    .pill-radio > .pill:first-child span {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px; }
+    .pill-radio > .pill:last-child span {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px; }
+    .pill-radio > .pill input:checked + span {
+      border-color: #89B6A5;
+      box-shadow: inset 0 0 0 3px #89B6A5;
+      z-index: 5;
+      color: #2c3443; }
 
 /*# sourceMappingURL=main.css.map */
