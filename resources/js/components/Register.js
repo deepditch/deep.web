@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import InputGroup from "./Util/input-group";
 import { RadioGroup, RadioGroupOption } from "./Util/radio-group";
 
+// TODO: Needs Validation
+
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
