@@ -5,7 +5,7 @@
  * building robust, powerful web applications using React + Laravel.
  */
 
-//require('./bootstrap'); // I don't think I want to attach anything to Window, maybe we will rethink this later --- Drake
+import 'bootstrap'
 
 /**
  * Next, we will create a fresh React component instance and attach it to

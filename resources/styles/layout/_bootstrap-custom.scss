@@ -19,10 +19,36 @@ $container-max-widths: ();
 // Optional
 @import "node_modules/bootstrap/scss/root";
 @import "node_modules/bootstrap/scss/reboot";
+@import "node_modules/bootstrap/scss/grid";
+@import "node_modules/bootstrap/scss/print";
+
+.container {
+  @include breakpoints {
+    max-width: $bp - $grid-gutter-width;
+  }
+}
+
+.wide-gutters {
+  margin-right: -1 * $grid-gutter-width;
+  margin-left: -1 * $grid-gutter-width;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: $grid-gutter-width;
+    padding-left: $grid-gutter-width;
+  }
+}
+
+.column-margin {
+  margin-top: $grid-gutter-width / 2;
+  margin-bottom: $grid-gutter-width / 2;
+}
+
+
+// Unused for now. We might want these later
 //@import "node_modules/bootstrap/scss/type";
 //@import "node_modules/bootstrap/scss/images";
 //@import "node_modules/bootstrap/scss/code";
-@import "node_modules/bootstrap/scss/grid";
 //@import "node_modules/bootstrap/scss/tables";
 //@import "node_modules/bootstrap/scss/forms";
 //@import "node_modules/bootstrap/scss/buttons";
@@ -48,27 +74,3 @@ $container-max-widths: ();
 //@import "node_modules/bootstrap/scss/popover";
 //@import "node_modules/bootstrap/scss/carousel";
 //@import "node_modules/bootstrap/scss/utilities";
-@import "node_modules/bootstrap/scss/print";
-
-
-.container {
-  @include breakpoints {
-    max-width: $bp - $grid-gutter-width;
-  }
-}
-
-.wide-gutters {
-  margin-right: -1 * $grid-gutter-width;
-  margin-left: -1 * $grid-gutter-width;
-
-  > .col,
-  > [class*="col-"] {
-    padding-right: $grid-gutter-width;
-    padding-left: $grid-gutter-width;
-  }
-}
-
-.column-margin {
-  margin-top: $grid-gutter-width / 2;
-  margin-bottom: $grid-gutter-width / 2;
-}
