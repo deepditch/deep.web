@@ -18,6 +18,9 @@ Clone the repo, cd into it, run composer to install dependencies, and migrate th
 git@github.com:deepditch/deep.web.git
 cd deep.web/
 composer install
+php artisan key:generate
+php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+php artisan jwt:secret
 php artisan migrate
 ```
 
