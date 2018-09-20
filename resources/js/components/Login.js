@@ -13,7 +13,7 @@ class LoginForm extends Component {
           <h1 class="h4">Log In to Your Account</h1>
         </header>
         <div class="mt-auto mb-auto">
-          <InputGroup name="Username" required />
+          <InputGroup name="Email" required />
           <InputGroup name="Password" required />
           <div class="divide-15" />
         </div>
