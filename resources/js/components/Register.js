@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import InputGroup from "./Util/input-group";
 import { RadioGroup, RadioGroupOption } from "./Util/radio-group";
 
-// TODO: Needs Validation
-
+/*
+ * Form for registering for an account
+ */
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
-    this.state = { organization: false };
+    this.state = {
+      /* Used to toggle visibility of the Organization Name input*/
+      organization: false
+    };
   }
 
   render() {
@@ -33,26 +37,40 @@ class RegistrationForm extends Component {
           </div>
           <div class="col">
             {this.state.organization ? (
-              <InputGroup name="Organization Name" required={this.state.organization} />
+              <InputGroup
+                name="Organization Name"
+                required={this.state.organization}
+              />
             ) : null}
           </div>
         </div>
+
         <InputGroup name="Email" required={true} />
         <InputGroup name="Password" required={true} />
         <InputGroup name="Confirm Password" required={true} />
+
         <div class="divide-15" />
-        <button class="btn link" type="submit" onClick={this.validate}>
-          Register
-        </button>
-        <span class="inline-spacer" />
-        <span class="small">
-          Have an Account? <a href="/Login">Login</a>
-        </span>
+
+        <div class="row narrow-gutters align-items-center">
+          <div class="col-auto">
+            <button class="btn link" type="submit" onClick={this.validate}>
+              Register
+            </button>
+          </div>
+          <div class="col-auto">
+            <span class="small">
+              Have an Account? <a href="/Login">Login</a>
+            </span>
+          </div>
+        </div>
       </form>
     );
   }
 }
 
+/**
+ * Registration Page
+ */
 class Register extends Component {
   render() {
     return (

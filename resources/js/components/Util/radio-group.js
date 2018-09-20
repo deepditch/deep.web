@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+/*
+ * Component for creating a radio option. For use within RadioGroup
+ */
 const RadioGroupOption = ({ name, value, defaultChecked , onChange }) => (
   <label class="pill">
     <input
@@ -13,6 +16,9 @@ const RadioGroupOption = ({ name, value, defaultChecked , onChange }) => (
   </label>
 );
 
+/*
+ * Component for creating a group of radio inputs
+ */
 class RadioGroup extends Component {
   //TODO: Throw error if two children are marked checked
   render() {

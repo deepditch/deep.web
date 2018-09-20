@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import InputGroup from "./Util/input-group";
 import { Link } from "react-router-dom";
 
+/*
+ * Form for logging into a user account
+ */
 class LoginForm extends Component {
   render() {
     return (
@@ -15,20 +18,28 @@ class LoginForm extends Component {
           <div class="divide-15" />
         </div>
         <div class="mt-auto">
-          <button class="btn link" type="submit">
-            Log In
-          </button>
-          <span class="inline-spacer" />
-          <a href="#" class="small">
-            Forgot Your Password?
-          </a>
+          <div class="row narrow-gutters align-items-center">
+            <div class="col-auto">
+              <button class="btn link" type="submit">
+                Log In
+              </button>
+            </div>
+            <div class="col">
+              <Link to="/Forgot" class="small">
+                Forgot your password?
+              </Link>
+            </div>
+          </div>
         </div>
       </form>
     );
   }
 }
 
-class Index extends Component {
+/**
+ * Registration Page
+ */
+class Login extends Component {
   render() {
     return (
       <div class="index-container">
@@ -57,4 +68,4 @@ class Index extends Component {
   }
 }
 
-export default Index;
+export default Login;
