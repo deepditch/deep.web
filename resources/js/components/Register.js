@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import InputGroup from "./Util/input-group";
-import { RadioGroup, RadioGroupOption } from "./Util/radio-group";
+import InputGroup from "./Form/input-group";
+import { RadioGroup, RadioGroupOption } from "./Form/radio-group";
 
 /*
  * Form for registering for an account

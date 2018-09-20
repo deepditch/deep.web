@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import InputGroup from "./Util/input-group";
+import InputGroup from "./Form/input-group";
 import { Link } from "react-router-dom";
 
 /*
