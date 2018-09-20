@@ -1,6 +1,9 @@
 
 import React, { Component } from 'react';
 
+/*
+ * Component for making an input with label
+ */
 class InputGroup extends Component {
   render() {
     return (

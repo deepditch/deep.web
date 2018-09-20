@@ -1174,6 +1174,14 @@ template {
     padding-right: 30px;
     padding-left: 30px; }
 
+.narrow-gutters {
+  margin-right: -7.5px;
+  margin-left: -7.5px; }
+  .narrow-gutters > .col,
+  .narrow-gutters > [class*="col-"] {
+    padding-right: 7.5px;
+    padding-left: 7.5px; }
+
 .column-margin {
   margin-top: 15px;
   margin-bottom: 15px; }
