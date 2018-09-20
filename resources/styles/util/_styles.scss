@@ -1,0 +1,75 @@
+﻿@import "lib";
+
+.clearfix {
+  @include clearfix();
+}
+
+.absolute-center {
+  @include absolute-center();
+}
+
+.margin-center {
+  @include margin-center();
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.relative {
+  position: relative;
+}
+
+.square {
+  position: relative;
+  padding-bottom: 100%;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.pipe {
+	outline: 1px solid;
+	box-sizing: content-box;
+}
+
+.background-cover {
+  background-size: cover;
+}
+
+.wb-bg {
+  background-image: url('/Areas/CMS/assets/img/Group 439@2x.png');
+  background-position: center;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+}
+
+.absolute-underlay {
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  max-width: 100%;
+
+  > img {
+    max-width: 100%;
+    display: block;
+  }
+}
+
+.h {
+  @include breakpoints {
+    &-100 {
+      height: 100%;
+    }
+  }
+}

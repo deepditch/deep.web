@@ -1,0 +1,36 @@
+@mixin padding-tblr($value-tb, $value-lr: $value-tb) {
+  // tblr: top bottom left right
+  padding: $value-tb $value-lr;
+
+  &-top {
+    padding-top: $value-tb;
+  }
+
+  &-bottom {
+    padding-bottom: $value-tb;
+  }
+
+  &-left {
+    padding-left: $value-lr;
+  }
+
+  &-right {
+    padding-right: $value-lr;
+  }
+}
+
+.block {
+  @include padding-tblr(pxtoem(50));
+
+  &-large {
+    @include padding-tblr(pxtoem(50) * 1.5);
+  }
+
+  &-medium {
+    @include padding-tblr(pxtoem(50) * .75);
+  }
+
+  &-small {
+    @include padding-tblr(pxtoem(50) * .5);
+  }
+}

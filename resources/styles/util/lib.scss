@@ -1,0 +1,201 @@
+﻿
+@mixin absolute-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin margin-center() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin arrow-up($color, $width, $height) {
+  content: '';
+  display: block;
+  width: $width;
+  height: $height;
+  border-bottom: ($height / 2) solid $color;
+  border-left: ($width / 2) solid transparent;
+  border-right: ($width / 2) solid transparent;
+}
+
+@mixin arrow-down($color, $width, $height) {
+  content: '';
+  display: block;
+  width: $width;
+  height: $height;
+  border-top: ($height / 2) solid $color;
+  border-right: ($width / 2) solid transparent;
+  border-bottom: none;
+  border-left: ($width / 2) solid transparent;
+}
+
+@mixin arrow-right($color, $width, $height) {
+  content: '';
+  display: block;
+  width: $width;
+  height: $height;
+  border-top: ($height / 2) solid transparent;
+  border-left: ($width / 2) solid $color;
+  border-bottom: ($height / 2) solid transparent;
+  border-right: none;
+}
+
+@mixin arrow-left($color, $width, $height) {
+  content: '';
+  display: block;
+  width: $width;
+  height: $height;
+  border-top: ($height / 2) solid transparent;
+  border-right: ($width / 2) solid $color;
+  border-bottom: ($height / 2) solid transparent;
+  border-left: none;
+  z-index: 20;
+}
+
+@mixin arrow-bottom-left($color, $size) {
+  content: '';
+  display: block;
+  width: $size;
+  height: $size;
+  border-top: ($size / 2) solid transparent;
+  border-left: ($size / 2) solid $color;
+  border-bottom: ($size / 2) solid $color;
+  border-right: ($size / 2) solid transparent;
+}
+
+@mixin psuedo-x($size, $thickness) {
+  &:before, &:after {
+    content: '';
+    display: block;
+    height: ($size * 1.41421);
+    border-left: $thickness solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  &:before {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  &:after {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  display: inline-block;
+  position: relative;
+  width: $size;
+  height: $size;
+}
+
+@mixin psuedo-plus($size, $thickness) {
+  &:before, &:after {
+    content: '';
+    display: block;
+    height: $size;
+    border-left: $thickness solid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  &:before {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  &:after {
+    transform: translate(-50%, -50%);
+  }
+
+  display: inline-block;
+  position: relative;
+  width: $size;
+  height: $size;
+}
+
+@mixin hover($added-selector: "") {
+  &:hover, &:focus, &:active, #{$added-selector} {
+    @content;
+  }
+}
+
+@mixin clearfix() {
+  &:before, &:after {
+    content: '';
+    clear: both;
+    display: table;
+  }
+}
+
+@mixin flex-row() {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+@mixin invisible() {
+  opacity: 0;
+  position: absolute;
+  left: -9999px;
+  z-index: 12;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+@mixin caret($size, $thickness) {
+  content: '';
+  display: inline-block;
+  width: $size;
+  height: $size;
+  border-right: $thickness solid;
+  border-bottom: $thickness solid;
+}
+
+@mixin caret-up($size, $thickness) {
+  @include caret($size, $thickness);
+  transform: rotate(-135deg);
+}
+
+@mixin caret-down($size, $thickness) {
+  @include caret($size, $thickness);
+  transform: rotate(45deg);
+}
+
+@mixin caret-left($size, $thickness) {
+  @include caret($size, $thickness);
+  transform: rotate(135deg);
+}
+
+@mixin caret-right($size, $thickness) {
+  @include caret($size, $thickness);
+  transform: rotate(-45deg);
+}
+
+@mixin optional-at-root($sel) {
+  @at-root #{if(not &, $sel, selector-append(&, $sel))} {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  @include optional-at-root('::-webkit-input-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root('::-moz-placeholder') {
+    @content;
+  }
+
+  @include optional-at-root(':-ms-input-placeholder') {
+    @content;
+  }
+}
+
