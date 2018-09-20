@@ -1,0 +1,99 @@
+@import 'node_modules/sass-math-pow/sass/math-pow';
+
+// Ratios
+$major-third: 1.25;
+$perfect-fourth: 1.33333;
+$augmented-fourth: 1.414;
+$perfect-fifth: 1.5;
+
+$font-body: 'Roboto', sans-serif;
+$font-headline: 'Roboto', sans-serif;
+$base-font-size: 18px;
+
+@function pxtoem($val, $context: $base-font-size) {
+  @if (unitless($val)) {
+    $val: $val * 1px;
+  }
+
+  @if (unitless($context)) {
+    $context: $context * 1px;
+  }
+
+  @return $val / $context * 1em;
+}
+
+@function pxtorem($val) {
+  @if (unitless($val)) {
+    $val: $val * 1px;
+  }
+
+  @return $val / $base-font-size * 1rem;
+}
+
+@function make-ratio($val, $ratio: $major-third) {
+  @return poly-pow($ratio, $val);
+}
+
+@mixin font-size($val) {
+    font-size: make-ratio($val) * 1em;
+}
+
+@mixin uppercase-headline {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: $font-headline;
+  letter-spacing: pxtoem(.5);
+}
+
+@mixin lowercase-headline {
+  text-transform: none;
+  font-family: $font-headline;
+}
+
+@mixin p {
+  @include font-size(0);
+}
+
+@mixin h1 {
+  @include font-size(5);
+  @include lowercase-headline();
+  line-height: 1;
+  margin: 0 0 pxtoem(15, 110);
+}
+
+@mixin h2 {
+  @include font-size(4);
+  @include lowercase-headline();
+  line-height: 1.1;
+  margin: 0 0 pxtoem(15, 70);
+}
+
+@mixin h3 {
+  @include font-size(3);
+  @include lowercase-headline();
+  font-weight: 300;
+  line-height: 1.4;
+  margin: 0 0 pxtoem(30, 47);
+}
+
+@mixin h4 {
+  @include font-size(2);
+  @include lowercase-headline();
+  font-weight: 600;
+  line-height: 1.3;
+  margin: pxtoem(20) 0 pxtoem(10);
+}
+
+@mixin h5 {
+  @include font-size(1);
+  @include uppercase-headline();
+  line-height: 1.1;
+  margin: 0 0 pxtoem(5);
+}
+
+@mixin h6 {
+  @include font-size(0);
+  @include lowercase-headline();
+  font-weight: 700;
+  margin: 0 0 pxtoem(15);
+}

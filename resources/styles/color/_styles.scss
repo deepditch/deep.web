@@ -1,0 +1,22 @@
+@import "lib";
+@import "../util/lib";
+
+.bg {
+  @include colors {
+    background-color: $color;
+  }
+}
+
+.text {
+  @include colors {
+    color: $color;
+  }
+}
+
+.hover {
+  @include colors {
+    @include hover() {
+      color: $color;
+    }
+  }
+}

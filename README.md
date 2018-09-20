@@ -73,10 +73,14 @@ From the root directory
 
 ```
 npm install
-npm run dev
+gulp build
 ```
-To auto-update things while you're making changes:
+To auto-update css and js from sources when changes are made:
 
 ```
-npm run watch
+gulp watch
+```
+For a full list of gulp commands
+```
+gulp help
 ```

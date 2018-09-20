@@ -1,0 +1,15 @@
+@import "../type/lib";
+@import "../color/lib";
+
+input, select, textarea {
+  width: 100%;
+  display: block;
+  border-radius: 5px;
+  border: 1px solid $light-gray;
+  padding: pxtoem(3) pxtoem(10);
+  background: transparent;
+}
+
+button {
+  cursor: pointer;
+}

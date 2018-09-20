@@ -1,0 +1,188 @@
+@import "lib";
+@import "../media/lib";
+@import "../color/lib";
+@import "../util/lib";
+
+html, body {
+  font-size: 16px;
+
+  @media (min-width: $lg) and (-webkit-min-device-pixel-ratio: 2) and (min-resolution: 192dpi) {
+    font-size: 18px;
+  }
+
+  @media(min-width: $xl) {
+    font-size: 18px;
+  }
+
+  @media(min-width: $xxl) {
+    font-size: 20px;
+  }
+
+  font-weight: 300;
+  max-width: 100%;
+  overflow-x: hidden;
+  min-width: 320px;
+  font-family: $font-body;
+  color: $gray;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#react-container {
+  min-height: 100vh;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+.p {
+  @include p;
+}
+
+h1, .h1 {
+  @include h1;
+}
+
+h2, .h2 {
+  @include h2;
+}
+
+h2.large, .h2.large {
+  @include font-size(6);
+}
+
+h2.medium, .h2.medium {
+  @include font-size(4);
+}
+
+h3, .h3 {
+  @include h3;
+}
+
+h4, .h4 {
+  @include h4;
+}
+
+h5, .h5 {
+  @include h5;
+}
+
+h6, .h6 {
+  @include h6;
+}
+
+a {
+  text-decoration: none;
+  transition: all .15s;
+
+  @include hover {
+    text-decoration: none;
+  }
+}
+
+.blank {
+  color: inherit;
+
+  @include hover {
+    color: inherit;
+  }
+}
+
+%list-inline {
+  padding-left: 0;
+  margin-left: -1 * pxtoem(5);
+  list-style: none;
+
+  > li {
+    display: inline-block;
+    padding-right: pxtoem(5);
+    padding-left: pxtoem(5);
+  }
+}
+
+.list-inline {
+  @extend %list-inline;
+}
+
+.pipe-list {
+  @extend %list-inline;
+
+  li {
+    &:after {
+      content: ' | ';
+      display: inline-block;
+      margin-left: pxtoem(5);
+      margin-right: pxtoem(-5);
+    }
+
+    &:last-child:after {
+      content: normal;
+    }
+  }
+}
+
+.list-unstyled {
+  list-style: none;
+  padding-left: 0;
+}
+
+.list-tall > li{
+  margin-bottom: .9em;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+}
+
+figure {
+  margin: 0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.light {
+  font-weight: lighter;
+}
+
+.no-break {
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+ul {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 20px;
+}
+
+.block-arrow {
+  display: inline-block;
+  padding: pxtoem(4) pxtoem(14);
+  border: 1px solid;
+  line-height: 1;
+  transition: all .15s;
+  font-weight: 300;
+
+  &:after {
+    font-family: 'Font Awesome 5 Pro';
+    content: '\f178';
+  }
+}
+
+small, .small {
+	@include font-size(-1);
+}
+
+large, .large {
+	@include font-size(1);
+}
+
+.inline-spacer {
+  display: inline-block;
+  width: .75em;
+}

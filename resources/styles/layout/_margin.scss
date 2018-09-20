@@ -1,0 +1,12 @@
+@mixin margins {
+  &-auto {
+    margin-top: auto;
+  }
+}
+.mt {
+  @include margins;
+}
+
+.mb {
+  @include margins;
+}

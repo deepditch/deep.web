@@ -1,0 +1,7 @@
+var mix = require('laravel-mix');
+
+mix.react('resources/js/app.js', 'public/js')
+   .sass('resources/styles/main.scss', 'public/css')
+   .sass('resources/styles/vendor.scss', 'public/css')
+   .sourceMaps()
+   .disableNotifications();

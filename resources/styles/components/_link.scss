@@ -1,0 +1,11 @@
+@import "../util/lib";
+
+.link {
+  vertical-align: middle;
+
+  &:after {
+    @include caret-right(.5em, .15em);
+    margin-left: .5em;
+    vertical-align: middle;
+  }
+}
