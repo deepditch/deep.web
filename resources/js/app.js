@@ -13,4 +13,4 @@
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-import 'components/app'
+import 'components/app';

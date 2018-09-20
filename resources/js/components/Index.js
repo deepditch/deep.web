@@ -1,7 +1,6 @@
-
 import React, { Component } from "react";
 import InputGroup from "./Util/input-group";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 class LoginForm extends Component {
   render() {
@@ -13,7 +12,7 @@ class LoginForm extends Component {
         <div class="mt-auto mb-auto">
           <InputGroup name="Username" />
           <InputGroup name="Password" />
-          <div class="divide-15"></div>
+          <div class="divide-15" />
         </div>
         <div class="mt-auto">
           <button class="btn link" type="submit">
@@ -42,7 +41,9 @@ class Index extends Component {
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
                 <div class="mt-auto">
-                  <Link to='/register' class="btn link bg-white mt-auto">Register</Link>
+                  <Link to="/register" class="btn link bg-white mt-auto">
+                    Register
+                  </Link>
                 </div>
               </div>
             </div>
