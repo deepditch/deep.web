@@ -10,8 +10,8 @@ class LoginForm extends Component {
           <h1 class="h4">Log In to Your Account</h1>
         </header>
         <div class="mt-auto mb-auto">
-          <InputGroup name="Username" />
-          <InputGroup name="Password" />
+          <InputGroup name="Username" required />
+          <InputGroup name="Password" required />
           <div class="divide-15" />
         </div>
         <div class="mt-auto">
@@ -41,7 +41,7 @@ class Index extends Component {
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
                 <div class="mt-auto">
-                  <Link to="/register" class="btn link bg-white mt-auto">
+                  <Link to="/Register" class="btn link bg-white mt-auto">
                     Register
                   </Link>
                 </div>
