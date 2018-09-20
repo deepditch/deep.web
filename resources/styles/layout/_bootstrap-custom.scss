@@ -39,6 +39,17 @@ $container-max-widths: ();
   }
 }
 
+.narrow-gutters {
+  margin-right: -1 * $grid-gutter-width / 4;
+  margin-left: -1 * $grid-gutter-width / 4;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: $grid-gutter-width / 4;
+    padding-left: $grid-gutter-width / 4;
+  }
+}
+
 .column-margin {
   margin-top: $grid-gutter-width / 2;
   margin-bottom: $grid-gutter-width / 2;

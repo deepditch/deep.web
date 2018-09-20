@@ -14,10 +14,10 @@
         "moduleFileExtensions": [
             "js",
             "jsx"
-          ],
-          "moduleDirectories": [
+        ],
+        "moduleDirectories": [
             "node_modules"
-          ]
+        ]
     },
     "devDependencies": {
         "@babel/core": "^7.1.0",
