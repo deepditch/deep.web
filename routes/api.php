@@ -19,5 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/road-damage/', 'RoadDamageController@getAllJson');
 Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
 Route::post('/road-damage/new', 'RoadDamageController@insert');
