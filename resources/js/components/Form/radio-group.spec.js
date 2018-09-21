@@ -13,7 +13,7 @@ describe("RadioGroup", () => {
       shallow(<RadioGroupOption />);
     });
 
-    it("show should call the callback when checked", () => {
+    it("should call the callback when checked", () => {
       const spy = jest.fn();
       const radioOption = mount(<RadioGroupOption onChange={spy} />);
       radioOption.find("input").simulate("change");
