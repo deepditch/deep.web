@@ -69,6 +69,8 @@ GET a road damage:
 ```curl http://127.0.0.1:8000/api/road-damage/1```
 
 ### Setup Front End
+Rename 'project.config.js.example' to 'project.config.js' and populate the 'GoogleMapsAPIKey' field
+
 From the root directory
 
 ```
