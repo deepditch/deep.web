@@ -1,4 +1,4 @@
-# Deep.Web
+# Deep.Web [![Build Status](https://travis-ci.com/deepditch/deep.web.svg?branch=master)](https://travis-ci.com/deepditch/deep.web)
 
 Laravel application. Caution: work in progress
 
