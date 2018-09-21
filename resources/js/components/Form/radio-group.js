@@ -3,13 +3,13 @@ import React, { Component } from "react";
 /*
  * Component for creating a radio option. For use within RadioGroup
  */
-const RadioGroupOption = ({ name, value, defaultChecked , onChange }) => (
+const RadioGroupOption = ({ name, value, defaultChecked, onChange }) => (
   <label class="pill">
     <input
       type="radio"
       name={name}
       value={value}
-      defaultChecked ={defaultChecked }
+      defaultChecked={defaultChecked}
       onChange={onChange}
     />
     <span>{value}</span>
