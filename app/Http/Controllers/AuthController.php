@@ -22,8 +22,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        Log::debug()
-        $validatedData = $request->validate([
+        $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
             'name' => 'required|max:255'
         ]);
@@ -34,19 +33,37 @@ class AuthController extends Controller
             'password' => Hash::make($request->input('password'))
         ]);
 
+
+        return response()->json(['success' => true, 'data'=> [ 'Registration success.' ]], 200);
+
+    }
+
+    /**
+     * Log in.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $token = JWTAuth::attempt([
+            'email' => $request->input('email'),
+            'password' => $request->input('password')
+        ]);
+
         try {
-            if (! $token = JWTAuth::attempt([
-                'email' => $request->input('email'),
-                'password' => $request->input('password')
-            ])) {
-                return response()->json(['success' => false, 'error' => 'We cannot find an account with the provided credentials.'], 404);
+            if (! $token) {
+                return response()->json(['success' => false, 'error' => 'Credentials invalid.'], 404);
             }
-        } catch (JWTException $e) {
-            return response()->json(['success' => false, 'error' => 'Failed to login, please try again.'], 500);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to login, please try again: ' . $e->getMessage()], 500);
         }
 
         return response()->json(['success' => true, 'data'=> [ 'token' => $token ]], 200);
-
     }
 
     /**
@@ -55,6 +72,7 @@ class AuthController extends Controller
      * They have to relogin to get a new token
      *
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function logout(Request $request) {
         $this->validate($request, ['token' => 'required']);
