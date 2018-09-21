@@ -17,13 +17,10 @@ use App\Http\Controllers\RoadDamageController;
 
 Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
-Route::post('recover', 'AuthController@recover');
 
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('logout', 'AuthController@logout');
-    Route::get('test', function(){
-        return response()->json(['foo'=>'bar']);
-    });
+
     Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
     Route::post('/road-damage/new', 'RoadDamageController@insert');
 });
