@@ -25,3 +25,6 @@ Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('/road-damage/new', 'RoadDamageController@insert');
 });
 
+Route::get('/road-damage/', 'RoadDamageController@getAllJson');
+Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
+Route::post('/road-damage/new', 'RoadDamageController@insert');

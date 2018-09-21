@@ -19,7 +19,16 @@ class RoadDamageController extends Controller {
    * @return App\Http\Resources\RoadDamage
    */
   public function getJson(int $id) {
-    return (new RoadDamageResource(RoadDamage::find($id)));
+    return new RoadDamageResource(RoadDamage::find($id));
+  }
+
+  /**
+   * Get the base Json data of all the models
+   *
+   * @return App\Http\Resources\RoadDamage
+   */
+  public function getAllJson() {
+    return RoadDamageResource::collection(RoadDamage::all());
   }
 
   /**
@@ -42,7 +51,7 @@ class RoadDamageController extends Controller {
       } catch (\Exception $e) {
         return $e->getMessage();
       }
-      
+
       Image::create([
         'roaddamage_id' => $road_damage->id,
         'image_name' => $file_path
