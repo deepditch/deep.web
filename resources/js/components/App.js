@@ -3,14 +3,16 @@ import { render } from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
+import DamageMapContainer from "./Map";
 
 class App extends Component {
   render() {
     return (
       <main>
         <Switch>
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/map" component={DamageMapContainer} />
           <Redirect from="/" to="/login" />
         </Switch>
       </main>
