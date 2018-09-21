@@ -10,3 +10,5 @@ config.destFullPath = path.join(config.root, config.dest);
 config.js = "js";
 config.styles = "styles";
 config.assets = "assets";
+
+config.GoogleMapsAPIKey = "YOUR_API_KEY";

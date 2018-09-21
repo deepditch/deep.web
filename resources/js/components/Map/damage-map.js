@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import RoadDamageService from "../../services/road-damage";
+import config from "../../../../project.config";
 
 class DamageMap extends Component {
   constructor(props) {
@@ -28,5 +29,5 @@ class DamageMap extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyAcf0CpiXV2Gmv6NR22b0VLGKCtkxXK9-8"
+  apiKey: config.GoogleMapsAPIKey
 })(DamageMap);
