@@ -1,4 +1,6 @@
-import { RadioGroup, RadioGroupOption } from 'components/Form/radio-group';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { RadioGroup, RadioGroupOption } from '../../components/Form/radio-group';
 
 describe('RadioGroup', () => {
   it('should render without crashing', () =>{
