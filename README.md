@@ -34,6 +34,32 @@ This will run the webapp at http://127.0.0.1:8000
 
 ### Sample
 
+Register a user
+
+```
+curl -X POST \
+  http://127.0.0.1:8000/api/register \
+  -H 'cache-control: no-cache' \
+  -H 'x-requested-with: XMLHttpRequest' \
+  -F email=admin@admin.com \
+  -F password=admin@admin.com \
+  -F name=admin
+```
+
+Returns the JWT authorization Token for this user
+
+Login
+
+```
+curl -X POST \
+  http://127.0.0.1:8000/api/register \
+  -H 'cache-control: no-cache' \
+  -H 'x-requested-with: XMLHttpRequest' \
+  -F email=admin@admin.com \
+  -F password=admin@admin.com \
+  -F name=admin
+```
+
 POST a road damage, download.jpeg here is where you put the path to the image you're uploading
 ```
 curl -X POST \
