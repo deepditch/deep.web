@@ -259,6 +259,24 @@ large, .large {
 .hover-accent:hover, .hover-accent:focus, .hover-accent:active {
   color: #89B6A5; }
 
+.index-container {
+  min-height: 100vh;
+  overflow: hidden;
+  background: url("../img/default-bg.jpg") no-repeat center;
+  background-size: cover;
+  background-color: #2c3443;
+  display: flex;
+  align-items: center;
+  flex-direction: row; }
+
+.app-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden; }
+
 .divide-5 {
   width: 100%;
   display: block;
