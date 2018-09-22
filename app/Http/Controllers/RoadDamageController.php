@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 use App\RoadDamage;
 use App\Image;
@@ -11,6 +12,16 @@ use App\Image;
 use App\Http\Resources\RoadDamage as RoadDamageResource;
 
 class RoadDamageController extends Controller {
+
+    /**
+     * Add authentication middleware.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
 
   /**
    * Get the base Json data of this model
@@ -38,7 +49,7 @@ class RoadDamageController extends Controller {
    * @return App\Http\Resources\RoadDamage
    */
   public function insert(Request $request) {
-    // @todo add validation
+    $user = JWTAuth::toUser($token);
     $road_damage = RoadDamage::create([
       'user_id' => $request->input('user_id'),
       'latitude' => $request->input('latitude'),

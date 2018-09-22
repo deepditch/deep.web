@@ -15,12 +15,12 @@ use App\Http\Controllers\RoadDamageController;
 |
 */
 
-Route::post('register', 'AuthController@register');
-Route::post('login', 'AuthController@login');
-
-Route::group(['middleware' => ['jwt.auth']], function() {
-    Route::get('logout', 'AuthController@logout');
-
-    Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
-    Route::post('/road-damage/new', 'RoadDamageController@insert');
+Route::group(['middleware' => 'api'], function($router) {
+        Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
+        Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
+        Route::get('logout', 'AuthController@logout');
+        Route::get('refresh', 'AuthController@refresh');
+        Route::get('me', 'AuthController@me');
+        Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
+        Route::post('/road-damage/new', 'RoadDamageController@insert');
 });
