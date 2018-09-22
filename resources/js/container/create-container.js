@@ -7,18 +7,14 @@ import Axios from "axios";
 export default function createContainer() {
   var c = new Container();
 
-  // Register services here
-  c.register("AuthService", c => new AuthService());
-  c.register("RegistrationForm", c => RegistrationForm(c.AuthService));
-  c.register("Register", c => Register(c.RegistrationForm));
   c.register("Axios", c => {
     let token = document.head.querySelector('meta[name="csrf-token"]');
     try {
       return Axios.create({
         baseURL: "http://127.0.0.1:8000",
         headers: {
-          "X-Requested-With": "XMLHttpRequest",
-          "X-CSRF-TOKEN": token.content
+          "X-Requested-With": "XMLHttpRequest"
+          //"X-CSRF-TOKEN": token.content
         }
       });
     } catch (err) {
@@ -26,6 +22,11 @@ export default function createContainer() {
       console.error(err);
     }
   });
+
+  // Register Services Here
+  c.register("AuthService", c => AuthService(c.Axios));
+  c.register("RegistrationForm", c => RegistrationForm(c.AuthService));
+  c.register("Register", c => Register(c.RegistrationForm));
 
   return c;
 }

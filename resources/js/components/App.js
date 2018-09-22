@@ -8,8 +8,6 @@ class App extends Component {
   render() {
     var c = createContainer();
 
-    var axios = c.Axios;
-
     return (
       <main>
         <Switch>
