@@ -2,15 +2,19 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import Login from "./Login";
-import Register from "./Register";
+import createContainer from '../container/create-container';
 
 class App extends Component {
   render() {
+    var c = createContainer();
+
+    var axios = c.Axios;
+
     return (
       <main>
         <Switch>
           <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
+          <Route exact path="/register" component={c.Register} />
           <Redirect from="/" to="/login" />
         </Switch>
       </main>
