@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import InputGroup from "./Form/input-group";
 import { RadioGroup, RadioGroupOption } from "./Form/radio-group";
+import { Link } from "react-router-dom";
 
 /*
  * Form for registering for an account
