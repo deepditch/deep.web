@@ -1,25 +1,31 @@
 $black: #000;
 $gray: #2c3443;
+$medium-gray: #8aa59b;
 $light-gray: #bababa;
 $off-white: #eeeeee;
 $white: #ffffff;
+$accent: #89B6A5;
 
 $all-colors: () !default;
 $all-colors: map-merge((
   "black": $black,
   "gray": $gray,
+  "medium-gray": $medium-gray,
   "light-gray": $light-gray,
   "off-white": $off-white,
   "white": $white,
+  "accent": $accent
 ), $all-colors);
 
 $primary-colors: () !default;
 $primary-colors: map-merge((
   "black": $black,
   "gray": $gray,
+  "medium-gray": $medium-gray,
   "light-gray": $light-gray,
   "off-white": $off-white,
   "white": $white,
+  "accent": $accent
 ), $primary-colors);
 
 $color: "Placeholder Variable: For use in 'colors' mixin." !global;

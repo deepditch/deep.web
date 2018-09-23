@@ -1,8 +1,10 @@
-
 import React, { Component } from "react";
-import InputGroup from "./Util/input-group";
-import { Link } from 'react-router-dom'
+import InputGroup from "./Form/input-group";
+import { Link } from "react-router-dom";
 
+/*
+ * Form for logging into a user account
+ */
 class LoginForm extends Component {
   render() {
     return (
@@ -11,25 +13,33 @@ class LoginForm extends Component {
           <h1 class="h4">Log In to Your Account</h1>
         </header>
         <div class="mt-auto mb-auto">
-          <InputGroup name="Username" />
-          <InputGroup name="Password" />
-          <div class="divide-15"></div>
+          <InputGroup name="Email" type="email" required />
+          <InputGroup name="Password" type="password" required />
+          <div class="divide-15" />
         </div>
         <div class="mt-auto">
-          <button class="btn link" type="submit">
-            Log In
-          </button>
-          <span class="inline-spacer" />
-          <a href="#" class="small">
-            Forgot Your Password?
-          </a>
+          <div class="row narrow-gutters align-items-center">
+            <div class="col-auto">
+              <button class="btn link" type="submit">
+                Log In
+              </button>
+            </div>
+            <div class="col">
+              <Link to="/forgot" class="small">
+                Forgot your password?
+              </Link>
+            </div>
+          </div>
         </div>
       </form>
     );
   }
 }
 
-class Index extends Component {
+/**
+ * Registration Page
+ */
+class Login extends Component {
   render() {
     return (
       <div class="index-container">
@@ -42,7 +52,9 @@ class Index extends Component {
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
                 <div class="mt-auto">
-                  <Link to='/register' class="btn link bg-white mt-auto">Register</Link>
+                  <Link to="/register" class="btn link bg-white mt-auto">
+                    Register
+                  </Link>
                 </div>
               </div>
             </div>
@@ -56,4 +68,4 @@ class Index extends Component {
   }
 }
 
-export default Index;
+export default Login;
