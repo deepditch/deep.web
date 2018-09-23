@@ -963,7 +963,8 @@ button {
       height: 0;
       width: 0;
       font-size: 0;
-      overflow: hidden; }
+      overflow: hidden;
+      visibility: hidden; }
     .pill-radio > .pill span {
       font-weight: 400;
       display: block;
