@@ -59,7 +59,7 @@ class RegistrationForm extends Component {
           </div>
           <div class="col-auto">
             <span class="small">
-              Have an Account? <a href="/Login">Login</a>
+              Have an Account? <Link to="/login">Login</Link>
             </span>
           </div>
         </div>
