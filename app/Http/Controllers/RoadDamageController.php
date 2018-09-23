@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 use App\RoadDamage;
 use App\Image;
@@ -12,6 +13,16 @@ use App\Http\Resources\RoadDamage as RoadDamageResource;
 
 class RoadDamageController extends Controller {
 
+    /**
+     * Add authentication middleware.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
   /**
    * Get the base Json data of this model
    *
@@ -19,7 +30,16 @@ class RoadDamageController extends Controller {
    * @return App\Http\Resources\RoadDamage
    */
   public function getJson(int $id) {
-    return (new RoadDamageResource(RoadDamage::find($id)));
+    return new RoadDamageResource(RoadDamage::find($id));
+  }
+
+  /**
+   * Get the base Json data of all the models
+   *
+   * @return App\Http\Resources\RoadDamage
+   */
+  public function getAllJson() {
+    return RoadDamageResource::collection(RoadDamage::all());
   }
 
   /**
@@ -29,9 +49,8 @@ class RoadDamageController extends Controller {
    * @return App\Http\Resources\RoadDamage
    */
   public function insert(Request $request) {
-    // @todo add validation
     $road_damage = RoadDamage::create([
-      'user_id' => $request->input('user_id'),
+      'user_id' => auth('api')->user()->id,
       'latitude' => $request->input('latitude'),
       'longitude' => $request->input('longitude')
     ]);
@@ -42,7 +61,7 @@ class RoadDamageController extends Controller {
       } catch (\Exception $e) {
         return $e->getMessage();
       }
-      
+
       Image::create([
         'roaddamage_id' => $road_damage->id,
         'image_name' => $file_path

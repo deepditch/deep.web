@@ -25,7 +25,7 @@ class RoadDamage extends Model {
    * @return \App\Image
    */
   public function getImage() {
-    return Image::where('roaddamage_id', $this->id)->first();
+    return Image::where('roaddamage_id', $this->id)->first() ?? (new Image);
   }
 
   /**

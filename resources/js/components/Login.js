@@ -13,8 +13,8 @@ class LoginForm extends Component {
           <h1 class="h4">Log In to Your Account</h1>
         </header>
         <div class="mt-auto mb-auto">
-          <InputGroup name="Email" required />
-          <InputGroup name="Password" required />
+          <InputGroup name="Email" type="email" required />
+          <InputGroup name="Password" type="password" required />
           <div class="divide-15" />
         </div>
         <div class="mt-auto">
@@ -25,7 +25,7 @@ class LoginForm extends Component {
               </button>
             </div>
             <div class="col">
-              <Link to="/Forgot" class="small">
+              <Link to="/forgot" class="small">
                 Forgot your password?
               </Link>
             </div>
@@ -52,7 +52,7 @@ class Login extends Component {
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 </p>
                 <div class="mt-auto">
-                  <Link to="/Register" class="btn link bg-white mt-auto">
+                  <Link to="/register" class="btn link bg-white mt-auto">
                     Register
                   </Link>
                 </div>
