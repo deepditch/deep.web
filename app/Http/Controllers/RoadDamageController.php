@@ -49,9 +49,8 @@ class RoadDamageController extends Controller {
    * @return App\Http\Resources\RoadDamage
    */
   public function insert(Request $request) {
-    $user = JWTAuth::toUser($token);
     $road_damage = RoadDamage::create([
-      'user_id' => $request->input('user_id'),
+      'user_id' => auth('api')->user()->id,
       'latitude' => $request->input('latitude'),
       'longitude' => $request->input('longitude')
     ]);
