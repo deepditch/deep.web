@@ -46,9 +46,9 @@ class RegistrationForm extends Component {
           </div>
         </div>
 
-        <InputGroup name="Email" required={true} />
-        <InputGroup name="Password" required={true} />
-        <InputGroup name="Confirm Password" required={true} />
+        <InputGroup name="Email" type="email" required={true} />
+        <InputGroup name="Password" type="password" required={true} />
+        <InputGroup name="Confirm Password" type="password" required={true} />
 
         <div class="divide-15" />
 
