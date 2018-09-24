@@ -45,7 +45,7 @@ export default AuthService =>
 
     render() {
       return (
-        <form class="login-form block-medium d-flex flex-column">
+        <form class="login-form block-medium d-flex flex-column" onSubmit={this.handleSubmit}>
           <header>
             <h1 class="h4">Log In to Your Account</h1>
           </header>

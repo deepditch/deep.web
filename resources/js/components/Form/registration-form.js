@@ -74,7 +74,7 @@ export default AuthService =>
               {this.state.AccountType == "Organization" ? (
                 <InputGroup
                   name="Organization Name"
-                  required={this.state.organization}
+                  required={this.state.AccountType == "Organization"}
                   onChange={this.handleInputChange}
                 />
               ) : null}
@@ -87,18 +87,21 @@ export default AuthService =>
             required={true}
             onChange={this.handleInputChange}
           />
+
           <InputGroup
             name="Email"
             type="email"
             required={true}
             onChange={this.handleInputChange}
           />
+
           <InputGroup
             name="Password"
             type="password"
             required={true}
             onChange={this.handleInputChange}
           />
+
           <InputGroup
             name="Confirm Password"
             type="password"

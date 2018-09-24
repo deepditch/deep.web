@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-export default (LoginForm) =>
+export default LoginForm =>
   class Login extends Component {
     render() {
       return (
