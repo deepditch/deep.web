@@ -20,6 +20,7 @@ class App extends Component {
   render() {
     return (
       <main>
+        <c.Notify></c.Notify>
         <Switch>
           <Route exact path="/login" component={c.Login} />
           <Route exact path="/register" component={c.Register} />

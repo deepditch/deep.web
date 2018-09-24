@@ -4,6 +4,7 @@ import RegistrationForm from "../components/Form/registration-form";
 import Register from "../components/register";
 import LoginForm from "../components/Form/login-form";
 import Login from "../components/login";
+import Notify from "../components/Notify";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { authActions } from "../actions";
@@ -57,6 +58,15 @@ export default function createContainer() {
   );
 
   c.register("Login", c => Login(c.LoginForm));
+
+  c.register("Notify", c =>
+    connect(state => {
+      return {
+        type: state.notify.type,
+        message: state.notify.message
+      };
+    })(Notify)
+  );
 
   return c;
 }
