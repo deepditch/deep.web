@@ -21,8 +21,6 @@ export default AuthService =>
 
       this.handleInputChange = this.handleInputChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
-
-      console.log(AuthService);
     }
 
     handleInputChange(event) {

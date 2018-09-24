@@ -28,7 +28,7 @@ export default function createContainer() {
   });
 
   // Register Services Here
-  c.register("AuthService", c => AuthService(c.Axios));
+  c.register("AuthService", c => new AuthService(c.Axios));
 
   c.register("RegistrationForm", c => RegistrationForm(c.AuthService));
   c.register("Register", c => Register(c.RegistrationForm));

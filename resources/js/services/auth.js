@@ -1,63 +1,66 @@
-export default axios =>
-  class AuthService {
-    /**
-     * Returns true if the user has logged in and false otherwise
-     */
-    get loggedIn() {
-      return !localStorage.getItem("user") === null;
-    }
+export default class AuthService {
+  constructor(axios) {
+    this.axios = axios;
+  }
 
-    /**
-     * Logs a user in
-     * @param {string} email the user's email
-     * @param {string} password the user's password
-     */
-    login(email, password) {
-      return axios
-        .post("/login", {
-          email: email,
-          password: password
-        })
-        .then(function(response) {
-          if (response.access_token)
-            localStorage.setItem("user", JSON.stringify(response));
+  /**
+   * Returns true if the user has logged in and false otherwise
+   */
+  get loggedIn() {
+    return !localStorage.getItem("user") === null;
+  }
 
-          return response;
-        })
-        .catch(function(error) {
-          console.error(error);
+  /**
+   * Logs a user in
+   * @param {string} email the user's email
+   * @param {string} password the user's password
+   */
+  login(email, password) {
+    return this.axios
+      .post("/login", {
+        email: email,
+        password: password
+      })
+      .then(function(response) {
+        if (response.access_token)
+          localStorage.setItem("user", JSON.stringify(response));
 
-          return error;
-        });
-    }
+        return response;
+      })
+      .catch(function(error) {
+        console.error(error);
 
-    /**
-     * Logs a user out
-     */
-    logout() {
-      localStorage.removeItem("user");
-    }
+        return error;
+      });
+  }
 
-    /**
-     * Registers a user
-     * @param {string} name the user's username
-     * @param {string} email the user's email
-     * @param {string} password the user's password
-     */
-    register(name, email, password) {
-      return axios
-        .post("/register", {
-          email: email,
-          name: name,
-          password: password
-        })
-        .then(function(response) {
-          console.log(response);
-          return response;
-        })
-        .catch(function(error) {
-          console.error(error);
-          return error;
-        });
-    }
-  };
+  /**
+   * Logs a user out
+   */
+  logout() {
+    localStorage.removeItem("user");
+  }
+
+  /**
+   * Registers a user
+   * @param {string} name the user's username
+   * @param {string} email the user's email
+   * @param {string} password the user's password
+   */
+  register(name, email, password) {
+    return this.axios
+      .post("/register", {
+        email: email,
+        name: name,
+        password: password
+      })
+      .then(function(response) {
+        console.log(response);
+        return response;
+      })
+      .catch(function(error) {
+        console.error(error);
+        return error;
+      });
+  }
+}
