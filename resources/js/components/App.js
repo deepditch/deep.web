@@ -1,12 +1,23 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import createContainer from '../container/create-container';
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import rootReducer from "../reducers";
+
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from "react-router-dom";
+
+import createContainer from "../container/create-container";
+
+const store = createStore(rootReducer);
+var c = createContainer();
 
 class App extends Component {
   render() {
-    var c = createContainer();
-
     return (
       <main>
         <Switch>
@@ -20,8 +31,10 @@ class App extends Component {
 }
 
 render(
-  <Router>
-    <App />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>,
   document.getElementById("react-container")
 );
