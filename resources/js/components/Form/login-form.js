@@ -50,8 +50,8 @@ export default AuthService =>
             <h1 class="h4">Log In to Your Account</h1>
           </header>
           <div class="mt-auto mb-auto">
-            <InputGroup name="Email" type="email" required onChange={this.onChange} />
-            <InputGroup name="Password" type="password" required onChange={this.onChange} />
+            <InputGroup name="Email" type="email" required onChange={this.handleInputChange} />
+            <InputGroup name="Password" type="password" required onChange={this.handleInputChange} />
             <div class="divide-15" />
           </div>
           <div class="mt-auto">
