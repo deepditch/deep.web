@@ -11,14 +11,49 @@ export default AuthService =>
     constructor(props) {
       super(props);
       this.state = {
-        /* Used to toggle visibility of the Organization Name input*/
-        organization: false
+        AccountType: "User",
+        "Organization Name": "",
+        Username: "",
+        Email: "",
+        Password: "",
+        "Confirm Password": ""
       };
+
+      this.handleInputChange = this.handleInputChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
+
+      console.log(AuthService);
+    }
+
+    handleInputChange(event) {
+      const target = event.target;
+      const value = target.type === "checkbox" ? target.checked : target.value;
+      const name = target.name;
+
+      this.setState({
+        [name]: value
+      });
+    }
+
+    handleSubmit(event) {
+      event.preventDefault();
+      AuthService.register(
+        this.state.Username,
+        this.state.Email,
+        this.state.Password
+      ).then(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.error(response);
+        }
+      );
     }
 
     render() {
       return (
-        <form class="login-form block-medium">
+        <form class="login-form block-medium" onSubmit={this.handleSubmit}>
           <header>
             <h1 class="h4">Register</h1>
           </header>
@@ -28,28 +63,50 @@ export default AuthService =>
               <RadioGroup name="AccountType">
                 <RadioGroupOption
                   value="User"
-                  onChange={e => this.setState({ organization: false })}
+                  onChange={this.handleInputChange}
                   defaultChecked
                 />
                 <RadioGroupOption
                   value="Organization"
-                  onChange={e => this.setState({ organization: true })}
+                  onChange={this.handleInputChange}
                 />
               </RadioGroup>
             </div>
             <div class="col">
-              {this.state.organization ? (
+              {this.state.AccountType == "Organization" ? (
                 <InputGroup
                   name="Organization Name"
                   required={this.state.organization}
+                  onChange={this.handleInputChange}
                 />
               ) : null}
             </div>
           </div>
 
-          <InputGroup name="Email" type="email" required={true} />
-          <InputGroup name="Password" type="password" required={true} />
-          <InputGroup name="Confirm Password" type="password" required={true} />
+          <InputGroup
+            name="Username"
+            type="text"
+            required={true}
+            onChange={this.handleInputChange}
+          />
+          <InputGroup
+            name="Email"
+            type="email"
+            required={true}
+            onChange={this.handleInputChange}
+          />
+          <InputGroup
+            name="Password"
+            type="password"
+            required={true}
+            onChange={this.handleInputChange}
+          />
+          <InputGroup
+            name="Confirm Password"
+            type="password"
+            required={true}
+            onChange={this.handleInputChange}
+          />
 
           <div class="divide-15" />
 

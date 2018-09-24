@@ -1,19 +1,63 @@
-export default Axios =>
+export default axios =>
   class AuthService {
-    constructor() {
-      this._loggedIn = false;
-    }
-
+    /**
+     * Returns true if the user has logged in and false otherwise
+     */
     get loggedIn() {
-      return this._loggedIn;
+      return !localStorage.getItem("user") === null;
     }
 
-    login() {
-      this._loggedIn = true;
-      console.log(this._loggedIn);
+    /**
+     * Logs a user in
+     * @param {string} email the user's email
+     * @param {string} password the user's password
+     */
+    login(email, password) {
+      return axios
+        .post("/login", {
+          email: email,
+          password: password
+        })
+        .then(function(response) {
+          if (response.access_token)
+            localStorage.setItem("user", JSON.stringify(response));
+
+          return response;
+        })
+        .catch(function(error) {
+          console.error(error);
+
+          return error;
+        });
     }
 
+    /**
+     * Logs a user out
+     */
     logout() {
-      this._loggedIn = false;
+      localStorage.removeItem("user");
+    }
+
+    /**
+     * Registers a user
+     * @param {string} name the user's username
+     * @param {string} email the user's email
+     * @param {string} password the user's password
+     */
+    register(name, email, password) {
+      return axios
+        .post("/register", {
+          email: email,
+          name: name,
+          password: password
+        })
+        .then(function(response) {
+          console.log(response);
+          return response;
+        })
+        .catch(function(error) {
+          console.error(error);
+          return error;
+        });
     }
   };
