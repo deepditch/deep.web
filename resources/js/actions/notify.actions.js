@@ -1,10 +1,3 @@
-export default (notifyActions = {
-  warn,
-  error,
-  success,
-  clear
-});
-
 export const notifyConstants = {
   NOTIFY_WARN: "notify-warn",
   NOTIFY_ERR: "notify-error",
@@ -38,3 +31,10 @@ function clear() {
     type: notifyConstants.NOTIFY_CLEAR
   };
 }
+
+export const notifyActions = {
+  warn,
+  error,
+  success,
+  clear
+};

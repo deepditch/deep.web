@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import InputGroup from "./input-group";
 import { Link } from "react-router-dom";
 
-/*
- * Form for logging into a user account
- */
-
 export default class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +12,7 @@ export default class LoginForm extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    console.log(this.props);
   }
 
   handleInputChange(event) {

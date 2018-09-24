@@ -1,9 +1,4 @@
-import notifyActions from "./notify.actions";
-
-export default (authActions = {
-  login,
-  register
-});
+import { notifyActions } from "./notify.actions";
 
 export const authConstants = {
   LOGIN_SUCCESS: "login_success",
@@ -13,8 +8,8 @@ export const authConstants = {
   LOGOUT: "logout"
 };
 
-const login = authService => {
-  (email, password) => {
+const login = (authService, dispatch) => {
+  return (email, password) => {
     authService.login(email, password).then(
       response => {
         dispatch(notifyActions.success("You have successfully logged in"));
@@ -25,19 +20,19 @@ const login = authService => {
         dispatch(failure());
       }
     );
-
-    function success(user) {
-      return { type: authConstants.LOGIN_SUCCESS, user: user };
-    }
-
-    function failure() {
-      return { type: authConstants.LOGIN_FAILURE };
-    }
   };
+
+  function success(user) {
+    return { type: authConstants.LOGIN_SUCCESS, user: user };
+  }
+
+  function failure() {
+    return { type: authConstants.LOGIN_FAILURE };
+  }
 };
 
-const register = authService => {
-  (name, email, password) => {
+const register = (authService, dispatch) => {
+  return (name, email, password) => {
     authService.register(name, email, password).then(
       response => {
         dispatch(notifyActions.success("You have successfully registered"));
@@ -48,13 +43,18 @@ const register = authService => {
         dispatch(failure());
       }
     );
-
-    function success(response) {
-      return { type: authConstants.REGISTER_SUCCESS, user: response };
-    }
-
-    function failure() {
-      return { type: authConstants.REGISTER_FAILURE };
-    }
   };
+
+  function success(response) {
+    return { type: authConstants.REGISTER_SUCCESS, user: response };
+  }
+
+  function failure() {
+    return { type: authConstants.REGISTER_FAILURE };
+  }
+};
+
+export const authActions = {
+  login,
+  register
 };

@@ -3,9 +3,6 @@ import InputGroup from "./input-group";
 import { RadioGroup, RadioGroupOption } from "./radio-group";
 import { Link } from "react-router-dom";
 
-/**
- * @param{AuthService} AuthService
- */
 export default class RegistrationForm extends Component {
   constructor(props) {
     super(props);
@@ -20,6 +17,8 @@ export default class RegistrationForm extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    console.log(this);
   }
 
   handleInputChange(event) {

@@ -35,17 +35,27 @@ export default function createContainer() {
   c.register("RegistrationForm", c =>
     connect(
       null,
-      authActions.register(c.AuthService)
+      dispatch => {
+        return {
+          register: authActions.register(c.AuthService, dispatch)
+        };
+      }
     )(RegistrationForm)
   );
+
   c.register("Register", c => Register(c.RegistrationForm));
 
   c.register("LoginForm", c =>
     connect(
       null,
-      authActions.login(c.AuthService)
+      dispatch => {
+        return {
+          login: authActions.login(c.AuthService, dispatch)
+        };
+      }
     )(LoginForm)
   );
+
   c.register("Login", c => Login(c.LoginForm));
 
   return c;
