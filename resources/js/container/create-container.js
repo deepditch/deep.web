@@ -7,7 +7,7 @@ import Login from "../components/login";
 import Notify from "../components/Notify";
 import Axios from "axios";
 import { connect } from "react-redux";
-import { authActions } from "../actions";
+import { authActions, notifyActions } from "../actions";
 
 export default function createContainer() {
   var c = new Container();
@@ -60,12 +60,19 @@ export default function createContainer() {
   c.register("Login", c => Login(c.LoginForm));
 
   c.register("Notify", c =>
-    connect(state => {
-      return {
-        type: state.notify.type,
-        message: state.notify.message
-      };
-    })(Notify)
+    connect(
+      state => {
+        return {
+          type: state.notify.type,
+          message: state.notify.message
+        };
+      },
+      dispatch => {
+        return {
+          clear: () => dispatch(notifyActions.clear())
+        };
+      }
+    )(Notify)
   );
 
   return c;
