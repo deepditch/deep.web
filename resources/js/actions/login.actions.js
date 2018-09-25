@@ -1,9 +1,10 @@
 import { NotifyActions } from "./notify.actions";
+import { history } from "../history";
 
 export const LoginActionTypes = {
+  LOGIN_ATTEMPT: "login_attempt",
   LOGIN_SUCCESS: "login_success",
   LOGIN_FAILURE: "login_failure",
-  LOGIN_ATTEMPT: "login_attempt",
   LOGOUT: "logout"
 };
 
@@ -27,13 +28,12 @@ export const LoginActions = {
  */
 export const CreateLoginActionDispatcher = (authService, dispatch) => {
   return (email, password) => {
-    dispatch(LoginActions.attempt());
-
     authService
       .login(email, password)
       .then(response => {
         dispatch(NotifyActions.success("You have successfully logged in"));
         dispatch(LoginActions.success(response));
+        history.push("/");
       })
       .catch(error => {
         dispatch(NotifyActions.error("Login failure"));

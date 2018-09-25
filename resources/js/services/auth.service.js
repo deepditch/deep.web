@@ -22,10 +22,10 @@ export class AuthService {
         password: password
       })
       .then(response => {
-        if (response.access_token)
+        if (response.data.access_token)
           localStorage.setItem("user", JSON.stringify(response.data));
 
-        return response;
+        return response.data;
       })
       .catch(error => {
         console.error(error);

@@ -1,7 +1,7 @@
 import { LoginActionTypes } from "../actions";
 
 var user = JSON.parse(localStorage.getItem("user"));
-const initialState = user ? { loggedIn: true, user } : {};
+const initialState = user ? { loggedIn: true, user: user } : { loggedIn: false };
 
 /**
  * Updates the login state based on the provided action
@@ -11,13 +11,13 @@ const initialState = user ? { loggedIn: true, user } : {};
 export default function LoginReducer(state = initialState, action) {
   switch (action.type) {
     case LoginActionTypes.LOGIN_ATTEMPT:
-      return { loggingIn: true };
+      return { loggedIn: false, loggingIn: true };
     case LoginActionTypes.LOGIN_SUCCESS:
       return { loggedIn: true, user: action.user };
     case LoginActionTypes.LOGIN_FAILURE:
       return { loggedIn: false };
     case LoginActionTypes.LOGOUT:
-      return {};
+      return { loggedIn: false };
     default:
       return state;
   }

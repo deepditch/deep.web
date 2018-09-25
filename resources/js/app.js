@@ -3,13 +3,9 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "reducers";
+import { history } from "./history";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from "react-router-dom";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
 
 import createContainer from "container/create-container";
 
@@ -22,10 +18,10 @@ class App extends Component {
       <main>
         <c.Notify />
         <Switch>
-          <Route exact path="/login" component={c.Login} />
-          <Route exact path="/register" component={c.Register} />
-          <Route exact path="/map" component={c.Map} />
-          <Redirect from="/" to="/login" />
+          <Route path="/login" component={c.Login} />
+          <Route path="/register" component={c.Register} />
+          <c.AuthorizedRoute exact path="/" component={c.Map} />
+          <Redirect to="/" />
         </Switch>
       </main>
     );
@@ -34,7 +30,7 @@ class App extends Component {
 
 render(
   <Provider store={store}>
-    <Router>
+    <Router history={history}>
       <App />
     </Router>
   </Provider>,

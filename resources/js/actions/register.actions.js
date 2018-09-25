@@ -1,4 +1,5 @@
 import { NotifyActions } from "./notify.actions";
+import { history } from "../history";
 
 export const RegisterActionTypes = {
   REGISTER_SUCCESS: "register_success",
@@ -33,6 +34,7 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
       .then(response => {
         dispatch(NotifyActions.success("You have successfully registered"));
         dispatch(RegisterActions.success(response));
+        history.push("/login");
       })
       .catch(error => {
         dispatch(NotifyActions.error("Registration failure"));

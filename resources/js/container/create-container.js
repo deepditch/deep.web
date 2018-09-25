@@ -1,7 +1,14 @@
 import Container from "./container";
 import { AuthService } from "../services/";
 import Axios from "axios";
-import { LoginProvider, RegisterProvider, NotifyProvider, DamageProvider } from "../providers";
+import {
+  LoginProvider,
+  RegisterProvider,
+  NotifyProvider,
+  DamageProvider
+} from "../providers";
+import AuthorizedRoute from "../components/PrivateRoute";
+import { connect } from "react-redux";
 
 /**
  * Creates an IoC container that manages and injects dependencies.
@@ -29,6 +36,19 @@ export default function createContainer() {
   });
 
   c.register("AuthService", c => new AuthService(c.Axios));
+
+  c.register("AuthorizedRoute", c =>
+    connect(
+      store => {
+        return { loggedIn: store.login.loggedIn };
+      },
+      null,
+      null,
+      {
+        pure: false
+      }
+    )(AuthorizedRoute)
+  );
 
   LoginProvider(c);
   RegisterProvider(c);
