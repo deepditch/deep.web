@@ -4,7 +4,7 @@ export default class AuthService {
   }
 
   /**
-   * Returns true if the user has logged in and false otherwise
+   * Returns true if the user is logged in and false otherwise
    */
   get loggedIn() {
     return !localStorage.getItem("user") === null;

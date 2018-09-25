@@ -3,9 +3,13 @@ import AuthService from "../services/auth";
 import Axios from "axios";
 import { LoginProvider, RegisterProvider, NotifyProvider } from "../providers";
 
+/**
+ * Creates an IoC container that manages and injects dependencies.
+ */
 export default function createContainer() {
   var c = new Container();
 
+  // Register dependencies. Order doesn't matter
   c.register("Axios", c => {
     let token = document.head.querySelector('meta[name="csrf-token"]');
     try {
