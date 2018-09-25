@@ -29,7 +29,7 @@
   }
 
   &.active {
-    animation: activateNotify forwards 0.15s;
+    animation: activateNotify forwards .2s;
 
     button {
       display: inline;

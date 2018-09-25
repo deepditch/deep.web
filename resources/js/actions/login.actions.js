@@ -12,8 +12,8 @@ export const LoginActions = {
   attempt: () => {
     return { type: LoginActionTypes.LOGIN_ATTEMPT };
   },
-  success: token => {
-    return { type: LoginActionTypes.LOGIN_SUCCESS, token: token };
+  success: (token, user) => {
+    return { type: LoginActionTypes.LOGIN_SUCCESS, token: token, user: user };
   },
   failure: () => {
     return { type: LoginActionTypes.LOGIN_FAILURE };
@@ -36,13 +36,24 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
     authService
       .login(email, password)
       .then(response => {
+        var user = {
+          email: email,
+          organization: "Test Organization"
+        };
+
+        var token = response.access_token;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
         dispatch(NotifyActions.success("You have successfully logged in"));
-        dispatch(LoginActions.success(response.access_token));
+        dispatch(LoginActions.success(token, user));
         history.push("/");
       })
       .catch(error => {
         dispatch(NotifyActions.error("Login failure"));
         dispatch(LoginActions.failure());
+        console.error(error);
       });
   };
 };

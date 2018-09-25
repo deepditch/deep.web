@@ -6,9 +6,11 @@ import React, { Component } from "react";
 export default class UserSidebar extends Component {
   render() {
     return (
-      <div class="block-medium">
-        <h1>{this.props.organizationName}</h1>
-        <div class="divide-20"></div>
+      <div class="block">
+        <h1>{this.props.user.organization}</h1>
+        <div class="divide-15" />
+        <p>{this.props.user.email}</p>
+        <div class="divide-10" />
         <button class="btn" onClick={this.props.logout}>
           Logout
         </button>

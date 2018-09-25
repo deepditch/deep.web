@@ -1026,8 +1026,8 @@ button {
     right: 15px;
     display: none; }
   #notify.active {
-    -webkit-animation: activateNotify forwards 0.15s;
-            animation: activateNotify forwards 0.15s; }
+    -webkit-animation: activateNotify forwards .2s;
+            animation: activateNotify forwards .2s; }
     #notify.active button {
       display: inline; }
   #notify[type="notify-default"] {
