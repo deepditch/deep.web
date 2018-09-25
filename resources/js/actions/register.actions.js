@@ -6,9 +6,6 @@ export const RegisterActionTypes = {
   REGISTER_ATTEMPT: "register_attempt"
 };
 
-/**
- * Enumerated register actions
- */
 export const RegisterActions = {
   attempt: () => {
     return { type: RegisterActionTypes.REGISTER_ATTEMPT };

@@ -3,7 +3,6 @@ import React, { Component } from "react";
 /**
  * Registration Page
  */
-
 export default RegistrationForm =>
   class Register extends Component {
     render() {

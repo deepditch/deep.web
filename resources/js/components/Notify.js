@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 class Notify extends Component {
   render() {
-    console.log(this.props);
     return (
       <div id="notify" class={this.props.message ? "active" : ""} type={this.props.notifyType}>
         {this.props.message} <button onClick={this.props.clear}>X Close</button>

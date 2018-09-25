@@ -1,5 +1,5 @@
 import Container from "./container";
-import AuthService from "../services/auth";
+import { AuthService } from "../services/";
 import Axios from "axios";
 import { LoginProvider, RegisterProvider, NotifyProvider } from "../providers";
 

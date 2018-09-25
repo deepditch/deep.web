@@ -6,9 +6,6 @@ export const NotifyActionTypes = {
   NOTIFY_CLEAR: "notify-clear"
 };
 
-/**
- * Enumerated notify actions
- */
 export const NotifyActions = {
   warn : (message) => {
     return {

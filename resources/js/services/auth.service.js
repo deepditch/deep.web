@@ -1,4 +1,4 @@
-export default class AuthService {
+export class AuthService {
   constructor(axios) {
     this.axios = axios;
   }
