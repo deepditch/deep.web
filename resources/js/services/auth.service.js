@@ -37,7 +37,7 @@ export class AuthService {
    * Logs a user out
    */
   logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
   }
 
   /**

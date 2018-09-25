@@ -24,7 +24,7 @@ export const LoginActions = {
 };
 
 /**
- * Create a login method that dispatches redux actions. Delegates login request to authService
+ * Returns a login method that dispatches redux actions. Delegates login request to authService
  * @param {AuthService} authService must have a login method : login(email, password)
  * @param {function} dispatch the redux dispatch method
  * @returns a login method that dispatches redux actions
@@ -45,6 +45,12 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
   };
 };
 
+/**
+ * Returns a logout method that dispatches redux actions. Delegates logout authService
+ * @param {AuthService} authService must have a login method : login(email, password)
+ * @param {function} dispatch the redux dispatch method
+ * @returns a login method that dispatches redux actions
+ */
 export const CreateLogoutActionDispatcher = (authService, dispatch) => {
   return () => {
     authService.logout();
