@@ -8,7 +8,7 @@ const initialState = {};
  * @param {JSON} action A redux action
  */
 export default function RegisterReducer(state = initialState, action) {
-  switch (action.Type) {
+  switch (action.type) {
     case RegisterActionTypes.REGISTER_ATTEMPT:
       return { registering: true, loggedIn: false };
     case RegisterActionTypes.REGISTER_SUCCESS:
