@@ -32,7 +32,6 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
     authService
       .login(email, password)
       .then(response => {
-        console.log(response);
         dispatch(NotifyActions.success("You have successfully logged in"));
         dispatch(LoginActions.success(response));
       })

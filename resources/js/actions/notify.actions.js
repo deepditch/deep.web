@@ -7,25 +7,25 @@ export const NotifyActionTypes = {
 };
 
 export const NotifyActions = {
-  warn : (message) => {
+  warn: message => {
     return {
       type: NotifyActionTypes.NOTIFY_WARN,
       message: message
     };
   },
-  error: (message)  => {
+  error: message => {
     return {
       type: NotifyActionTypes.NOTIFY_ERR,
       message: message
     };
   },
-  success: (message) => {
+  success: message => {
     return {
       type: NotifyActionTypes.NOTIFY_SUCCESS,
       message: message
     };
   },
-  default: (message) => {
+  default: message => {
     return {
       type: NotifyActionTypes.NOTIFY_DEFAULT,
       message: message
