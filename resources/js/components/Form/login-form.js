@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import InputGroup from "./input-group";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -12,7 +13,6 @@ export default class LoginForm extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    console.log(this.props);
   }
 
   handleInputChange(event) {
@@ -72,3 +72,7 @@ export default class LoginForm extends Component {
     );
   }
 }
+
+LoginForm.PropTypes = {
+  login: PropTypes.func.isRequired
+};

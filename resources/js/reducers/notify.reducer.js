@@ -1,23 +1,39 @@
-import { notifyConstants } from "../actions";
+import React from "react";
+import { NotifyActionTypes } from "../actions";
 
-export default function notify(state = {}, action) {
+const initialState = {
+  notifyType: "notify-default",
+  message: <>Welcome to <strong>deep.ditch</strong></>
+};
+
+/**
+ * Updates the notify state based on the provided action
+ * @param {JSON} state The previous notify state
+ * @param {JSON} action A redux action
+ */
+export default function NotifyReducer(state = initialState, action) {
   switch (action.type) {
-    case notifyConstants.NOTIFY_SUCCESS:
+    case NotifyActionTypes.NOTIFY_DEFAULT:
       return {
-        type: "notify-success",
+        notifyType: "notify-default",
         message: action.message
       };
-    case notifyConstants.NOTIFY_WARN:
+    case NotifyActionTypes.NOTIFY_SUCCESS:
       return {
-        type: "notify-warn",
+        notifyType: "notify-success",
         message: action.message
       };
-    case notifyConstants.NOTIFY_ERR:
+    case NotifyActionTypes.NOTIFY_WARN:
       return {
-        type: "notify-error",
+        notifyType: "notify-warn",
         message: action.message
       };
-    case notifyConstants.NOTIFY_CLEAR:
+    case NotifyActionTypes.NOTIFY_ERR:
+      return {
+        notifyType: "notify-error",
+        message: action.message
+      };
+    case NotifyActionTypes.NOTIFY_CLEAR:
       return {};
     default:
       return state;

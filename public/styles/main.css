@@ -983,4 +983,65 @@ button {
       z-index: 5;
       color: #2c3443; }
 
+#notify {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  -webkit-transform: translate(0, -100%);
+          transform: translate(0, -100%);
+  padding: 0.55556em 0.83333em;
+  font-size: 0.8em;
+  text-align: center;
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff; }
+  #notify button {
+    position: absolute;
+    color: inherit;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    float: right;
+    position: absolute;
+    right: 15px;
+    display: none; }
+  #notify.active {
+    -webkit-animation: activateNotify forwards 0.15s;
+            animation: activateNotify forwards 0.15s; }
+    #notify.active button {
+      display: inline; }
+  #notify[type="notify-default"] {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff; }
+  #notify[type="notify-success"] {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb; }
+  #notify[type="notify-warn"] {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba; }
+  #notify[type="notify-error"] {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb; }
+
+@-webkit-keyframes activateNotify {
+  0% {
+    -webkit-transform: translate(0, -100%);
+            transform: translate(0, -100%); }
+  100% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0); } }
+
+@keyframes activateNotify {
+  0% {
+    -webkit-transform: translate(0, -100%);
+            transform: translate(0, -100%); }
+  100% {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0); } }
+
 /*# sourceMappingURL=main.css.map */

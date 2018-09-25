@@ -29,7 +29,6 @@ export default class AuthService {
       })
       .catch(function(error) {
         console.error(error);
-
         return error;
       });
   }
@@ -55,7 +54,6 @@ export default class AuthService {
         password: password
       })
       .then(function(response) {
-        console.log(response);
         return response;
       })
       .catch(function(error) {

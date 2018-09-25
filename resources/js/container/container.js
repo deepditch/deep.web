@@ -6,7 +6,7 @@ export default class Container {
   }
 
   /**
-   * Register a dependency
+   * Registers a dependency
    * @param {string} name The name of the service being registered
    * @param {function} callback a function that takes a Container as a parameter and returns a service
    */

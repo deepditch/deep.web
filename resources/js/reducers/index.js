@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import auth from "./auth.reducer";
-import notify from "./notify.reducer";
+import LoginReducer from "./login.reducer";
+import RegisterReducer from "./register.reducer";
+import NotifyReducer from "./notify.reducer";
 
 export default combineReducers({
-  auth,
-  notify
+  login: LoginReducer,
+  register: RegisterReducer,
+  notify: NotifyReducer
 });

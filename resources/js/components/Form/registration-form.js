@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import InputGroup from "./input-group";
 import { RadioGroup, RadioGroupOption } from "./radio-group";
 import { Link } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 export default class RegistrationForm extends Component {
   constructor(props) {
@@ -17,8 +18,6 @@ export default class RegistrationForm extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    console.log(this);
   }
 
   handleInputChange(event) {
@@ -116,3 +115,7 @@ export default class RegistrationForm extends Component {
     );
   }
 }
+
+RegistrationForm.PropTypes = {
+  register: PropTypes.func.isRequired
+};
