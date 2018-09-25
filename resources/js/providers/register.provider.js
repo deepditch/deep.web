@@ -1,7 +1,7 @@
 import RegistrationForm from "../components/Form/registration-form";
 import Register from "../components/register";
 import { connect } from "react-redux";
-import { RegisterActionDispatcher } from "../actions";
+import { CreateRegisterActionDispatcher } from "../actions";
 
 /**
  * Registers dependencies in the container and connects react components to the redux store
@@ -13,7 +13,7 @@ export const RegisterProvider = (c) => {
       null,
       dispatch => {
         return {
-          register: RegisterActionDispatcher(c.AuthService, dispatch)
+          register: CreateRegisterActionDispatcher(c.AuthService, dispatch)
         };
       }
     )(RegistrationForm)

@@ -18,19 +18,25 @@ export const RegisterActions = {
   }
 };
 
-export const RegisterActionDispatcher = (authService, dispatch) => {
+/**
+ * Create a register method that dispatches redux actions. Delegates register request to authService
+ * @param {AuthService} authService must have a register method : register(name, email, password)
+ * @param {function} dispatch the redux dispatch method
+ * @returns a register method that dispatches redux actions
+ */
+export const CreateRegisterActionDispatcher = (authService, dispatch) => {
   return (name, email, password) => {
     dispatch(RegisterActions.attempt());
 
-    authService.register(name, email, password).then(
-      response => {
+    authService
+      .register(name, email, password)
+      .then(response => {
         dispatch(NotifyActions.success("You have successfully registered"));
         dispatch(RegisterActions.success(response));
-      },
-      error => {
+      })
+      .catch(error => {
         dispatch(NotifyActions.error("Registration failure"));
         dispatch(RegisterActions.failure());
-      }
-    );
+      });
   };
 };

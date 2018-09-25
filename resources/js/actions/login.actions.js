@@ -11,7 +11,7 @@ export const LoginActions = {
   attempt: () => {
     return { type: LoginActionTypes.LOGIN_ATTEMPT };
   },
-  success: (user) => {
+  success: user => {
     return { type: LoginActionTypes.LOGIN_SUCCESS, user: user };
   },
   failure: () => {
@@ -19,19 +19,26 @@ export const LoginActions = {
   }
 };
 
-export const LoginActionDispatcher = (authService, dispatch) => {
+/**
+ * Create a login method that dispatches redux actions. Delegates login request to authService
+ * @param {AuthService} authService must have a login method : login(email, password)
+ * @param {function} dispatch the redux dispatch method
+ * @returns a login method that dispatches redux actions
+ */
+export const CreateLoginActionDispatcher = (authService, dispatch) => {
   return (email, password) => {
     dispatch(LoginActions.attempt());
 
-    authService.login(email, password).then(
-      response => {
+    authService
+      .login(email, password)
+      .then(response => {
+        console.log(response);
         dispatch(NotifyActions.success("You have successfully logged in"));
         dispatch(LoginActions.success(response));
-      },
-      error => {
+      })
+      .catch(error => {
         dispatch(NotifyActions.error("Login failure"));
         dispatch(LoginActions.failure());
-      }
-    );
+      });
   };
 };

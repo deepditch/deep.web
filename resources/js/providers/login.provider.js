@@ -1,7 +1,7 @@
 import LoginForm from "../components/Form/login-form";
 import Login from "../components/login";
 import { connect } from "react-redux";
-import { LoginActionDispatcher } from "../actions";
+import { CreateLoginActionDispatcher } from "../actions";
 
 /**
  * Registers dependencies in the container and connects react components to the redux store
@@ -13,7 +13,7 @@ export const LoginProvider = (c) => {
       null,
       dispatch => {
         return {
-          login: LoginActionDispatcher(c.AuthService, dispatch)
+          login: CreateLoginActionDispatcher(c.AuthService, dispatch)
         };
       }
     )(LoginForm)

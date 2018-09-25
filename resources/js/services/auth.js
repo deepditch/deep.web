@@ -21,15 +21,15 @@ export default class AuthService {
         email: email,
         password: password
       })
-      .then(function(response) {
+      .then(response => {
         if (response.access_token)
           localStorage.setItem("user", JSON.stringify(response));
 
         return response;
       })
-      .catch(function(error) {
+      .catch(error => {
         console.error(error);
-        return error;
+        throw error;
       });
   }
 
@@ -53,12 +53,12 @@ export default class AuthService {
         name: name,
         password: password
       })
-      .then(function(response) {
+      .then(response => {
         return response;
       })
-      .catch(function(error) {
+      .catch(error => {
         console.error(error);
-        return error;
+        throw error;
       });
   }
 }
