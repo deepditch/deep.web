@@ -2,8 +2,8 @@ import React from "react";
 import { NotifyActionTypes } from "../actions";
 
 const initialState = {
-  notifyType: "notify-default",
-  message: <>Welcome to <strong>deep.ditch</strong></>
+  //notifyType: "notify-default",
+  //message: <>Welcome to <strong>deep.ditch</strong></>
 };
 
 /**

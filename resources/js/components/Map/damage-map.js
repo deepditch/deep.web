@@ -1,28 +1,19 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
-import RoadDamageService from "../../services/road-damage";
 import config from "../../../../project.config";
 
 class DamageMap extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      locations: []
-    };
-  }
-
   componentDidMount() {
-    var locations = new RoadDamageService().getDamageInstances();
-    this.setState({ locations: locations });
+    this.props.loadDamage();
   }
 
   render() {
     return (
       <Map google={this.props.google} zoom={14}>
-        {this.state.locations.map(damage =>
-          <Marker name={damage.type} position={damage.position} />
-        )}
+        {this.props.instances &&
+          this.props.instances.map(damage => (
+            <Marker name={damage.type} position={damage.position} />
+          ))}
       </Map>
     );
   }

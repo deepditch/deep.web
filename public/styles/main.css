@@ -1013,7 +1013,8 @@ button {
   text-align: center;
   color: #004085;
   background-color: #cce5ff;
-  border-color: #b8daff; }
+  border-color: #b8daff;
+  z-index: 300; }
   #notify button {
     position: absolute;
     color: inherit;

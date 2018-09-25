@@ -9,10 +9,10 @@ import { NotifyActions } from "../actions";
 export const NotifyProvider = c => {
   c.register("Notify", c =>
     connect(
-      state => {
+      store => {
         return {
-          notifyType: state.notify.notifyType,
-          message: state.notify.message
+          notifyType: store.notify.notifyType,
+          message: store.notify.message
         };
       },
       dispatch => {

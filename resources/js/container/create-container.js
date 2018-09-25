@@ -1,7 +1,7 @@
 import Container from "./container";
 import { AuthService } from "../services/";
 import Axios from "axios";
-import { LoginProvider, RegisterProvider, NotifyProvider } from "../providers";
+import { LoginProvider, RegisterProvider, NotifyProvider, DamageProvider } from "../providers";
 
 /**
  * Creates an IoC container that manages and injects dependencies.
@@ -33,6 +33,7 @@ export default function createContainer() {
   LoginProvider(c);
   RegisterProvider(c);
   NotifyProvider(c);
+  DamageProvider(c);
 
   return c;
 }

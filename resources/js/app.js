@@ -24,6 +24,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/login" component={c.Login} />
           <Route exact path="/register" component={c.Register} />
+          <Route exact path="/map" component={c.Map} />
           <Redirect from="/" to="/login" />
         </Switch>
       </main>

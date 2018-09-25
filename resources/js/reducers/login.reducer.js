@@ -9,7 +9,7 @@ const initialState = user ? { loggedIn: true, user } : {};
  * @param {JSON} action A redux action
  */
 export default function LoginReducer(state = initialState, action) {
-  switch (action.Type) {
+  switch (action.type) {
     case LoginActionTypes.LOGIN_ATTEMPT:
       return { loggingIn: true };
     case LoginActionTypes.LOGIN_SUCCESS:

@@ -1,21 +1,20 @@
-
-export default class RoadDamageService {
-  getDamageInstances() {
-    return [
+export class MockRoadDamageService {
+  async getDamageInstances() {
+    return Promise.resolve([
       {
         position: {
           lat: 37.759703,
           lng: -122.428093
         },
-        type: 'D44'
+        type: "D44"
       },
       {
         position: {
           lat: 37.778519,
-          lng: -122.405640
+          lng: -122.40564
         },
-        type: 'D01'
+        type: "D01"
       }
-    ];
+    ]);
   }
 }
