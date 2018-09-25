@@ -14,7 +14,7 @@ class AddTimestampsImages extends Migration
     public function up()
     {
         Schema::table('images', function (Blueprint $table) {
-          $table->timestamps();
+            $table->timestamps();
         });
     }
 
