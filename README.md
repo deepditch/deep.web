@@ -33,6 +33,8 @@ php artisan serve
 This will run the webapp at http://127.0.0.1:8000
 
 ### Setup Front End
+Rename 'project.config.js.example' to 'project.config.js' and populate the 'GoogleMapsAPIKey' field
+
 From the root directory
 
 ```
