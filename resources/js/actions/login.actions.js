@@ -47,8 +47,9 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
 
 export const CreateLogoutActionDispatcher = (authService, dispatch) => {
   return () => {
-    authService.logout(email, password);
+    authService.logout();
     dispatch(LoginActions.logout());
     dispatch(NotifyActions.default("You have been logged out"));
+    history.push("/login");
   };
 };

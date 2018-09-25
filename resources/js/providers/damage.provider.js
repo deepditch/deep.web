@@ -1,7 +1,13 @@
 import DamageMap from "../components/Map/damage-map";
 import Map from "../components/map";
+import UserSidebar from "../components/UserSidebar";
 import { connect } from "react-redux";
-import { CreateDamageActionDispatcher } from "../actions";
+
+import {
+  CreateDamageActionDispatcher,
+  CreateLogoutActionDispatcher
+} from "../actions";
+
 import { RoadDamageService } from "../services";
 
 /**
@@ -26,5 +32,20 @@ export const DamageProvider = c => {
     )(DamageMap)
   );
 
-  c.register("Map", c => Map(c.DamageMap));
+  c.register("UserSidebar", c =>
+    connect(
+      store => {
+        return {
+          organizationName: "Test Organization"
+        };
+      },
+      dispatch => {
+        return {
+          logout: CreateLogoutActionDispatcher(c.AuthService, dispatch)
+        };
+      }
+    )(UserSidebar)
+  );
+
+  c.register("Map", c => Map(c.UserSidebar, c.DamageMap));
 };
