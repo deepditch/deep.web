@@ -23,8 +23,8 @@ export default function createContainer() {
       var instance = Axios.create({
         baseURL: "/api/",
         headers: {
-          "X-Requested-With": "XMLHttpRequest"
-          //"X-CSRF-TOKEN": token.content
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRF-TOKEN": token.content
         }
       });
 
