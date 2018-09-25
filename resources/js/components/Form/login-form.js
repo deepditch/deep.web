@@ -57,9 +57,11 @@ export default class LoginForm extends Component {
         <div class="mt-auto">
           <div class="row narrow-gutters align-items-center">
             <div class="col-auto">
-              <button class="btn link" type="submit">
-                Log In
-              </button>
+            {this.props.pending ? (
+              <span class="btn">Logging In ...</span>
+            ) : (
+              <button class="btn link">Log In</button>
+            )}
             </div>
             <div class="col">
               <Link to="/forgot" class="small">

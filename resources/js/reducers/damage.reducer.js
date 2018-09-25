@@ -7,10 +7,12 @@ import { DamageActionTypes } from "../actions";
  */
 export default function DamageReducer(state = { instances: [] }, action) {
   switch (action.type) {
-    case DamageActionTypes.LOAD_DAMAGE:
-      return { instances: action.instances };
-    case DamageActionTypes.REQUEST_DAMAGE:
-      return { instances: [] };
+    case DamageActionTypes.LOAD_DAMAGE_ATTEMPT:
+      return { instances: [], pending: true };
+    case DamageActionTypes.LOAD_DAMAGE_SUCCESS:
+      return { instances: action.instances, success: true };
+    case DamageActionTypes.LOAD_DAMAGE_FAILURE:
+      return { instances: [], rejected: true };
     default:
       return state;
   }

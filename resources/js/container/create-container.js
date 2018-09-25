@@ -49,7 +49,7 @@ export default function createContainer() {
   c.register("AuthorizedRoute", c =>
     connect(
       store => {
-        return { loggedIn: store.auth.loggedIn };
+        return { loggedIn: store.login.loggedIn };
       },
       null,
       null,

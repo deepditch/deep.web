@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import InputGroup from "./input-group";
 import { RadioGroup, RadioGroupOption } from "./radio-group";
 import { Link } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 export default class RegistrationForm extends Component {
   constructor(props) {
@@ -103,7 +103,11 @@ export default class RegistrationForm extends Component {
 
         <div class="row narrow-gutters align-items-center">
           <div class="col-auto">
-            <button class="btn link">Register</button>
+            {this.props.pending ? (
+              <span class="btn">Registering ...</span>
+            ) : (
+              <button class="btn link">Register</button>
+            )}
           </div>
           <div class="col-auto">
             <span class="small">

@@ -21,7 +21,8 @@ export const DamageProvider = c => {
     connect(
       store => {
         return {
-          instances: store.damage.instances
+          instances: store.damage.instances,
+          pending: store.damage.pending
         };
       },
       dispatch => {

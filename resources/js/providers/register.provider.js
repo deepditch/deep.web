@@ -10,7 +10,11 @@ import { CreateRegisterActionDispatcher } from "../actions";
 export const RegisterProvider = (c) => {
   c.register("RegistrationForm", c =>
     connect(
-      null,
+      store => {
+        return {
+          pending: store.register.pending
+        }
+      },
       dispatch => {
         return {
           register: CreateRegisterActionDispatcher(c.AuthService, dispatch)

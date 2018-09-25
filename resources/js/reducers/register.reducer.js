@@ -10,11 +10,11 @@ const initialState = {};
 export default function RegisterReducer(state = initialState, action) {
   switch (action.type) {
     case RegisterActionTypes.REGISTER_ATTEMPT:
-      return { registering: true, loggedIn: false };
+      return { pending: true };
     case RegisterActionTypes.REGISTER_SUCCESS:
-      return { loggedIn: false };
+      return { success: true };
     case RegisterActionTypes.REGISTER_FAILURE:
-      return { loggedIn: false };
+      return { rejected: false };
     default:
       return state;
   }

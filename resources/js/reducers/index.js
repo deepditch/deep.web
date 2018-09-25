@@ -8,7 +8,7 @@ import DamageReducer from "./damage.reducer";
  * Defines the shape of the redux store.
  */
 export default combineReducers({
-  auth: LoginReducer,
+  login: LoginReducer,
   register: RegisterReducer,
   notify: NotifyReducer,
   damage: DamageReducer

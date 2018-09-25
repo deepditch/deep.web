@@ -11,11 +11,11 @@ const initialState = token ? { loggedIn: true, token: token } : { loggedIn: fals
 export default function LoginReducer(state=initialState, action) {
   switch (action.type) {
     case LoginActionTypes.LOGIN_ATTEMPT:
-      return { loggedIn: false, loggingIn: true };
+      return { loggedIn: false, pending: true };
     case LoginActionTypes.LOGIN_SUCCESS:
-      return { loggedIn: true, token: action.token };
+      return { loggedIn: true, token: action.token, success: true };
     case LoginActionTypes.LOGIN_FAILURE:
-      return { loggedIn: false };
+      return { loggedIn: false, rejected: true };
     case LoginActionTypes.LOGOUT:
       return { loggedIn: false };
     default:

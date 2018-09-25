@@ -10,7 +10,11 @@ import { CreateLoginActionDispatcher } from "../actions";
 export const LoginProvider = (c) => {
   c.register("LoginForm", c =>
     connect(
-      null,
+      store => {
+        return {
+          pending: store.login.pending
+        }
+      },
       dispatch => {
         return {
           login: CreateLoginActionDispatcher(c.AuthService, dispatch)
