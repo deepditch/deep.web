@@ -14,11 +14,11 @@ class CreateRoadDamagesTable extends Migration
     public function up()
     {
         Schema::create('road_damages', function (Blueprint $table) {
-          $table->increments('id');
-          $table->integer('user_id');
-          $table->double('latitude', 11, 8); // DOUBLE equivalent with precision, 11 digits in total and 8 after the decimal point
-          $table->double('longitude', 11, 8);
-          $table->timestamps();
+            $table->increments('id');
+            $table->integer('user_id');
+            $table->double('latitude', 11, 8); // DOUBLE equivalent with precision, 11 digits in total and 8 after the decimal point
+            $table->double('longitude', 11, 8);
+            $table->timestamps();
         });
     }
 

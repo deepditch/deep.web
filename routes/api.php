@@ -15,13 +15,13 @@ use App\Http\Controllers\RoadDamageController;
 |
 */
 
-Route::group(['middleware' => 'api'], function($router) {
-        Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
-        Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
-        Route::get('logout', 'AuthController@logout');
-        Route::get('refresh', 'AuthController@refresh');
-        Route::get('me', 'AuthController@me');
-        Route::get('/road-damage/', 'RoadDamageController@getAllJson');
-        Route::post('/road-damage/new', 'RoadDamageController@insert');
-        Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
+Route::group(['middleware' => 'api'], function ($router) {
+    Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
+    Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
+    Route::get('logout', 'AuthController@logout');
+    Route::get('refresh', 'AuthController@refresh');
+    Route::get('me', 'AuthController@me');
+    Route::get('/road-damage/', 'RoadDamageController@getAllJson');
+    Route::post('/road-damage/new', 'RoadDamageController@insert');
+    Route::get('/road-damage/{id}', 'RoadDamageController@getJson');
 });

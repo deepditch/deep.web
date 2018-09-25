@@ -35,7 +35,7 @@ class AuthController extends Controller
             'name' => 'required|max:255'
         ]);
 
-        $user = User::create ([
+        $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password'))
@@ -50,7 +50,8 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required'
@@ -112,7 +113,8 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         auth('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
