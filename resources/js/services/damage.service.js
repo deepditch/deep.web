@@ -18,3 +18,37 @@ export class MockRoadDamageService {
     ]);
   }
 }
+
+export class RoadDamageService {
+  constructor(axios) {
+    this.axios = axios;
+  }
+
+  async getDamageInstances() {
+    return this.axios
+      .get("/road-damage")
+      .then(response => {
+        console.log(response);
+        return [
+          {
+            position: {
+              lat: 37.759703,
+              lng: -122.428093
+            },
+            type: "D44"
+          },
+          {
+            position: {
+              lat: 37.778519,
+              lng: -122.40564
+            },
+            type: "D01"
+          }
+        ];
+      })
+      .catch(error => {
+        console.error(error);
+        throw error;
+      });
+  }
+}

@@ -20,13 +20,22 @@ export default function createContainer() {
   c.register("Axios", c => {
     let token = document.head.querySelector('meta[name="csrf-token"]');
     try {
-      return Axios.create({
+      var instance = Axios.create({
         baseURL: "/api/",
         headers: {
           "X-Requested-With": "XMLHttpRequest"
           //"X-CSRF-TOKEN": token.content
         }
       });
+
+      instance.interceptors.request.use(function(config) {
+        const token = localStorage.getItem("token");
+        config.headers.Authorization = token ? `Bearer ${token}` : "";
+        console.log(config);
+        return config;
+      });
+
+      return instance;
     } catch (err) {
       console.error(
         "CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token"
@@ -40,7 +49,7 @@ export default function createContainer() {
   c.register("AuthorizedRoute", c =>
     connect(
       store => {
-        return { loggedIn: store.login.loggedIn };
+        return { loggedIn: store.auth.loggedIn };
       },
       null,
       null,

@@ -2,14 +2,14 @@ import DamageMap from "../components/Map/damage-map";
 import Map from "../components/map";
 import { connect } from "react-redux";
 import { CreateDamageActionDispatcher } from "../actions";
-import { MockRoadDamageService } from "../services";
+import { RoadDamageService } from "../services";
 
 /**
  * Registers dependencies in the container and connects react components to the redux store
  * @param {Container} c the IoC container
  */
 export const DamageProvider = c => {
-  c.register("DamageService", c => new MockRoadDamageService());
+  c.register("DamageService", c => new RoadDamageService(c.Axios));
 
   c.register("DamageMap", c =>
     connect(

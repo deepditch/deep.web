@@ -7,7 +7,7 @@ export class AuthService {
    * Returns true if the user is logged in and false otherwise
    */
   get loggedIn() {
-    return !localStorage.getItem("user") === null;
+    return !localStorage.getItem("token") === null;
   }
 
   /**
@@ -23,7 +23,7 @@ export class AuthService {
       })
       .then(response => {
         if (response.data.access_token)
-          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("token", response.data.access_token);
 
         return response.data;
       })

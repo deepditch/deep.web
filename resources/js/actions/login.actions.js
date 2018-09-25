@@ -12,11 +12,14 @@ export const LoginActions = {
   attempt: () => {
     return { type: LoginActionTypes.LOGIN_ATTEMPT };
   },
-  success: user => {
-    return { type: LoginActionTypes.LOGIN_SUCCESS, user: user };
+  success: token => {
+    return { type: LoginActionTypes.LOGIN_SUCCESS, token: token };
   },
   failure: () => {
     return { type: LoginActionTypes.LOGIN_FAILURE };
+  },
+  logout: () => {
+    return { type: LoginActionTypes.LOGOUT };
   }
 };
 
@@ -32,12 +35,20 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
       .login(email, password)
       .then(response => {
         dispatch(NotifyActions.success("You have successfully logged in"));
-        dispatch(LoginActions.success(response));
+        dispatch(LoginActions.success(response.access_token));
         history.push("/");
       })
       .catch(error => {
         dispatch(NotifyActions.error("Login failure"));
         dispatch(LoginActions.failure());
       });
+  };
+};
+
+export const CreateLogoutActionDispatcher = (authService, dispatch) => {
+  return () => {
+    authService.logout(email, password);
+    dispatch(LoginActions.logout());
+    dispatch(NotifyActions.default("You have been logged out"));
   };
 };
