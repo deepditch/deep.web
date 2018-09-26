@@ -36,16 +36,10 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
     authService
       .login(email, password)
       .then(response => {
-        console.log(response);
-        var user = {
-          email: email,
-          organization: "Test Organization"
-        };
-
         var token = response.access_token;
+        var user = response.user;
 
         localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
 
         dispatch(NotifyActions.success("You have successfully logged in"));
         dispatch(LoginActions.success(token, user));

@@ -14,3 +14,6 @@ yarn-error.log
 .phpunit.result.cache
 project.config.js
 .php_cs.cache
+public/styles/vendor.css.map
+public/styles/main.css.map
+public/js/app.js

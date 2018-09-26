@@ -29,7 +29,7 @@ export class AuthService {
         throw error;
       });
   }
-
+ 
   /**
    * Logs a user out
    */

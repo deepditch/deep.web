@@ -78,6 +78,6 @@ class RoadDamageController extends Controller
             ]);
         }
 
-        return (new RoadDamageResource($road_damage));
+        return new RoadDamageResource($road_damage);
     }
 }

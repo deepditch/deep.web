@@ -77,7 +77,12 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return new UserResource(User::find(auth('api')->user()->id));
+        return response()->json(
+            array_merge(
+                ['user' => (new UserResource(User::find(auth('api')->user()->id)))->toArray($request)],
+                $this->respondWithToken($request)
+            )
+        );
     }
 
     /**
