@@ -19,5 +19,4 @@ class Organization extends Model
     'state',
     'zip',
   ];
-
 }
