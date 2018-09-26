@@ -10,7 +10,7 @@ class InputGroup extends Component {
       <label className="input-group">
         {this.props.name}
         {!this.props.required && <i class="small text-medium-gray"> - Optional</i>}
-        <input type={this.props.type} />
+        <input name={this.props.name} type={this.props.type} onChange={this.props.onChange} />
       </label>
     );
   }
