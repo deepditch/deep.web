@@ -41,13 +41,15 @@ export class AuthService {
    * Registers a user
    * @param {string} name the user's username
    * @param {string} email the user's email
+   * @param {bool} is organization true/false
    * @param {string} password the user's password
    */
-  register(name, email, password) {
+  register(name, email, organization, password) {
     return this.axios
       .post("/register", {
         email: email,
         name: name,
+        organization: organization,
         password: password
       })
       .then(response => {

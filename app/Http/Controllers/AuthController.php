@@ -8,7 +8,10 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Resources\User as UserResource;
+
 use App\User;
+use App\Organization;
 
 class AuthController extends Controller
 {
@@ -32,13 +35,23 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
-            'name' => 'required|max:255'
+            'name' => 'required|max:255',
         ]);
+
+        if ($request->input('organization')) {
+            $request->validate([
+                'organization' => 'unique:organizations,name|max:255'
+            ]);
+            $organization = Organization::create([
+                'name' => $request->input('name')
+            ]);
+        }
 
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password'))
+            'password' => Hash::make($request->input('password')),
+            'organization_id' => $organization->id ?? 0
         ]);
 
         return response()->json(['success' => true, 'data'=> [ 'Registration success.' ]], 200);
@@ -64,7 +77,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return new UserResource(User::find(auth('api')->user()->id));
     }
 
     /**
@@ -98,11 +111,11 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
+        return [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60
-        ]);
+        ];
     }
 
     /**

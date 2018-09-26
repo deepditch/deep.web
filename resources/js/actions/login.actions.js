@@ -36,6 +36,7 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
     authService
       .login(email, password)
       .then(response => {
+        console.log(response);
         var user = {
           email: email,
           organization: "Test Organization"
