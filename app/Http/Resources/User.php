@@ -21,10 +21,11 @@ class User extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'organization_id' => $this->organization_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'organization' => Organization::find($this->organization_id ?? 0)->toArray()
+            'organization' => Organization::find($this->organization_id) ? 
+                Organization::find($this->organization_id)->toArray() :
+                null
         ];
     }
 }

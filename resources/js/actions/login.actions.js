@@ -40,6 +40,7 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
         var user = response.user;
 
         localStorage.setItem("token", token);
+        localStorage.setItem("user", user);
 
         dispatch(NotifyActions.success("You have successfully logged in"));
         dispatch(LoginActions.success(token, user));
