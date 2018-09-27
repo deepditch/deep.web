@@ -37,7 +37,7 @@ export const DamageProvider = c => {
     connect(
       store => {
         return {
-          user: store.login.user,
+          user: store.user.user,
         };
       },
       dispatch => {

@@ -36,20 +36,24 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
     authService
       .login(email, password)
       .then(response => {
+        console.log("LoginActions", response);
+
         var token = response.access_token;
         var user = response.user;
 
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", user);
+        localStorage.setItem("token", token); // TODO: create middleware for setting localStorage
+        localStorage.setItem("user", JSON.stringify(user));
 
-        dispatch(NotifyActions.success("You have successfully logged in"));
+        dispatch(NotifyActions.success("You have successfully logged in")); // TODO: create middleware for notifications
         dispatch(LoginActions.success(token, user));
+
         history.push("/");
       })
       .catch(error => {
         dispatch(NotifyActions.error("Login failure"));
         dispatch(LoginActions.failure());
-        console.error(error);
+
+        console.error(error); // TODO: create middleware for error logging
       });
   };
 };

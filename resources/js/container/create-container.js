@@ -31,7 +31,6 @@ export default function createContainer() {
       instance.interceptors.request.use(function(config) {
         const token = localStorage.getItem("token");
         config.headers.Authorization = token ? `Bearer ${token}` : "";
-        console.log(config);
         return config;
       });
 
@@ -49,7 +48,7 @@ export default function createContainer() {
   c.register("AuthorizedRoute", c =>
     connect(
       store => {
-        return { loggedIn: store.login.loggedIn };
+        return { loggedIn: store.user.loggedIn };
       },
       null,
       null,

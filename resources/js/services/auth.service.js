@@ -25,11 +25,10 @@ export class AuthService {
         return response.data;
       })
       .catch(error => {
-        console.error(error);
         throw error;
       });
   }
- 
+
   /**
    * Logs a user out
    */
@@ -38,25 +37,24 @@ export class AuthService {
   }
 
   /**
-   * Registers a user
-   * @param {string} name the user's username
+   * Registers a user or a user and an organization simultaneously
+   * @param {string} userName the user's username
    * @param {string} email the user's email
-   * @param {bool} is organization true/false
    * @param {string} password the user's password
+   * @param {string} organizationName the organization's name, null if an organization is not being registered
    */
-  register(name, email, organization, password) {
+  register(userName, email, password, organizationName = null) {
     return this.axios
       .post("/register", {
+        name: userName,
         email: email,
-        name: name,
-        organization: organization,
-        password: password
+        password: password,
+        organization: organizationName
       })
       .then(response => {
-        return response;
+        return response.data;
       })
       .catch(error => {
-        console.error(error);
         throw error;
       });
   }

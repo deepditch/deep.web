@@ -28,7 +28,6 @@ export class RoadDamageService {
     return this.axios
       .get("/road-damage")
       .then(response => {
-        console.log(response);
         return [
           {
             position: {
@@ -47,7 +46,6 @@ export class RoadDamageService {
         ];
       })
       .catch(error => {
-        console.error(error);
         throw error;
       });
   }

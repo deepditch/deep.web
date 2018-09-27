@@ -11,8 +11,8 @@ export const RegisterActions = {
   attempt: () => {
     return { type: RegisterActionTypes.REGISTER_ATTEMPT };
   },
-  success: response => {
-    return { type: RegisterActionTypes.REGISTER_SUCCESS, response: response };
+  success: user => {
+    return { type: RegisterActionTypes.REGISTER_SUCCESS, user: user };
   },
   failure: () => {
     return { type: RegisterActionTypes.REGISTER_FAILURE };
@@ -26,19 +26,26 @@ export const RegisterActions = {
  * @returns a register method that dispatches redux actions
  */
 export const CreateRegisterActionDispatcher = (authService, dispatch) => {
-  return (name, email, organization, password) => {
+  return (userName, email, password, organizationName = null) => {
     dispatch(RegisterActions.attempt());
 
     authService
-      .register(name, email, organization, password)
+      .register(userName, email, password, organizationName)
       .then(response => {
+        var user = response.user;
+
+        localStorage.setItem("user", JSON.stringify(user));
+
         dispatch(NotifyActions.success("You have successfully registered"));
-        dispatch(RegisterActions.success(response));
+        dispatch(RegisterActions.success(user));
+
         history.push("/login");
       })
       .catch(error => {
         dispatch(NotifyActions.error("Registration failure"));
         dispatch(RegisterActions.failure());
+
+        console.error(error);
       });
   };
 };

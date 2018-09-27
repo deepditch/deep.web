@@ -42,8 +42,9 @@ class AuthController extends Controller
             $request->validate([
                 'organization' => 'unique:organizations,name|max:255'
             ]);
+
             $organization = Organization::create([
-                'name' => $request->input('name')
+                'name' => $request->input('organization')
             ]);
         }
 
@@ -54,7 +55,7 @@ class AuthController extends Controller
             'organization_id' => $organization->id ?? 0
         ]);
 
-        return response()->json(['success' => true, 'data'=> [ 'Registration success.' ]], 200);
+        return response()->json(['success' => true, 'data'=> [ 'Registration success.']], 200);
     }
 
     /**

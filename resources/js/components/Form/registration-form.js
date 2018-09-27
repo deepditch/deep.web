@@ -10,7 +10,7 @@ export default class RegistrationForm extends Component {
     this.state = {
       AccountType: "User",
       "Organization Name": "",
-      Name: "",
+      "User Name": "",
       Email: "",
       Password: "",
       "Confirm Password": ""
@@ -33,10 +33,12 @@ export default class RegistrationForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     this.props.register(
-      this.state.Name,
+      this.state["User Name"],
       this.state.Email,
-      this.state.AccountType == "Organization",
-      this.state.Password
+      this.state.Password,
+      this.state.AccountType == "Organization" // If the user is also registering an organization, pass along the organization name
+        ? this.state["Organization Name"]
+        : null
     );
   }
 
@@ -62,14 +64,25 @@ export default class RegistrationForm extends Component {
             </RadioGroup>
           </div>
           <div class="col">
-          <InputGroup
-                name="Name"
+            {this.state.AccountType == "Organization" ? (
+              <InputGroup
+                name="Organization Name"
                 type="text"
                 required
                 onChange={this.handleInputChange}
-           />
+              />
+            ) : (
+              ""
+            )}
           </div>
         </div>
+
+        <InputGroup
+          name="User Name"
+          type="text"
+          required={true}
+          onChange={this.handleInputChange}
+        />
 
         <InputGroup
           name="Email"
