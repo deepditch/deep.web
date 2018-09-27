@@ -48,7 +48,7 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Insert a RoadgDamage into the database.
+     * Insert a RoadDamage into the database.
      *
      * @param  Illuminate\Http\Request $request
      * @return App\Http\Resources\RoadDamage
