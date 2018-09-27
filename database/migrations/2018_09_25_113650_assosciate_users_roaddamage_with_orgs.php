@@ -14,11 +14,11 @@ class AssosciateUsersRoaddamageWithOrgs extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('organization_id');
+            $table->unsignedInteger('organization_id');
         });
 
         Schema::table('road_damages', function (Blueprint $table) {
-            $table->integer('organization_id');
+            $table->unsignedInteger('organization_id');
         });
     }
 

@@ -14,9 +14,7 @@ class AddDefaultOrg extends Seeder
      * @return void
      */
     public function run()
-    {
-        Organization::find(1)->delete();
-        
+    {        
         $org = Organization::create([
             'name' => "Default Organization"
         ]);

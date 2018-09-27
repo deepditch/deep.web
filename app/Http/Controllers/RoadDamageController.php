@@ -43,7 +43,7 @@ class RoadDamageController extends Controller
     public function getAllJson()
     {
         return RoadDamageResource::collection(
-            RoadDamage::where('user_id',  auth('api')->user->id)
+            RoadDamage::where('organization_id', auth('api')->user()->organization_id)->get()
         );
     }
 

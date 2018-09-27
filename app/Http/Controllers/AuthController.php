@@ -80,7 +80,7 @@ class AuthController extends Controller
         return response()->json(
             array_merge(
                 ['user' => (new UserResource(User::find(auth('api')->user()->id)))->toArray($request)],
-                $this->getTokenArray($request)
+                $this->getTokenArray($token)
             )
         );
     }
