@@ -93,7 +93,11 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        return response()->json(auth('api')->user());
+        return [
+            'user' => (new UserResource(
+                User::find(auth('api')->user()->id)
+             ))->toArray($request)
+        ];
     }
 
     /**
