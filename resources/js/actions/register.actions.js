@@ -1,3 +1,4 @@
+import React from "react";
 import { NotifyActions } from "./notify.actions";
 import { history } from "../history";
 
@@ -36,7 +37,14 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
 
         localStorage.setItem("user", JSON.stringify(user));
 
-        dispatch(NotifyActions.success("You have successfully registered"));
+        dispatch(
+          NotifyActions.success(
+            <>
+              <strong>{user.name}</strong>, you have been registered and may
+              login.
+            </>
+          )
+        );
         dispatch(RegisterActions.success(user));
 
         history.push("/login");

@@ -55,7 +55,7 @@ class AuthController extends Controller
             'organization_id' => $organization->id ?? 0
         ]);
 
-        return response()->json(['success' => true, 'data'=> [ 'Registration success.']], 200);
+        return response()->json(['user' => new UserResource(User::find($user->id))], 200);
     }
 
     /**
