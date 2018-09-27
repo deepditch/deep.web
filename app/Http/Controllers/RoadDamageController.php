@@ -36,17 +36,19 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Get the base Json data of all the models
+     * Get the base Json data of all the models for the authenticated user
      *
      * @return App\Http\Resources\RoadDamage
      */
     public function getAllJson()
     {
-        return RoadDamageResource::collection(RoadDamage::all());
+        return RoadDamageResource::collection(
+            RoadDamage::where('user_id',  auth('api')->user->id)
+        );
     }
 
     /**
-     * Insert a RoadDamage into the database.
+     * Insert a RoadgDamage into the database.
      *
      * @param  Illuminate\Http\Request $request
      * @return App\Http\Resources\RoadDamage
