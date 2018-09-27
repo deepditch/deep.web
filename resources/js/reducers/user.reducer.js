@@ -26,8 +26,6 @@ export default function UserReducer(state = initialState, action) {
     case LoginActionTypes.LOGIN_ATTEMPT:
       return { loggedIn: false };
     case LoginActionTypes.LOGIN_SUCCESS:
-      console.log(action);
-
       return {
         loggedIn: true,
         token: action.token,
