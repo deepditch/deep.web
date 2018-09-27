@@ -80,7 +80,7 @@ class AuthController extends Controller
         return response()->json(
             array_merge(
                 ['user' => (new UserResource(User::find(auth('api')->user()->id)))->toArray($request)],
-                $this->respondWithToken($request)
+                $this->getTokenArray($request)
             )
         );
     }
@@ -108,7 +108,7 @@ class AuthController extends Controller
      */
     public function refresh(Request $request)
     {
-        return response()->json($this->respondWithToken(auth('api')->refresh()));
+        return response()->json($this->getTokenArray(auth('api')->refresh()));
     }
 
     /**
@@ -118,7 +118,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    protected function getTokenArray($token)
     {
         return [
             'access_token' => $token,
