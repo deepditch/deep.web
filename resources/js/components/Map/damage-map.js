@@ -7,9 +7,20 @@ class DamageMap extends Component {
     this.props.loadDamage();
   }
 
+  componentDidUpdate() {
+    const bounds = new window.google.maps.LatLngBounds();
+    this.props.instances.map(damage => {
+      bounds.extend(
+        new window.google.maps.LatLng(damage.position.lat, damage.position.lng)
+      );
+    });
+
+    this.refs.map.map.fitBounds(bounds);
+  }
+
   render() {
     return (
-      <Map google={this.props.google} zoom={14}>
+      <Map ref="map" google={this.props.google} zoom={14}>
         {this.props.instances &&
           this.props.instances.map(damage => (
             <Marker name={damage.type} position={damage.position} />

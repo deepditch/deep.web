@@ -1,3 +1,4 @@
+import React from "react";
 import { NotifyActions } from "./notify.actions";
 import { history } from "../history";
 
@@ -11,8 +12,8 @@ export const RegisterActions = {
   attempt: () => {
     return { type: RegisterActionTypes.REGISTER_ATTEMPT };
   },
-  success: response => {
-    return { type: RegisterActionTypes.REGISTER_SUCCESS, response: response };
+  success: user => {
+    return { type: RegisterActionTypes.REGISTER_SUCCESS, user: user };
   },
   failure: () => {
     return { type: RegisterActionTypes.REGISTER_FAILURE };
@@ -26,19 +27,37 @@ export const RegisterActions = {
  * @returns a register method that dispatches redux actions
  */
 export const CreateRegisterActionDispatcher = (authService, dispatch) => {
-  return (name, email, password) => {
+  return (userName, email, password, organizationName = null) => {
     dispatch(RegisterActions.attempt());
 
     authService
-      .register(name, email, password)
+      .register(userName, email, password, organizationName)
       .then(response => {
-        dispatch(NotifyActions.success("You have successfully registered"));
-        dispatch(RegisterActions.success(response));
+        var user = response.user;
+
+        localStorage.setItem("user", JSON.stringify(user));
+
+        dispatch(
+          NotifyActions.success(
+            <>
+              <strong>{user.name}</strong>, you have been registered and may
+              login.
+            </>
+          )
+        );
+        dispatch(RegisterActions.success(user));
+
         history.push("/login");
       })
       .catch(error => {
-        dispatch(NotifyActions.error("Registration failure"));
+        //@todo V make below pretty
+        // {"message":"The given data was invalid.","errors":{"email":["The email has already been taken."]}}
+        // "email" array could have many errors
+
+        dispatch(NotifyActions.error(JSON.stringify(error.response.data)));
         dispatch(RegisterActions.failure());
+
+        console.error(error);
       });
   };
 };

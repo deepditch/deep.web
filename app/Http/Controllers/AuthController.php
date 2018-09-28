@@ -7,8 +7,12 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+
+use App\Http\Resources\User as UserResource;
 
 use App\User;
+use App\Organization;
 
 class AuthController extends Controller
 {
@@ -32,16 +36,27 @@ class AuthController extends Controller
     {
         $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
-            'name' => 'required|max:255'
+            'name' => 'required|max:255',
         ]);
+
+        if ($request->input('organization')) {
+            $request->validate([
+                'organization' => 'unique:organizations,name|max:255'
+            ]);
+
+            $organization = Organization::create([
+                'name' => $request->input('organization')
+            ]);
+        }
 
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password'))
+            'password' => Hash::make($request->input('password')),
+            'organization_id' => isset($organization) ? $organization->id : config('organization.default_id')
         ]);
 
-        return response()->json(['success' => true, 'data'=> [ 'Registration success.' ]], 200);
+        return response()->json(['user' => new UserResource(User::find($user->id))], 200);
     }
 
     /**
@@ -64,7 +79,12 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return response()->json(
+            array_merge(
+                ['user' => new UserResource(User::find(auth('api')->user()->id))],
+                $this->getTokenArray($token)
+            )
+        );
     }
 
     /**
@@ -75,7 +95,11 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        return response()->json(auth('api')->user());
+        return [
+            'user' => new UserResource(
+                User::find(auth('api')->user()->id)
+            )
+        ];
     }
 
     /**
@@ -86,7 +110,7 @@ class AuthController extends Controller
      */
     public function refresh(Request $request)
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        return response()->json($this->getTokenArray(auth('api')->refresh()));
     }
 
     /**
@@ -96,13 +120,13 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function respondWithToken($token)
+    protected function getTokenArray($token)
     {
-        return response()->json([
+        return [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60
-        ]);
+        ];
     }
 
     /**

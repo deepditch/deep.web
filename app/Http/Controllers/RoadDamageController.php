@@ -36,13 +36,15 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Get the base Json data of all the models
+     * Get the base Json data of all the models for the authenticated user
      *
      * @return App\Http\Resources\RoadDamage
      */
     public function getAllJson()
     {
-        return RoadDamageResource::collection(RoadDamage::all());
+        return RoadDamageResource::collection(
+            RoadDamage::where('organization_id', auth('api')->user()->organization_id)->get()
+        );
     }
 
     /**
@@ -53,11 +55,17 @@ class RoadDamageController extends Controller
      */
     public function insert(Request $request)
     {
+        $request->validate([
+            'latitude' => 'required|unique:latitude',
+            'longitude' => 'required|unique:longitude',
+            'name' => 'required|max:255'
+        ]);
+        
         $road_damage = RoadDamage::create([
-      'user_id' => auth('api')->user()->id,
-      'latitude' => $request->input('latitude'),
-      'longitude' => $request->input('longitude')
-    ]);
+          'user_id' => auth('api')->user()->id,
+          'latitude' => $request->input('latitude'),
+          'longitude' => $request->input('longitude')
+        ]);
 
         if (! empty($request->file('image'))) {
             try {
@@ -67,11 +75,11 @@ class RoadDamageController extends Controller
             }
 
             Image::create([
-        'roaddamage_id' => $road_damage->id,
-        'image_name' => $file_path
-      ]);
+              'roaddamage_id' => $road_damage->id,
+              'image_name' => $file_path
+            ]);
         }
 
-        return (new RoadDamageResource($road_damage));
+        return new RoadDamageResource($road_damage);
     }
 }
