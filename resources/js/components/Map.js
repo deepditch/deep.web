@@ -9,7 +9,7 @@ export default (UserSidebar, DamageMap) =>
             <div class="col-4">
               <UserSidebar />
             </div>
-            <div class="col-10">
+            <div class="col-8">
               <DamageMap />
             </div>
           </div>
