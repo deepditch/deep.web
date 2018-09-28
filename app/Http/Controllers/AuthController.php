@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Resources\User as UserResource;
 
@@ -52,7 +53,7 @@ class AuthController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
-            'organization_id' => $organization->id ?? 0
+            'organization_id' => isset($organization) ? $organization->id : config('organization.default_id')
         ]);
 
         return response()->json(['user' => new UserResource(User::find($user->id))], 200);
@@ -80,7 +81,7 @@ class AuthController extends Controller
 
         return response()->json(
             array_merge(
-                ['user' => (new UserResource(User::find(auth('api')->user()->id)))->toArray($request)],
+                ['user' => new UserResource(User::find(auth('api')->user()->id))],
                 $this->getTokenArray($token)
             )
         );
@@ -95,9 +96,9 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return [
-            'user' => (new UserResource(
+            'user' => new UserResource(
                 User::find(auth('api')->user()->id)
-             ))->toArray($request)
+            )
         ];
     }
 

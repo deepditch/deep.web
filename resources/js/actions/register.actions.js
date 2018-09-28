@@ -50,7 +50,11 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
         history.push("/login");
       })
       .catch(error => {
-        dispatch(NotifyActions.error("Registration failure"));
+        //@todo V make below pretty
+        // {"message":"The given data was invalid.","errors":{"email":["The email has already been taken."]}}
+        // "email" array could have many errors
+
+        dispatch(NotifyActions.error(JSON.stringify(error.response.data)));
         dispatch(RegisterActions.failure());
 
         console.error(error);

@@ -18,37 +18,17 @@ class AddOrgForeignKey extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        $user_orgs = [];
-        foreach (User::all() as $user) {
-            $user_orgs[$user->id] = $user->organization_id;
-        }
-
         Schema::table('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->index('organization_id');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
 
-        foreach (User::all() as $user) {
-            $user->organization_id = $user_orgs[$user->id];
-            $user->save();
-        }
-
-        $rd_orgs = [];
-        foreach (RoadDamage::all() as $rd) {
-            $rd_orgs[$rd->id] = $rd->organization_id;
-        }
-
         Schema::table('road_damages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->index('organization_id');
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
-
-        foreach (RoadDamage::all() as $rd) {
-            $rd->organization_id = $rd_orgs[$rd->id];
-            $rd->save();
-        }
 
         Schema::enableForeignKeyConstraints();
     }

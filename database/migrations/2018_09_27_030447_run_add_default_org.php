@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class RunAddDefaultOrg extends Migration
 {
@@ -13,11 +14,15 @@ class RunAddDefaultOrg extends Migration
      */
     public function up()
     {
-        Artisan::call('db:seed', [
-            '--class' => 'AddDefaultOrg',
-            '--force' => true 
-            ]
-        );
+        DB::table('organizations')->where('id', '=', 1)->delete();
+        DB::table('organizations')->insert([
+            'id' => 1,
+            'name' => 'Defautlt Organization',
+            'address' => '123 Woodward Ave',
+            'city' => 'Detroit',
+            'state' => 'Michigan',
+            'zip' => '48202'
+        ]);
     }
 
     /**
