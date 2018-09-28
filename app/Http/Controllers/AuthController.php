@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 use App\Http\Resources\User as UserResource;
 
@@ -39,6 +38,8 @@ class AuthController extends Controller
             'name' => 'required|max:255',
         ]);
 
+        $role = User::USER_ROLE;
+
         if ($request->input('organization')) {
             $request->validate([
                 'organization' => 'unique:organizations,name|max:255'
@@ -47,13 +48,16 @@ class AuthController extends Controller
             $organization = Organization::create([
                 'name' => $request->input('organization')
             ]);
+
+            $role = User::ADMIN_ROLE;
         }
 
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
-            'organization_id' => isset($organization) ? $organization->id : config('organization.default_id')
+            'organization_id' => isset($organization) ? $organization->id : config('organization.default_id'),
+            'role' => $role
         ]);
 
         return response()->json(['user' => new UserResource(User::find($user->id))], 200);
