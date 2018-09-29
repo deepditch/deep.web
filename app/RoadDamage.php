@@ -18,6 +18,7 @@ class RoadDamage extends Model
     'latitude',
     'longitude',
     'image_id',
+    'organization_id'
   ];
 
     /**
