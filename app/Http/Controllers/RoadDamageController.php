@@ -58,7 +58,6 @@ class RoadDamageController extends Controller
         $request->validate([
             'latitude' => 'required',
             'longitude' => 'required',
-            'name' => 'required|max:255',
         ]);
 
         $road_damage = RoadDamage::create([
