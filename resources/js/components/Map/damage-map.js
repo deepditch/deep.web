@@ -53,7 +53,7 @@ class DamageMap extends Component {
         <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
           <div>
             <h3>Type: {this.state.selectedPlace.name}</h3><br />
-            <img src={this.state.selectedPlace.image} />
+            <img width='240px' src={this.state.selectedPlace.image} />
           </div>
         </InfoWindow>
       </Map>

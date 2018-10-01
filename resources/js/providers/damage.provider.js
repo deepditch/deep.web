@@ -1,5 +1,5 @@
 import DamageMap from "../components/Map/damage-map";
-import Map from "../components/map";
+import Map from "../components/Map";
 import UserSidebar from "../components/UserSidebar";
 import { connect } from "react-redux";
 
