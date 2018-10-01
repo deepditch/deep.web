@@ -2,14 +2,18 @@ import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
 
-export class DamageMap extends Component {
-  componentDidMount() {
-    this.props.loadDamage();
-    this.setState({
+class DamageMap extends Component {
+  constructor(props) {
+    super(props);
+    // Don't call this.setState() here!
+    this.state = {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-    });
+    };
+  }
+  componentDidMount() {
+    this.props.loadDamage();
   }
 
   componentDidUpdate() {
@@ -44,15 +48,15 @@ export class DamageMap extends Component {
       <Map ref="map" google={this.props.google} zoom={14} onClick={this.onMapClicked}>
         {this.props.instances &&
           this.props.instances.map(damage => (
-            <div>
-            <Marker name={damage.type} onClick={this.onMarkerClick} position={{lat: damage.position.latitude, lng: damage.position.longitude}} />
-            <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
-              <div>
-                <h1>{this.state.selectedPlace.name}</h1>
-              </div>
-            </InfoWindow>
-            </div>
+            <>
+              <Marker name={damage.type} onClick={this.onMarkerClick} position={{lat: damage.position.latitude, lng: damage.position.longitude}} />
+            </>
           ))}
+        <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
+          <div>
+            <h1>'dsafsd'</h1>
+          </div>
+        </InfoWindow>
       </Map>
     );
   }
