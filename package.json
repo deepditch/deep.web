@@ -15,6 +15,7 @@
         "babel-jest": "^23.6.0",
         "babel-loader": "^8.0.2",
         "babel-plugin-react-html-attrs": "^2.1.0",
+        "babel-plugin-transform-class-properties": "^6.24.1",
         "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
         "css-loader": "^0.28.11",
         "del": "^3.0.0",
