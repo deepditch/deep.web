@@ -48,13 +48,12 @@ class DamageMap extends Component {
       <Map ref="map" google={this.props.google} zoom={14} onClick={this.onMapClicked}>
         {this.props.instances &&
           this.props.instances.map(damage => (
-            <>
-              <Marker name={damage.type} onClick={this.onMarkerClick} position={{lat: damage.position.latitude, lng: damage.position.longitude}} />
-            </>
+            <Marker name={damage.type} image={damage.image} onClick={this.onMarkerClick} position={{lat: damage.position.latitude, lng: damage.position.longitude}} />
           ))}
         <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
           <div>
-            <h1>'dsafsd'</h1>
+            <h3>Type: {this.state.selectedPlace.name}</h3><br />
+            <img src={this.state.selectedPlace.image} />
           </div>
         </InfoWindow>
       </Map>
