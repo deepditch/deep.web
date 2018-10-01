@@ -32,7 +32,7 @@ class RoadDamageController extends Controller
      */
     public function getJson(int $id)
     {
-        return new RoadDamageResource(RoadDamage::find($id));
+        return new RoadDamageResource(RoadDamage::findOrFail($id));
     }
 
     /**
@@ -56,8 +56,8 @@ class RoadDamageController extends Controller
     public function insert(Request $request)
     {
         $request->validate([
-            'latitude' => 'required|unique:latitude',
-            'longitude' => 'required|unique:longitude',
+            'latitude' => 'required',
+            'longitude' => 'required',
             'name' => 'required|max:255',
         ]);
 
@@ -65,6 +65,7 @@ class RoadDamageController extends Controller
           'user_id' => auth('api')->user()->id,
           'latitude' => $request->input('latitude'),
           'longitude' => $request->input('longitude'),
+          'organization_id' => auth('api')->user()->organization_id,
           'type' => $request->input('type') ?? 'D00'
         ]);
 

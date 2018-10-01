@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\Image;
-
 use Illuminate\Http\Resources\Json\JsonResource;
+
+use App\Image;
+use App\Organization;
 
 class RoadDamage extends JsonResource
 {
@@ -27,6 +28,9 @@ class RoadDamage extends JsonResource
         'image' => $this->getImageUrl(),
         'created_at' => $this->created_at,
         'updated_at' => $this->updated_at,
+        'organization' => Organization::find($this->organization_id) ?
+            Organization::find($this->organization_id)->toArray() :
+            null
       ];
     }
 }
