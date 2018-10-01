@@ -58,13 +58,14 @@ class RoadDamageController extends Controller
         $request->validate([
             'latitude' => 'required|unique:latitude',
             'longitude' => 'required|unique:longitude',
-            'name' => 'required|max:255'
+            'name' => 'required|max:255',
         ]);
-        
+
         $road_damage = RoadDamage::create([
           'user_id' => auth('api')->user()->id,
           'latitude' => $request->input('latitude'),
-          'longitude' => $request->input('longitude')
+          'longitude' => $request->input('longitude'),
+          'type' => $request->input('type') ?? 'D00'
         ]);
 
         if (! empty($request->file('image'))) {
