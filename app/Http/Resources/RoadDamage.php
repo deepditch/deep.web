@@ -20,8 +20,11 @@ class RoadDamage extends JsonResource
         return [
         'id' => $this->id,
         'user_id' => $this->user_id,
-        'latitude' => $this->latitude,
-        'longitude' => $this->longitude,
+        'position' => [
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude
+        ],
+        'type' => $this->type ?? '',
         'image' => $this->getImageUrl(),
         'created_at' => $this->created_at,
         'updated_at' => $this->updated_at,

@@ -1,5 +1,5 @@
 import RegistrationForm from "../components/Form/registration-form";
-import Register from "../components/register";
+import Register from "../components/Register";
 import { connect } from "react-redux";
 import { CreateRegisterActionDispatcher } from "../actions";
 
