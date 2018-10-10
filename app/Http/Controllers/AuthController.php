@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Resources\User as UserResource;
 
@@ -36,6 +37,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
             'name' => 'required|max:255',
+            'password' => 'required|min:8',
         ]);
 
         $role = User::USER_ROLE;

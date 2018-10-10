@@ -1,3 +1,5 @@
+import { test, parseErrors } from "../helpers/errors";
+
 export class AuthService {
   constructor(axios) {
     this.axios = axios;
@@ -25,7 +27,7 @@ export class AuthService {
         return response.data;
       })
       .catch(error => {
-        throw error;
+        throw parseErrors(error.response);
       });
   }
 
@@ -33,7 +35,16 @@ export class AuthService {
    * Logs a user out
    */
   logout() {
-    localStorage.removeItem("token");
+    this.axios
+      .get("/logout")
+      .then(response => {
+        localStorage.removeItem("token");
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error.response);
+        throw parseErrors(error.response);
+      });
   }
 
   /**
@@ -56,9 +67,7 @@ export class AuthService {
         return response.data;
       })
       .catch(error => {
-        console.log(error.response);
-
-        throw error;
+        throw parseErrors(error.response);
       });
   }
 }
