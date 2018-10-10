@@ -1,4 +1,4 @@
-import { test, parseErrors } from "../helpers/errors";
+import { parseErrors } from "../helpers/errors";
 
 export class AuthService {
   constructor(axios) {
