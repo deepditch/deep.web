@@ -20,6 +20,7 @@ class App extends Component {
         <Switch>
           <Route path="/login" component={c.Login} />
           <Route path="/register" component={c.Register} />
+          <c.AuthorizedRoute exact path="/users" component={c.Users} />
           <c.AuthorizedRoute exact path="/" component={c.Map} />
           <Redirect to="/" />
         </Switch>

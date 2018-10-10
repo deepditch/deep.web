@@ -21,6 +21,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('logout', 'AuthController@logout');
     Route::get('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
+    Route::get('users', 'AuthController@getUsersJson')
+        ->middleware('role:admin');
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
     Route::get('road-damage/{id}', 'RoadDamageController@getJson');

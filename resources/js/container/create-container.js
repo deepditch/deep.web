@@ -7,6 +7,7 @@ import {
   NotifyProvider,
   DamageProvider
 } from "../providers";
+import { UsersProvider } from "../providers/users.provider";
 import AuthorizedRoute from "../components/PrivateRoute";
 import { connect } from "react-redux";
 
@@ -27,6 +28,7 @@ export default function createContainer() {
           "X-CSRF-TOKEN": token.content
         }
       });
+      console.log(token)
 
       instance.interceptors.request.use(function(config) {
         const token = localStorage.getItem("token");
@@ -62,6 +64,7 @@ export default function createContainer() {
   RegisterProvider(c);
   NotifyProvider(c);
   DamageProvider(c);
+  UsersProvider(c);
 
   return c;
 }
