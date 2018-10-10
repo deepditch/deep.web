@@ -12,7 +12,7 @@ export class RoadDamageService {
         return Promise.resolve(response.data.data);
       })
       .catch(error => {
-        throw error;
+        throw parseErrors(error.response);
       });
   }
 }
