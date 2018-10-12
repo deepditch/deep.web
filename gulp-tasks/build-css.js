@@ -9,7 +9,7 @@ var gulp = require("gulp"),
 var config = require("../project.config");
 
 gulp.task("build:css:css", "Build and add vendor prefixes for plain CSS", function () {
-  return gulp.src(path.join(config.srcFullPath, config.styles, "*.css"))
+  return gulp.src([path.join(config.srcFullPath, config.styles, "*.css"), 'node_modules/*/*.css'])
     .pipe(plumber({
       errorHandler: function (err) {
         console.log(err);
@@ -29,7 +29,7 @@ gulp.task("build:css:sass", "Build and add vendor prefixes for SASS styles", fun
       }
     }))
     .pipe(sourcemaps.init())
-    .pipe(sass({ errLogToConsole: true, sourcemap: true, outputStyle: "nested" }))
+    .pipe(sass({ errLogToConsole: true, sourcemap: true, outputStyle: "nested", includePaths: ['node_modules'] }))
     .pipe(prefix("last 1 version", "> 1%", "ie 8"))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(path.join(config.destFullPath, config.styles)));

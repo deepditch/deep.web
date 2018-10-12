@@ -28,7 +28,6 @@ export default function createContainer() {
           "X-CSRF-TOKEN": token.content
         }
       });
-      console.log(token)
 
       instance.interceptors.request.use(function(config) {
         const token = localStorage.getItem("token");

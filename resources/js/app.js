@@ -6,6 +6,7 @@ import rootReducer from "reducers";
 import { history } from "./history";
 
 import { Router, Route, Switch, Redirect } from "react-router-dom";
+import 'bootstrap';
 
 import createContainer from "container/create-container";
 
@@ -13,17 +14,30 @@ const store = createStore(rootReducer);
 var c = createContainer();
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    console.log(this.props);
+    console.log(this.state);
+    this.isLoggedin = this.isLoggedIn.bind(this);
+  }
+
+  isLoggedIn() {
+  }
+
   render() {
     return (
       <main>
-        <c.Notify />
-        <Switch>
-          <Route path="/login" component={c.Login} />
-          <Route path="/register" component={c.Register} />
-          <c.AuthorizedRoute exact path="/users" component={c.Users} />
-          <c.AuthorizedRoute exact path="/" component={c.Map} />
-          <Redirect to="/" />
-        </Switch>
+        <div class="app-container h-100">
+          <c.Notify />
+          <Switch>
+            <Route path="/login" component={c.Login} />
+            <Route path="/register" component={c.Register} />
+            <c.AuthorizedRoute exact path="/" component={c.Map} />
+            <c.AuthorizedRoute exact path="/damage" component={c.Map} />
+            <c.AuthorizedRoute exact path="/users" component={c.Users} />
+            <Redirect to="/login" />
+          </Switch>
+        </div>
       </main>
     );
   }

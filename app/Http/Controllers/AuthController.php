@@ -147,16 +147,4 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-
-    /**
-     * Get the base Json data of all the models for the authenticated user
-     *
-     * @return App\Http\Resources\RoadDamage
-     */
-    public function getUsersJson()
-    {
-        return UserResource::collection(
-            User::where('organization_id', auth('api')->user()->organization_id)->get()
-        );
-    }
 }
