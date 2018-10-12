@@ -27,7 +27,7 @@ export default class UserInviteForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    console.log(this.props);
+    console.log(this.state);
     this.props.inviteUser(this.state.Email);
   }
 
@@ -36,8 +36,9 @@ export default class UserInviteForm extends Component {
       <form onSubmit={this.handleSubmit}>
         <div class="input-group">
           <input
-            type="text"
+            type="email"
             class="form-control"
+            name="Email"
             placeholder="User's Email"
             onChange={this.handleInputChange} />
           <div class="input-group-append">

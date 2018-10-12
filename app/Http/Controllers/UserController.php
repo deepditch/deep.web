@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Resources\User as UserResource;
 
@@ -36,16 +37,20 @@ class UserController extends Controller
      */
     public function inviteUser(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email|unique:user_invites,email|max:255',
+        ]);
+
         $token = str_random(16);
 
         $invite = UserInvite::create([
-            'email' => $request->get('email'),
+            'email' => $request->input('email'),
             'organization_id' =>  auth('api')->user()->organization_id,
             'token' => $token
         ]);
 
-        Mail::to($request->get('email'))->send(new UserInviteMailable($invite));
-        Nw::log()->debug('here');
+        Mail::to($request->input('email'))->send(new UserInviteMailable($invite));
+
         return response()->json(['Invite sent successfully.', 200]);
     }
 
