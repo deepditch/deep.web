@@ -27,7 +27,7 @@ export const UsersProvider = c => {
           inviteUser: CreateInviteUserActionDispatcher(c.UsersService, dispatch)
         };
       }
-    )(c.UserInviteForm)
+    )(UserInviteForm)
   );
 
   c.register("Users", c =>
@@ -42,6 +42,6 @@ export const UsersProvider = c => {
           getUsers: CreateUsersActionDispatcher(c.UsersService, dispatch),
         };
       }
-    )(Users, c.UserInviteForm)
+    )(Users(c.UserInviteForm))
   );
 };
