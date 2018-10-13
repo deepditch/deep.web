@@ -23,7 +23,7 @@ class CheckRole
         Log::debug(auth('api')->user()->role);
         if ($role === User::ADMIN_ROLE && auth('api')->user()->role !== User::ADMIN_ROLE) {
             return response()->json([
-                'error' => 'Unauthorized'
+                'error' => 'You are not authorized to perform this action.'
             ], 401);
         }
 
