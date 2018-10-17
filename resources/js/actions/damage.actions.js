@@ -1,4 +1,5 @@
 import { NotifyActions } from "./notify.actions";
+import { parseErrors } from "../helpers/errors";
 
 export const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
@@ -34,7 +35,7 @@ export const CreateDamageActionDispatcher = (DamageService, dispatch) => {
       })
       .catch(error => {
         dispatch(DamageActions.failure());
-        dispatch(NotifyActions.error("Failed to load road damage"));
+        dispatch(NotifyActions.error(error));
       });
   };
 };
