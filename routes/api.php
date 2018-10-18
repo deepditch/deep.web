@@ -23,14 +23,13 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('me', 'AuthController@me');
     Route::get('user', 'UserController@getUsersJson')
         ->middleware('role:admin');
-    Route::post('user/invite', 'UserController@inviteUser')
+    Route::get('user/invite', 'UserController@getInvitesJson')
         ->middleware('role:admin');
-    Route::post('user/revoke-invite', 'UserController@revokeInvite')
+    Route::post('user/invite/new', 'UserController@inviteUser')
+        ->middleware('role:admin');
+    Route::post('user/invite/revoke', 'UserController@revokeInvite')
         ->middleware('role:admin');
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
     Route::get('road-damage/{id}', 'RoadDamageController@getJson');
-        // ->middleware('role:user');
-        // TODO: remove this comment. This is not necessary, but here for example.
-        // use :admin to limit to admin
 });

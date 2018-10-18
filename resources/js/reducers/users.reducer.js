@@ -1,4 +1,4 @@
-import { UsersActionTypes } from "../actions/users.actions";
+import { UsersActionTypes, InviteUserActionTypes } from "../actions/users.actions";
 
 /**
  * Updates the users list state based on the provided action
@@ -26,11 +26,11 @@ export default function UsersReducer(state = { users: [] }, action) {
 export function InviteUserReducer(state = {}, action) {
   switch (action.type) {
     case InviteUserActionTypes.INVITE_USER_ATTEMPT:
-    return { pending: true };
+      return { pending: true };
     case InviteUserActionTypes.INVITE_USER_SUCCESS:
-    return { success: true };
+      return { success: true };
     case InviteUserActionTypes.INVITE_USER_FAILURE:
-    return { rejected: true };
+      return { rejected: true };
     default:
       return state;
   }

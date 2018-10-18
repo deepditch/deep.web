@@ -52,12 +52,9 @@ export class AuthService {
         organization: organizationName
       })
       .then(response => {
-        console.log(response);
         return response.data;
       })
       .catch(error => {
-        console.log(error.response);
-
         throw error;
       });
   }

@@ -5,6 +5,7 @@ import NotifyReducer from "./notify.reducer";
 import DamageReducer from "./damage.reducer";
 import UserReducer from "./user.reducer";
 import UsersReducer from "./users.reducer";
+import InvitesReducer from "./invites.reducer";
 
 /**
  * Defines the shape of the redux store.
@@ -14,6 +15,7 @@ export default combineReducers({
   register: RegisterReducer,
   user: UserReducer,
   users: UsersReducer,
+  invites: InvitesReducer,
   notify: NotifyReducer,
   damage: DamageReducer,
 });

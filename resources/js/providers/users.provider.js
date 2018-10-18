@@ -5,7 +5,9 @@ import { connect } from "react-redux";
 
 import {
   CreateUsersActionDispatcher,
-  CreateInviteUserActionDispatcher
+  CreateInvitesActionDispatcher,
+  CreateInviteUserActionDispatcher,
+  CreateRevokeInviteActionDispatcher
 } from "../actions/users.actions";
 
 import { UsersService } from "../services/users.service";
@@ -35,11 +37,14 @@ export const UsersProvider = c => {
       store => {
         return {
           users: store.users,
+          invites: store.invites
         };
       },
       dispatch => {
         return {
           getUsers: CreateUsersActionDispatcher(c.UsersService, dispatch),
+          getInvites: CreateInvitesActionDispatcher(c.UsersService, dispatch),
+          revokeInvite: CreateRevokeInviteActionDispatcher(c.UsersService, dispatch)
         };
       }
     )(Users(c.UserInviteForm))

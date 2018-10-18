@@ -31,6 +31,9 @@ class UserInvite extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.invite');
+        return $this->view('emails.invite')
+            ->with([
+                'token' => $this->invite->token
+            ]);
     }
 }

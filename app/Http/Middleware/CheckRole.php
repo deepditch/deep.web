@@ -20,7 +20,6 @@ class CheckRole
      */
     public function handle($request, Closure $next, string $role)
     {
-        Log::debug(auth('api')->user()->role);
         if ($role === User::ADMIN_ROLE && auth('api')->user()->role !== User::ADMIN_ROLE) {
             return response()->json([
                 'error' => 'Unauthorized'

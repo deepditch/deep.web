@@ -9,7 +9,13 @@ export const UsersActionTypes = {
 export const InviteUserActionTypes = {
   INVITE_USER_ATTEMPT: "invite_user_attempt",
   INVITE_USER_SUCCESS: "invite_user_success",
-  INVITE_USERFAILURE: "invite_user_failure"
+  INVITE_USER_FAILURE: "invite_user_failure",
+  REVOKE_INVITE_ATTEMPT: "revoke_invite_attempt",
+  REVOKE_INVITE_SUCCESS: "revoke_invite_success",
+  REVOKE_INVITE_FAILURE: "revoke_invice_failure",
+  LOAD_INVITES_ATTEMPT: "load_invites_attempt",
+  LOAD_INVITES_SUCCESS: "load_invites_success",
+  LOAD_INVITES_FAILURE: "load_invites_failure"
 };
 
 export const UsersActions = {
@@ -24,7 +30,25 @@ export const UsersActions = {
   }
 };
 
-export const InviteUsersActions = {
+export const InvitesActions = {
+  getInvitesAttempt: () => {
+    return { type: InviteUserActionTypes.LOAD_INVITES_ATTEMPT };
+  },
+  getInvitesSuccess: invites => {
+    return { type: InviteUserActionTypes.LOAD_INVITES_SUCCESS, invites: invites };
+  },
+  getInvitesFailure: () => {
+    return { type: InviteUserActionTypes.LOAD_INVITES_FAILURE };
+  },
+  revokeInviteAttempt: () => {
+    return { type: InviteUserActionTypes.REVOKE_INVITE_ATTEMPT };
+  },
+  revokeInviteSuccess: () => {
+    return { type: InviteUserActionTypes.REVOKE_INVITE_SUCCESS };
+  },
+  revokeInviteFailure: () => {
+    return { type: InviteUserActionTypes.REVOKE_INVITE_FAILURE };
+  },
   inviteAttempt: () => {
     return { type: InviteUserActionTypes.INVITE_USER_ATTEMPT };
   },
@@ -51,8 +75,29 @@ export const CreateUsersActionDispatcher = (UsersService, dispatch) => {
         dispatch(UsersActions.success(users));
       })
       .catch(error => {
-        dispatch(UsersActions.failure());
         dispatch(NotifyActions.error("Failed to load users"));
+        dispatch(UsersActions.failure());
+      });
+  };
+};
+
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {UsersService} UsersService must have a getUsersInstances() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+export const CreateInvitesActionDispatcher = (UsersService, dispatch) => {
+  return () => {
+    dispatch(InvitesActions.getInvitesAttempt());
+
+    UsersService.getInvites()
+      .then(invites => {
+        dispatch(InvitesActions.getInvitesSuccess(invites));
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error("Failed to load invites"));
+        dispatch(InvitesActions.getInvitesFailure());
       });
   };
 };
@@ -65,15 +110,36 @@ export const CreateUsersActionDispatcher = (UsersService, dispatch) => {
  */
 export const CreateInviteUserActionDispatcher = (UsersService, dispatch) => {
   return (email) => {
-    dispatch(InviteUsersActions.inviteAttempt());
+    dispatch(InvitesActions.inviteAttempt());
 
     UsersService.inviteUser(email)
       .then(users => {
-        dispatch(InviteUsersActions.inviteSuccess(users));
+        dispatch(InvitesActions.inviteSuccess(users));
       })
       .catch(error => {
-        dispatch(InviteUsersActions.inviteFailure());
         dispatch(NotifyActions.error("Failed to invite user"));
+        dispatch(InvitesActions.inviteFailure());
+      });
+  };
+}
+
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {UsersService} UsersService must have a getUsersInstances() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+export const CreateRevokeInviteActionDispatcher = (UsersService, dispatch) => {
+  return (revoke_invite_id) => {
+    dispatch(InvitesActions.revokeInviteAttempt());
+
+    UsersService.revokeInvite(revoke_invite_id)
+      .then(users => {
+        dispatch(InvitesActions.revokeInviteSuccess());
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error("Failed to revoke invite"));
+        dispatch(InvitesActions.revokeInviteFailure());
       });
   };
 };
