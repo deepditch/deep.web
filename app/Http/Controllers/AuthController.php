@@ -36,6 +36,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
             'name' => 'required|max:255',
+            'password' => 'required|min:8',
         ]);
 
         $role = User::USER_ROLE;
@@ -80,7 +81,7 @@ class AuthController extends Controller
             'email' => $request->input('email'),
             'password' => $request->input('password')])
         ) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Invalid email or password!'], 401);
         }
 
         return response()->json(

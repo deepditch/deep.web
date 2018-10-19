@@ -47,10 +47,8 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
         history.push("/");
       })
       .catch(error => {
-        dispatch(NotifyActions.error("Login failure"));
+        dispatch(NotifyActions.error(error));
         dispatch(LoginActions.failure());
-
-        console.error(error); // TODO: create middleware for error logging
       });
   };
 };
