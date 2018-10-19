@@ -29,6 +29,7 @@ class App extends Component {
           <c.Notify />
           <Switch>
             <Route path="/login" component={c.Login} />
+            <Route path="/register/:token" component={c.Register} />
             <Route path="/register" component={c.Register} />
             <c.AuthorizedRoute exact path="/" component={c.Map} />
             <c.AuthorizedRoute exact path="/damage" component={c.Map} />

@@ -7,9 +7,6 @@ import PropTypes from "prop-types";
 export default class UserInviteForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      Email: "",
-    };
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);

@@ -8,9 +8,6 @@ export default UserInviteForm =>
   class Users extends Component {
     constructor(props) {
       super(props);
-      this.state = {
-        revoke_invite_id: 0,
-      };
 
       this.handleClick = this.handleClick.bind(this);
       this.submitRevoke = this.submitRevoke.bind(this);

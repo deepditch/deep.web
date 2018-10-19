@@ -11,4 +11,5 @@
 |
 */
 
-Route::view('/{path?}', 'web');
+Route::view('/{path?}', 'web')
+  ->where('path', '.*');

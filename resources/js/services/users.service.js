@@ -1,3 +1,5 @@
+import { parseErrors } from "../helpers/errors";
+
 export class UsersService {
   constructor(axios) {
     this.axios = axios;
@@ -10,7 +12,7 @@ export class UsersService {
         return Promise.resolve(response.data.data);
       })
       .catch(error => {
-        throw error.response;
+        throw parseErrors(error.response);
       });
   }
 
@@ -21,7 +23,7 @@ export class UsersService {
         return Promise.resolve(response.data.data);
       })
       .catch(error => {
-        throw error.response;
+        throw parseErrors(error.response);
       });
   }
 
@@ -35,10 +37,10 @@ export class UsersService {
         email: email,
       })
       .then(response => {
-        return response.data;
+        return response.data.data;
       })
       .catch(error => {
-        throw error.response;
+        throw parseErrors(error.response);
       });
   }
 
@@ -52,10 +54,10 @@ export class UsersService {
         invite_id: invite_id,
       })
       .then(response => {
-        return response.data;
+        return response.data.data;
       })
       .catch(error => {
-        throw error.response;
+        throw parseErrors(error.response);
       });
   }
 }

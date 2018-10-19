@@ -67,7 +67,11 @@ class UserController extends Controller
 
         Mail::to($request->input('email'))->send(new UserInviteMailable($invite));
 
-        return response()->json(['Invite sent successfully.', 200]);
+        return UserInviteResource::collection(
+            UserInvite::where(
+                'organization_id', auth('api')->user()->organization_id
+            )->get()
+        );
     }
 
     /**
@@ -85,6 +89,10 @@ class UserController extends Controller
             }
         }
 
-        return response()->json(['Invite revoked successfully.', 200]);
+        return UserInviteResource::collection(
+            UserInvite::where(
+                'organization_id', auth('api')->user()->organization_id
+            )->get()
+        );
     }
 }

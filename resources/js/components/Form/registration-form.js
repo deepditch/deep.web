@@ -20,6 +20,18 @@ export default class RegistrationForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    console.log(this);
+    console.log(location);
+    if (this.props.token) {
+      //TODO:
+      // get email and org ID from the invite record
+      // input type=readonly or disabled on email
+      // verify this was not modified upon register
+      this.props.fetchInviteData();
+    }
+  }
+
   handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;

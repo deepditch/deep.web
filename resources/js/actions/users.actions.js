@@ -43,8 +43,8 @@ export const InvitesActions = {
   revokeInviteAttempt: () => {
     return { type: InviteUserActionTypes.REVOKE_INVITE_ATTEMPT };
   },
-  revokeInviteSuccess: () => {
-    return { type: InviteUserActionTypes.REVOKE_INVITE_SUCCESS };
+  revokeInviteSuccess: invites => {
+    return { type: InviteUserActionTypes.REVOKE_INVITE_SUCCESS, invites: invites };
   },
   revokeInviteFailure: () => {
     return { type: InviteUserActionTypes.REVOKE_INVITE_FAILURE };
@@ -52,8 +52,8 @@ export const InvitesActions = {
   inviteAttempt: () => {
     return { type: InviteUserActionTypes.INVITE_USER_ATTEMPT };
   },
-  inviteSuccess: users => {
-    return { type: InviteUserActionTypes.INVITE_USER_SUCCESS };
+  inviteSuccess: invites => {
+    return { type: InviteUserActionTypes.INVITE_USER_SUCCESS, invites: invites };
   },
   inviteFailure: () => {
     return { type: InviteUserActionTypes.INVITE_USER_FAILURE };
@@ -113,11 +113,12 @@ export const CreateInviteUserActionDispatcher = (UsersService, dispatch) => {
     dispatch(InvitesActions.inviteAttempt());
 
     UsersService.inviteUser(email)
-      .then(users => {
-        dispatch(InvitesActions.inviteSuccess(users));
+      .then(invites => {
+        dispatch(NotifyActions.success("User has been invited!"));
+        dispatch(InvitesActions.inviteSuccess(invites));
       })
       .catch(error => {
-        dispatch(NotifyActions.error("Failed to invite user"));
+        dispatch(NotifyActions.error(error));
         dispatch(InvitesActions.inviteFailure());
       });
   };
@@ -134,11 +135,12 @@ export const CreateRevokeInviteActionDispatcher = (UsersService, dispatch) => {
     dispatch(InvitesActions.revokeInviteAttempt());
 
     UsersService.revokeInvite(revoke_invite_id)
-      .then(users => {
-        dispatch(InvitesActions.revokeInviteSuccess());
+      .then(invites => {
+        dispatch(NotifyActions.success("User invite has been revoked."));
+        dispatch(InvitesActions.revokeInviteSuccess(invites));
       })
       .catch(error => {
-        dispatch(NotifyActions.error("Failed to revoke invite"));
+        dispatch(NotifyActions.error(error));
         dispatch(InvitesActions.revokeInviteFailure());
       });
   };
