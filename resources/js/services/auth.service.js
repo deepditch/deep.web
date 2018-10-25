@@ -42,7 +42,7 @@ export class AuthService {
         return response.data;
       })
       .catch(error => {
-        console.log(error.response);
+        console.error(error.response);
         throw parseErrors(error.response);
       });
   }

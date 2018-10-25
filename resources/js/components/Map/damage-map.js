@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
 
+
 class DamageMap extends Component {
   constructor(props) {
     super(props);

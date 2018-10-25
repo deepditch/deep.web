@@ -9,10 +9,10 @@ var gulp = require("gulp"),
 var config = require("../project.config");
 
 gulp.task("build:css:css", "Build and add vendor prefixes for plain CSS", function () {
-  return gulp.src([path.join(config.srcFullPath, config.styles, "*.css"), 'node_modules/*/*.css'])
+  return gulp.src(path.join(config.srcFullPath, config.styles, "*.css"))
     .pipe(plumber({
       errorHandler: function (err) {
-        console.log(err);
+        console.error(err);
         this.emit('end');
       }
     }))
@@ -24,7 +24,7 @@ gulp.task("build:css:sass", "Build and add vendor prefixes for SASS styles", fun
   return gulp.src(path.join(config.srcFullPath, config.styles, "*.scss"))
     .pipe(plumber({
       errorHandler: function (err) {
-        console.log(err);
+        console.error(err);
         this.emit('end');
       }
     }))

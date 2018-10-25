@@ -15,7 +15,7 @@ class Notify extends Component {
   }
 }
 
-Notify.PropTypes = {
+Notify.propTypes = {
   notifyType: PropTypes.string,
   message: PropTypes.node,
   clear: PropTypes.func.isRequired

@@ -21,8 +21,6 @@ export default class RegistrationForm extends Component {
   }
 
   componentDidMount() {
-    console.log(this);
-    console.log(location);
     if (this.props.token) {
       //TODO:
       // get email and org ID from the invite record

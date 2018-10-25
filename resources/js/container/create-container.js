@@ -8,7 +8,7 @@ import {
   DamageProvider
 } from "../providers";
 import { UsersProvider } from "../providers/users.provider";
-import AuthorizedRoute from "../components/PrivateRoute";
+import AuthorizedRoute from "../components/authorized-route";
 import { connect } from "react-redux";
 
 /**

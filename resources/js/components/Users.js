@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import ReactTable from 'react-table';
-
-import Base from './Base';
-import UserInviteForm from "./Form/userinvite-form";
+import ReactTable from "./react-table";
 
 export default UserInviteForm =>
   class Users extends Component {
@@ -31,97 +28,82 @@ export default UserInviteForm =>
 
     render() {
       return (
-        <Base>
-        <div class="block-small">
+        <div class="container container-md">
+          <div class="divide-30" />
           <div class="row">
-          <div class="col-2"></div>
-            <div class="col-4">
-            <h1>Users</h1>
+            <div class="col-6">
+              <h1 class="h3">Users</h1>
             </div>
-            <div class="col-4">
+            <div class="col-6">
               <UserInviteForm />
             </div>
-            <div class="col-2"></div>
           </div>
-          <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-              <ReactTable
-                columns={[
+
+          <ReactTable
+            columns={[
+              {
+                Header: "Name",
+                accessor: "name"
+              },
+              {
+                Header: "Email",
+                accessor: "email"
+              },
+              {
+                Header: "Role",
+                accessor: "role"
+              },
+              {
+                Header: "Organization",
+                accessor: "organization.name"
+              }
+            ]}
+            defaultPageSize="5"
+            data={this.props.users.users}
+            className="-striped -highlight"
+          />
+
+          <div class="divide-30" />
+          <h1 class="h3">Pending Invites</h1>
+
+          <ReactTable
+            columns={[
+              {
+                Header: "Email",
+                accessor: "email"
+              },
+              {
+                Header: "Organization",
+                accessor: "organization.name"
+              },
+              {
+                Header: "",
+                columns: [
                   {
-                    Header: "Name",
-                    accessor: "name"
-                  },
-                  {
-                    Header: "Email",
-                    accessor: "email"
-                  },
-                  {
-                    Header: "Role",
-                    accessor: "role"
-                  },
-                  {
-                    Header: "Organization",
-                    accessor: "organization.name"
-                  },
-                ]}
-                defaultPageSize="5"
-                data={this.props.users.users}
-                className="-striped -highlight"
-              />
-            </div>
-            <div class="col-2"></div>
-          </div>
-          <div class="row pt-4">
-          <div class="col-2"></div>
-            <div class="col-4">
-            <h3>Pending Invites</h3>
-            </div>
-            <div class="col-4"></div>
-            <div class="col-2"></div>
-          </div>
-          <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-              <ReactTable
-                columns={[
-                  {
-                    Header: "Email",
-                    accessor: "email"
-                  },
-                  {
-                    Header: "Organization",
-                    accessor: "organization.name"
-                  },
-                  {
-                    Header: '',
-                    columns: [{
-                      Header: '',
-                      accessor: 'id',
-                      Cell: row => (
-                        <form onSubmit={this.submitRevoke}>
-                          <button
+                    Header: "",
+                    accessor: "id",
+                    Cell: row => (
+                      <form onSubmit={this.submitRevoke}>
+                        <button
                           class="btn"
                           type="submit"
                           name="revoke_invite_id"
                           value={row.value}
-                          onClick={this.handleClick}>
+                          onClick={this.handleClick}
+                        >
                           REVOKE
-                          </button>
-                        </form>
-                      )
-                    }]
+                        </button>
+                      </form>
+                    )
                   }
-                ]}
-                defaultPageSize="5"
-                data={this.props.invites.invites}
-                className="-striped -highlight"
-              />
-            </div>
-            <div class="col-2"></div>
-          </div>
+                ]
+              }
+            ]}
+            defaultPageSize="5"
+            data={this.props.invites.invites}
+            className="-striped -highlight"
+          />
         </div>
-        </Base>
       );
     }
-  }
+  };

@@ -6,7 +6,6 @@ import { InviteUserActionTypes } from "../actions/users.actions";
  * @param {JSON} action A redux action
  */
 export default function InvitesReducer(state = { invites: [] }, action) {
-  console.log(action);
   switch (action.type) {
     case InviteUserActionTypes.INVITE_USER_ATTEMPT:
     case InviteUserActionTypes.LOAD_INVITES_ATTEMPT:
