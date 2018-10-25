@@ -1,3 +1,5 @@
+// Used by Jest for testing
+
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
