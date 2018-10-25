@@ -1,6 +1,5 @@
 import React from "react";
 import { NotifyActions } from "./notify.actions";
-import { history } from "../history";
 
 export const RegisterActionTypes = {
   REGISTER_SUCCESS: "register_success",
@@ -33,10 +32,7 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
     authService
       .register(userName, email, password, organizationName)
       .then(response => {
-        var user = response.user;
-
-        localStorage.setItem("user", JSON.stringify(user));
-
+        dispatch(RegisterActions.success(response.user));
         dispatch(
           NotifyActions.success(
             <>
@@ -45,15 +41,10 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
             </>
           )
         );
-        dispatch(RegisterActions.success(user));
-
-        history.push("/login");
       })
       .catch(error => {
         dispatch(NotifyActions.error(error));
         dispatch(RegisterActions.failure());
-
-        console.error(error);
       });
   };
 };

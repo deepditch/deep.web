@@ -4,18 +4,19 @@ import UserSidebar from "../components/UserSidebar";
 import { connect } from "react-redux";
 
 import {
-  CreateDamageActionDispatcher,
+  DamageActionDispatcher,
   CreateLogoutActionDispatcher
 } from "../actions";
 
-import { RoadDamageService } from "../services";
+import { DamageService } from "../services";
 
 /**
  * Registers dependencies in the container and connects react components to the redux store
  * @param {Container} c the IoC container
  */
 export const DamageProvider = c => {
-  c.register("DamageService", c => new RoadDamageService(c.Axios));
+  c.register("DamageService", c => new DamageService(c.Axios));
+  c.register("DamageActions", c => new DamageActionDispatcher(c.DamageService));
 
   c.register("DamageMap", c =>
     connect(
@@ -27,7 +28,7 @@ export const DamageProvider = c => {
       },
       dispatch => {
         return {
-          loadDamage: CreateDamageActionDispatcher(c.DamageService, dispatch)
+          loadDamage: c.DamageActions.loadDamage(dispatch)
         };
       }
     )(DamageMap)

@@ -55286,22 +55286,21 @@ config.GoogleMapsAPIKey = "AIzaSyChfb0Zpgxfl2lf-4YoxdXjWVy9OYFAHTs";
 /*!**************************************!*\
   !*** ./js/actions/damage.actions.js ***!
   \**************************************/
-/*! exports provided: DamageActionTypes, DamageActions, CreateDamageActionDispatcher */
+/*! exports provided: DamageActionTypes, DamageActions, DamageActionDispatcher */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageActionTypes", function() { return DamageActionTypes; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageActions", function() { return DamageActions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateDamageActionDispatcher", function() { return CreateDamageActionDispatcher; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageActionDispatcher", function() { return DamageActionDispatcher; });
 /* harmony import */ var _notify_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./notify.actions */ "./js/actions/notify.actions.js");
-/* harmony import */ var _helpers_errors__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/errors */ "./js/helpers/errors.js");
-
 
 const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
   LOAD_DAMAGE_SUCCESS: "load_damage_success",
-  LOAD_DAMAGE_FAILURE: "load_damage_failure"
+  LOAD_DAMAGE_FAILURE: "load_damage_failure",
+  ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance"
 };
 const DamageActions = {
   attempt: () => {
@@ -55319,26 +55318,34 @@ const DamageActions = {
     return {
       type: DamageActionTypes.LOAD_DAMAGE_FAILURE
     };
+  },
+  activate: id => {
+    return {
+      type: DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE,
+      id: id
+    };
   }
 };
-/**
- * Returns a method that loads damage instances and dispatches redux actions. Delegates get request to DamageService
- * @param {DamageService} DamageService must have a getDamageInstances() method that returns a Promise
- * @param {function} dispatch the redux dispatch method
- * @return a loadDamageInstances method that dispatches redux actions
- */
+class DamageActionDispatcher {
+  constructor(damageService) {
+    this.loadDamage = dispatch => () => {
+      dispatch(DamageActions.attempt());
+      this.damageService.getDamageInstances().then(instances => {
+        dispatch(DamageActions.success(instances));
+      }).catch(error => {
+        dispatch(DamageActions.failure());
+        dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
+      });
+    };
 
-const CreateDamageActionDispatcher = (DamageService, dispatch) => {
-  return () => {
-    dispatch(DamageActions.attempt());
-    DamageService.getDamageInstances().then(instances => {
-      dispatch(DamageActions.success(instances));
-    }).catch(error => {
-      dispatch(DamageActions.failure());
-      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
-    });
-  };
-};
+    this.activateDamage = dispatch => id => {
+      dispatch(DamageActions.activate(id));
+    };
+
+    this.damageService = damageService;
+  }
+
+}
 
 /***/ }),
 
@@ -55346,7 +55353,7 @@ const CreateDamageActionDispatcher = (DamageService, dispatch) => {
 /*!*****************************!*\
   !*** ./js/actions/index.js ***!
   \*****************************/
-/*! exports provided: NotifyActionTypes, NotifyActions, UsersActionTypes, InviteUserActionTypes, UsersActions, InvitesActions, CreateUsersActionDispatcher, CreateInvitesActionDispatcher, CreateInviteUserActionDispatcher, CreateRevokeInviteActionDispatcher, LoginActionTypes, LoginActions, CreateLoginActionDispatcher, CreateLogoutActionDispatcher, RegisterActionTypes, RegisterActions, CreateRegisterActionDispatcher, DamageActionTypes, DamageActions, CreateDamageActionDispatcher */
+/*! exports provided: UsersActionTypes, InviteUserActionTypes, UsersActions, InvitesActions, CreateUsersActionDispatcher, CreateInvitesActionDispatcher, CreateInviteUserActionDispatcher, CreateRevokeInviteActionDispatcher, LoginActionTypes, LoginActions, CreateLoginActionDispatcher, CreateLogoutActionDispatcher, RegisterActionTypes, RegisterActions, CreateRegisterActionDispatcher, NotifyActionTypes, NotifyActions, DamageActionTypes, DamageActions, DamageActionDispatcher */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -55377,7 +55384,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DamageActions", function() { return _damage_actions__WEBPACK_IMPORTED_MODULE_3__["DamageActions"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CreateDamageActionDispatcher", function() { return _damage_actions__WEBPACK_IMPORTED_MODULE_3__["CreateDamageActionDispatcher"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DamageActionDispatcher", function() { return _damage_actions__WEBPACK_IMPORTED_MODULE_3__["DamageActionDispatcher"]; });
 
 /* harmony import */ var _users_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./users.actions */ "./js/actions/users.actions.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UsersActionTypes", function() { return _users_actions__WEBPACK_IMPORTED_MODULE_4__["UsersActionTypes"]; });
@@ -55462,16 +55469,10 @@ const CreateLoginActionDispatcher = (authService, dispatch) => {
   return (email, password) => {
     dispatch(LoginActions.attempt());
     authService.login(email, password).then(response => {
-      var token = response.access_token;
-      var user = response.user;
-      localStorage.setItem("token", token); // TODO: create middleware for setting localStorage
-
-      localStorage.setItem("user", JSON.stringify(user));
-      dispatch(LoginActions.success(token, user));
-      _history__WEBPACK_IMPORTED_MODULE_1__["history"].push("/");
+      dispatch(LoginActions.success(response.access_token, response.user));
     }).catch(error => {
-      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
       dispatch(LoginActions.failure());
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
     });
   };
 };
@@ -55487,7 +55488,6 @@ const CreateLogoutActionDispatcher = (authService, dispatch) => {
     authService.logout();
     dispatch(LoginActions.logout());
     dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].default("You have been logged out"));
-    _history__WEBPACK_IMPORTED_MODULE_1__["history"].push("/login");
   };
 };
 
@@ -55560,8 +55560,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _notify_actions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./notify.actions */ "./js/actions/notify.actions.js");
-/* harmony import */ var _history__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../history */ "./js/history.js");
-
 
 
 const RegisterActionTypes = {
@@ -55598,15 +55596,11 @@ const CreateRegisterActionDispatcher = (authService, dispatch) => {
   return (userName, email, password, organizationName = null) => {
     dispatch(RegisterActions.attempt());
     authService.register(userName, email, password, organizationName).then(response => {
-      var user = response.user;
-      localStorage.setItem("user", JSON.stringify(user));
+      dispatch(RegisterActions.success(response.user));
       dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].success(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, user.name), ", you have been registered and may login.")));
-      dispatch(RegisterActions.success(user));
-      _history__WEBPACK_IMPORTED_MODULE_2__["history"].push("/login");
     }).catch(error => {
       dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].error(error));
       dispatch(RegisterActions.failure());
-      console.error(error);
     });
   };
 };
@@ -55813,6 +55807,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-router-dom */ "../node_modules/react-router-dom/es/index.js");
 /* harmony import */ var container_create_container__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! container/create-container */ "./js/container/create-container.js");
 /* harmony import */ var _components_Header__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/Header */ "./js/components/Header.js");
+/* harmony import */ var _middleware__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./middleware */ "./js/middleware/index.js");
 
 
 
@@ -55822,8 +55817,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const store = Object(redux__WEBPACK_IMPORTED_MODULE_3__["createStore"])(reducers__WEBPACK_IMPORTED_MODULE_4__["default"]);
+
 var c = Object(container_create_container__WEBPACK_IMPORTED_MODULE_7__["default"])();
+const store = Object(redux__WEBPACK_IMPORTED_MODULE_3__["createStore"])(reducers__WEBPACK_IMPORTED_MODULE_4__["default"], Object(redux__WEBPACK_IMPORTED_MODULE_3__["applyMiddleware"])(_middleware__WEBPACK_IMPORTED_MODULE_9__["AuthMiddleware"], _middleware__WEBPACK_IMPORTED_MODULE_9__["RedirectMiddleware"]));
 
 class App extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
@@ -55984,7 +55980,7 @@ class LoginForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
 }
-LoginForm.PropTypes = {
+LoginForm.propTypes = {
   login: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.func.isRequired
 };
 
@@ -56404,6 +56400,37 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./js/components/Map/active-damage.js":
+/*!********************************************!*\
+  !*** ./js/components/Map/active-damage.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ActiveDamage; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
+      marker: this.props.marker,
+      visible: this.props.visible
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      width: "240px",
+      src: this.props.image
+    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Type: ", this.props.type)));
+  }
+
+}
+
+/***/ }),
+
 /***/ "./js/components/Map/damage-map.js":
 /*!*****************************************!*\
   !*** ./js/components/Map/damage-map.js ***!
@@ -56419,6 +56446,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
 /* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./active-damage */ "./js/components/Map/active-damage.js");
+
 
 
 
@@ -56462,23 +56491,25 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         lat: damage.position.latitude,
         lng: damage.position.longitude
       }
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_3__["default"], {
       marker: this.state.activeMarker,
-      visible: this.state.showingInfoWindow
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Type: ", this.state.selectedPlace.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      width: "240px",
-      src: this.state.selectedPlace.image
-    }))));
+      visible: this.state.showingInfoWindow,
+      image: this.state.selectedPlace.image,
+      type: this.state.selectedPlace.type
+    }));
   }
 
 }
 
 var _initialiseProps = function () {
-  this.onMarkerClick = (props, marker, e) => this.setState({
-    selectedPlace: props,
-    activeMarker: marker,
-    showingInfoWindow: true
-  });
+  this.onMarkerClick = (props, marker, e) => {
+    console.log(props, marker);
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
+  };
 
   this.onMapClicked = props => {
     if (this.state.showingInfoWindow) {
@@ -56514,6 +56545,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class Notify extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
+    console.log(this.props);
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "notify",
       className: this.props.message ? "active" : "",
@@ -56525,11 +56557,6 @@ class Notify extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 }
 
-Notify.propTypes = {
-  notifyType: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.string,
-  message: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.node,
-  clear: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.func.isRequired
-};
 /* harmony default export */ __webpack_exports__["default"] = (Notify);
 
 /***/ }),
@@ -56897,6 +56924,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function parseErrors(response) {
   let errors = "";
+  console.log(response);
 
   if (response.data.errors) {
     lodash__WEBPACK_IMPORTED_MODULE_0___default.a.forEach(Object.keys(response.data.errors), key => {
@@ -56924,6 +56952,130 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var history__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! history */ "../node_modules/history/es/index.js");
 
 const history = Object(history__WEBPACK_IMPORTED_MODULE_0__["createBrowserHistory"])();
+
+/***/ }),
+
+/***/ "./js/middleware/auth.middleware.js":
+/*!******************************************!*\
+  !*** ./js/middleware/auth.middleware.js ***!
+  \******************************************/
+/*! exports provided: AuthMiddleware */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AuthMiddleware", function() { return AuthMiddleware; });
+/* harmony import */ var _history__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../history */ "./js/history.js");
+/* harmony import */ var _createMiddleware__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createMiddleware */ "./js/middleware/createMiddleware.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions */ "./js/actions/index.js");
+
+
+
+const AuthMiddleware = Object(_createMiddleware__WEBPACK_IMPORTED_MODULE_1__["default"])([{
+  action: _actions__WEBPACK_IMPORTED_MODULE_2__["LoginActionTypes"].LOGIN_SUCCESS,
+  after: (store, action) => {
+    localStorage.setItem("token", action.token); // TODO: create middleware for setting localStorage
+
+    localStorage.setItem("user", JSON.stringify(action.user));
+  }
+}, {
+  action: _actions__WEBPACK_IMPORTED_MODULE_2__["RegisterActionTypes"].REGISTER_SUCCESS,
+  after: (store, action) => {
+    localStorage.setItem("user", JSON.stringify(action.user));
+  }
+}, {
+  action: _actions__WEBPACK_IMPORTED_MODULE_2__["LoginActionTypes"].LOGOUT,
+  after: (store, action) => {
+    localStorage.removeItem("token");
+  }
+}]);
+
+/***/ }),
+
+/***/ "./js/middleware/createMiddleware.js":
+/*!*******************************************!*\
+  !*** ./js/middleware/createMiddleware.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CreateMiddleware; });
+// Helper method for creating a middleware that handles the given set of actions
+function CreateMiddleware(handlers) {
+  return storeAPI => next => action => {
+    const actionHandler = handlers.find(h => h.action === action.type); // Execute custom middleware handler before the action is dispatched
+
+    if (actionHandler && actionHandler.before) {
+      actionHandler.before(storeAPI, action);
+    } // Dispatch the action
+
+
+    const result = next(action); // Execute custom middleware handler after the action is dispatched
+
+    if (actionHandler && actionHandler.after) {
+      actionHandler.after(storeAPI, action);
+    }
+
+    return result;
+  };
+}
+
+/***/ }),
+
+/***/ "./js/middleware/index.js":
+/*!********************************!*\
+  !*** ./js/middleware/index.js ***!
+  \********************************/
+/*! exports provided: AuthMiddleware, RedirectMiddleware */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _auth_middleware__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./auth.middleware */ "./js/middleware/auth.middleware.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AuthMiddleware", function() { return _auth_middleware__WEBPACK_IMPORTED_MODULE_0__["AuthMiddleware"]; });
+
+/* harmony import */ var _redirect_middleware__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./redirect.middleware */ "./js/middleware/redirect.middleware.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RedirectMiddleware", function() { return _redirect_middleware__WEBPACK_IMPORTED_MODULE_1__["RedirectMiddleware"]; });
+
+
+
+
+/***/ }),
+
+/***/ "./js/middleware/redirect.middleware.js":
+/*!**********************************************!*\
+  !*** ./js/middleware/redirect.middleware.js ***!
+  \**********************************************/
+/*! exports provided: RedirectMiddleware */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RedirectMiddleware", function() { return RedirectMiddleware; });
+/* harmony import */ var _history__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../history */ "./js/history.js");
+/* harmony import */ var _createMiddleware__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createMiddleware */ "./js/middleware/createMiddleware.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../actions */ "./js/actions/index.js");
+
+
+
+const RedirectMiddleware = Object(_createMiddleware__WEBPACK_IMPORTED_MODULE_1__["default"])([{
+  action: _actions__WEBPACK_IMPORTED_MODULE_2__["LoginActionTypes"].LOGIN_SUCCESS,
+  after: (store, action) => {
+    _history__WEBPACK_IMPORTED_MODULE_0__["history"].push("/");
+  }
+}, {
+  action: _actions__WEBPACK_IMPORTED_MODULE_2__["RegisterActionTypes"].REGISTER_SUCCESS,
+  after: (store, action) => {
+    _history__WEBPACK_IMPORTED_MODULE_0__["history"].push("/login");
+  }
+}, {
+  action: _actions__WEBPACK_IMPORTED_MODULE_2__["LoginActionTypes"].LOGOUT,
+  after: (store, action) => {
+    _history__WEBPACK_IMPORTED_MODULE_0__["history"].push("/login");
+  }
+}]);
 
 /***/ }),
 
@@ -56955,7 +57107,8 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 const DamageProvider = c => {
-  c.register("DamageService", c => new _services__WEBPACK_IMPORTED_MODULE_5__["RoadDamageService"](c.Axios));
+  c.register("DamageService", c => new _services__WEBPACK_IMPORTED_MODULE_5__["DamageService"](c.Axios));
+  c.register("DamageActions", c => new _actions__WEBPACK_IMPORTED_MODULE_4__["DamageActionDispatcher"](c.DamageService));
   c.register("DamageMap", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
     return {
       instances: store.damage.instances,
@@ -56963,7 +57116,7 @@ const DamageProvider = c => {
     };
   }, dispatch => {
     return {
-      loadDamage: Object(_actions__WEBPACK_IMPORTED_MODULE_4__["CreateDamageActionDispatcher"])(c.DamageService, dispatch)
+      loadDamage: c.DamageActions.loadDamage(dispatch)
     };
   })(_components_Map_damage_map__WEBPACK_IMPORTED_MODULE_0__["default"]));
   c.register("UserSidebar", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
@@ -57286,7 +57439,7 @@ function InvitesReducer(state = {
   switch (action.type) {
     case _actions_users_actions__WEBPACK_IMPORTED_MODULE_0__["InviteUserActionTypes"].INVITE_USER_ATTEMPT:
     case _actions_users_actions__WEBPACK_IMPORTED_MODULE_0__["InviteUserActionTypes"].LOAD_INVITES_ATTEMPT:
-    case _actions_users_actions__WEBPACK_IMPORTED_MODULE_0__["InviteUserActionTypes"].REVOKE_INVITEc_ATTEMPT:
+    case _actions_users_actions__WEBPACK_IMPORTED_MODULE_0__["InviteUserActionTypes"].REVOKE_INVITE_ATTEMPT:
       return {
         invites: [],
         pending: true
@@ -57596,14 +57749,6 @@ class AuthService {
     this.axios = axios;
   }
   /**
-   * Returns true if the user is logged in and false otherwise
-   */
-
-
-  get loggedIn() {
-    return !localStorage.getItem("token") === null;
-  }
-  /**
    * Logs a user in
    * @param {string} email the user's email
    * @param {string} password the user's password
@@ -57627,10 +57772,8 @@ class AuthService {
 
   logout() {
     this.axios.get("/logout").then(response => {
-      localStorage.removeItem("token");
       return response.data;
     }).catch(error => {
-      console.error(error.response);
       throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
     });
   }
@@ -57664,15 +57807,15 @@ class AuthService {
 /*!***************************************!*\
   !*** ./js/services/damage.service.js ***!
   \***************************************/
-/*! exports provided: RoadDamageService */
+/*! exports provided: DamageService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RoadDamageService", function() { return RoadDamageService; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageService", function() { return DamageService; });
 /* harmony import */ var _helpers_errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helpers/errors */ "./js/helpers/errors.js");
 
-class RoadDamageService {
+class DamageService {
   constructor(axios) {
     this.axios = axios;
   }
@@ -57693,7 +57836,7 @@ class RoadDamageService {
 /*!******************************!*\
   !*** ./js/services/index.js ***!
   \******************************/
-/*! exports provided: AuthService, RoadDamageService, UsersService */
+/*! exports provided: AuthService, DamageService, UsersService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57702,7 +57845,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AuthService", function() { return _auth_service__WEBPACK_IMPORTED_MODULE_0__["AuthService"]; });
 
 /* harmony import */ var _damage_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./damage.service */ "./js/services/damage.service.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RoadDamageService", function() { return _damage_service__WEBPACK_IMPORTED_MODULE_1__["RoadDamageService"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DamageService", function() { return _damage_service__WEBPACK_IMPORTED_MODULE_1__["DamageService"]; });
 
 /* harmony import */ var _users_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./users.service */ "./js/services/users.service.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UsersService", function() { return _users_service__WEBPACK_IMPORTED_MODULE_2__["UsersService"]; });

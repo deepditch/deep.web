@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 class Notify extends Component {
   render() {
+    console.log(this.props);
+
     return (
       <div
         id="notify"
@@ -14,11 +16,5 @@ class Notify extends Component {
     );
   }
 }
-
-Notify.propTypes = {
-  notifyType: PropTypes.string,
-  message: PropTypes.node,
-  clear: PropTypes.func.isRequired
-};
 
 export default Notify;

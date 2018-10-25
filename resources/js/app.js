@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import rootReducer from "reducers";
 import { history } from "./history";
 import { Router, Route, Switch, Redirect } from "react-router-dom";
 import createContainer from "container/create-container";
 import Header from "./components/Header";
 
-const store = createStore(rootReducer);
+import { AuthMiddleware, RedirectMiddleware } from "./middleware";
+
 var c = createContainer();
+const store = createStore(rootReducer, applyMiddleware(AuthMiddleware, RedirectMiddleware));
 
 class App extends Component {
   render() {

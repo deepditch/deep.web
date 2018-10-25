@@ -1,4 +1,5 @@
-import { combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
+
 import LoginReducer from "./login.reducer";
 import RegisterReducer from "./register.reducer";
 import NotifyReducer from "./notify.reducer";
@@ -17,5 +18,5 @@ export default combineReducers({
   users: UsersReducer,
   invites: InvitesReducer,
   notify: NotifyReducer,
-  damage: DamageReducer,
+  damage: DamageReducer
 });

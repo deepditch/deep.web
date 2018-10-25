@@ -2,6 +2,9 @@ import _ from 'lodash';
 
 export function parseErrors(response) {
   let errors = "";
+
+  console.log(response);
+
   if (response.data.errors) {
     _.forEach(Object.keys(response.data.errors), (key) => {
       errors += _.get(response.data.errors, key, []) +  "\n";
@@ -9,5 +12,6 @@ export function parseErrors(response) {
   } else if (response.data.error) {
     errors = response.data.error;
   }
+
   return errors;
 }
