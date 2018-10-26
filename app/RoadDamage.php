@@ -8,18 +8,18 @@ use Illuminate\Support\Facades\Storage;
 class RoadDamage extends Model
 {
 
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array
-   */
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
-    'user_id',
-    'latitude',
-    'longitude',
-    'image_id',
-    'organization_id'
-  ];
+        'user_id',
+        'latitude',
+        'longitude',
+        'image_id',
+        'organization_id'
+    ];
 
     /**
      * Get the image object

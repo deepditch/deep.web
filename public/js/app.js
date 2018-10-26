@@ -55300,7 +55300,8 @@ const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
   LOAD_DAMAGE_SUCCESS: "load_damage_success",
   LOAD_DAMAGE_FAILURE: "load_damage_failure",
-  ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance"
+  ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance",
+  DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance"
 };
 const DamageActions = {
   attempt: () => {
@@ -55308,10 +55309,10 @@ const DamageActions = {
       type: DamageActionTypes.LOAD_DAMAGE_ATTEMPT
     };
   },
-  success: instances => {
+  success: damages => {
     return {
       type: DamageActionTypes.LOAD_DAMAGE_SUCCESS,
-      instances: instances
+      damages: damages
     };
   },
   failure: () => {
@@ -55324,14 +55325,19 @@ const DamageActions = {
       type: DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE,
       id: id
     };
+  },
+  deactivate: id => {
+    return {
+      type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE
+    };
   }
 };
 class DamageActionDispatcher {
   constructor(damageService) {
     this.loadDamage = dispatch => () => {
       dispatch(DamageActions.attempt());
-      this.damageService.getDamageInstances().then(instances => {
-        dispatch(DamageActions.success(instances));
+      this.damageService.getDamageInstances().then(damages => {
+        dispatch(DamageActions.success(damages));
       }).catch(error => {
         dispatch(DamageActions.failure());
         dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
@@ -55340,6 +55346,10 @@ class DamageActionDispatcher {
 
     this.activateDamage = dispatch => id => {
       dispatch(DamageActions.activate(id));
+    };
+
+    this.deactivateDamage = dispatch => () => {
+      dispatch(DamageActions.deactivate());
     };
 
     this.damageService = damageService;
@@ -56385,13 +56395,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-/* harmony default export */ __webpack_exports__["default"] = ((UserSidebar, DamageMap) => class Map extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+/* harmony default export */ __webpack_exports__["default"] = ((DamageList, DamageMap) => class Map extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row no-gutters h-100"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-4"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(UserSidebar, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageList, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-8"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMap, null)));
   }
@@ -56400,31 +56410,47 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./js/components/Map/active-damage.js":
-/*!********************************************!*\
-  !*** ./js/components/Map/active-damage.js ***!
-  \********************************************/
+/***/ "./js/components/Map/damage-list.js":
+/*!******************************************!*\
+  !*** ./js/components/Map/damage-list.js ***!
+  \******************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ActiveDamage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
 
 
-class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
-      marker: this.props.marker,
-      visible: this.props.visible
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      width: "240px",
-      src: this.props.image
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Type: ", this.props.type)));
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      className: this.props.active ? "active" : ""
+    }, this.props.damage.position.street_name, " (", this.props.damage.position.direction, ") ", this.props.damage.type, this.props.damage.label, " ", this.props.damage.verified);
+  }
+
+}
+
+class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(...args) {
+    var _temp;
+
+    return _temp = super(...args), this.handleListItemClick = (e, damage) => {
+      this.props.activateDamage(damage.id);
+    }, _temp;
+  }
+
+  render() {
+    var listItems = this.props.damages.map(damage => {
+      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageListItem, {
+        onClick: e => this.handleListItemClick(e, damage),
+        damage: damage,
+        active: this.props.activeDamageId == damage.id
+      });
+    });
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, listItems);
   }
 
 }
@@ -56446,23 +56472,62 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
 /* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./active-damage */ "./js/components/Map/active-damage.js");
+/* harmony import */ var _damage_list__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./damage-list */ "./js/components/Map/damage-list.js");
 
 
 
 
+const pins = {
+  D00: "D00.png",
+  D01: "D01.png",
+  D10: "D10.png",
+  D11: "D11.png",
+  D20: "D20.png",
+  D40: "D40.png",
+  D43: "D43.png",
+  D44: "D44.png",
+  default: "D00.png"
+};
+var pinImage = {
+  get: function (type) {
+    return "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
+  }
+};
+
+class DamageMarker extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
+      name: this.props.damage.type,
+      position: {
+        lat: this.props.damage.position.latitude,
+        lng: this.props.damage.position.longitude
+      },
+      options: {
+        icon: `${pinImage[this.props.damage.type]}`
+      }
+    });
+  }
+
+}
+
+class ActiveDamageInfoWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    if (!this.props.damage) return null;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
+      marker: this.props.marker,
+      visible: this.props.visible
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      width: "240px",
+      src: this.props.damage.image
+    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Type: ", this.props.damage.type)));
+  }
+
+}
 
 class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
-    super(props); // Don't call this.setState() here!
-
-    _initialiseProps.call(this);
-
-    this.state = {
-      showingInfoWindow: false,
-      activeMarker: {},
-      selectedPlace: {}
-    };
+    super(props);
+    this.markers = [];
   }
 
   componentDidMount() {
@@ -56470,11 +56535,44 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   componentDidUpdate() {
+    this.markers = [];
+    var heatData = [];
+    this.props.damages.forEach(function (damage) {
+      this.markers.append(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMarker, {
+        key: damage.id,
+        type: damage.type,
+        image: damage.image,
+        onClick: this.onMarkerClick.bind(this),
+        position: damage.position
+      }));
+      damage.reports.forEach(function (report) {
+        if (report.confidence >= 0.5) {
+          heatData.append({
+            location: new this.props.google.maps.LatLng(report.latitude, report.longitude),
+            weight: report.confidence
+          });
+        }
+      });
+    });
     const bounds = new window.google.maps.LatLngBounds();
-    this.props.instances.map(damage => {
+    this.props.damages.map(damage => {
       bounds.extend(new window.google.maps.LatLng(damage.position.latitude, damage.position.longitude));
     });
     this.refs.map.map.fitBounds(bounds);
+    new this.props.google.maps.visualization.HeatmapLayer({
+      data: heatData,
+      //the 'heat' of the heatmap
+      map: this.refs.map.map //the map instance
+
+    });
+  }
+
+  onMarkerClick(props, marker, e) {
+    this.props.activateDamage(props.key);
+  }
+
+  onMapClicked(props) {
+    if (this.props.activeDamageId) this.props.deactivateDamage();
   }
 
   render() {
@@ -56482,47 +56580,19 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       ref: "map",
       google: this.props.google,
       zoom: 14,
-      onClick: this.onMapClicked
-    }, this.props.instances && this.props.instances.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
-      name: damage.type,
-      image: damage.image,
-      onClick: this.onMarkerClick,
-      position: {
-        lat: damage.position.latitude,
-        lng: damage.position.longitude
-      }
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      marker: this.state.activeMarker,
-      visible: this.state.showingInfoWindow,
-      image: this.state.selectedPlace.image,
-      type: this.state.selectedPlace.type
+      onClick: this.onMapClicked.bind(this)
+    }, this.markers, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ActiveDamageInfoWindow, {
+      visible: this.props.activeDamageId,
+      marker: this.markers[this.props.activeDamageId],
+      damage: this.props.damages[this.props.activeDamageId]
     }));
   }
 
 }
 
-var _initialiseProps = function () {
-  this.onMarkerClick = (props, marker, e) => {
-    console.log(props, marker);
-    this.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
-  };
-
-  this.onMapClicked = props => {
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      });
-    }
-  };
-};
-
 /* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["GoogleApiWrapper"])({
-  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_2___default.a.GoogleMapsAPIKey
+  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_2___default.a.GoogleMapsAPIKey,
+  libraries: ['places', 'visualization']
 })(DamageMap));
 
 /***/ }),
@@ -56538,14 +56608,10 @@ var _initialiseProps = function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-
 
 
 class Notify extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
-    console.log(this.props);
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "notify",
       className: this.props.message ? "active" : "",
@@ -56589,49 +56655,6 @@ __webpack_require__.r(__webpack_exports__);
   }
 
 });
-
-/***/ }),
-
-/***/ "./js/components/UserSidebar.js":
-/*!**************************************!*\
-  !*** ./js/components/UserSidebar.js ***!
-  \**************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return UserSidebar; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "../node_modules/react-router-dom/es/index.js");
-
-
-/**
- * Registration Page
- */
-
-class UserSidebar extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "block"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, this.props.user.organization.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "divide-15"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Welcome, ", this.props.user.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "divide-10"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "btn",
-      onClick: this.props.getUsers
-    }, "Users"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-      to: "/users",
-      className: "btn link bg-white mt-auto"
-    }, "Users"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "btn",
-      onClick: this.props.logout
-    }, "Logout"));
-  }
-
-}
 
 /***/ }),
 
@@ -57090,8 +57113,8 @@ const RedirectMiddleware = Object(_createMiddleware__WEBPACK_IMPORTED_MODULE_1__
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageProvider", function() { return DamageProvider; });
 /* harmony import */ var _components_Map_damage_map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Map/damage-map */ "./js/components/Map/damage-map.js");
-/* harmony import */ var _components_Map__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Map */ "./js/components/Map.js");
-/* harmony import */ var _components_UserSidebar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/UserSidebar */ "./js/components/UserSidebar.js");
+/* harmony import */ var _components_Map_damage_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Map/damage-list */ "./js/components/Map/damage-list.js");
+/* harmony import */ var _components_Map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Map */ "./js/components/Map.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "../node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../actions */ "./js/actions/index.js");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services */ "./js/services/index.js");
@@ -57111,24 +57134,31 @@ const DamageProvider = c => {
   c.register("DamageActions", c => new _actions__WEBPACK_IMPORTED_MODULE_4__["DamageActionDispatcher"](c.DamageService));
   c.register("DamageMap", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
     return {
-      instances: store.damage.instances,
-      pending: store.damage.pending
+      damages: store.damage.damages,
+      pending: store.damage.pending,
+      success: store.damage.success,
+      activeDamageId: store.damage.activeDamageId
     };
   }, dispatch => {
     return {
-      loadDamage: c.DamageActions.loadDamage(dispatch)
+      loadDamage: c.DamageActions.loadDamage(dispatch),
+      activateDamage: c.DamageActions.activateDamage(dispatch),
+      deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
     };
   })(_components_Map_damage_map__WEBPACK_IMPORTED_MODULE_0__["default"]));
-  c.register("UserSidebar", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
+  c.register("DamageList", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
     return {
-      user: store.user.user
+      damages: store.damage.damages,
+      pending: store.damage.pending,
+      success: store.damage.success,
+      activeDamageId: store.damage.activeDamageId
     };
   }, dispatch => {
     return {
-      logout: Object(_actions__WEBPACK_IMPORTED_MODULE_4__["CreateLogoutActionDispatcher"])(c.AuthService, dispatch)
+      activateDamage: c.DamageActions.activateDamage(dispatch)
     };
-  })(_components_UserSidebar__WEBPACK_IMPORTED_MODULE_2__["default"]));
-  c.register("Map", c => Object(_components_Map__WEBPACK_IMPORTED_MODULE_1__["default"])(c.UserSidebar, c.DamageMap));
+  })(_components_Map_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"]));
+  c.register("Map", c => Object(_components_Map__WEBPACK_IMPORTED_MODULE_2__["default"])(c.DamageList, c.DamageMap));
 };
 
 /***/ }),
@@ -57346,25 +57376,31 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 function DamageReducer(state = {
-  instances: []
+  damages: []
 }, action) {
   switch (action.type) {
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].LOAD_DAMAGE_ATTEMPT:
       return {
-        instances: [],
+        damages: [],
         pending: true
       };
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].LOAD_DAMAGE_SUCCESS:
       return {
-        instances: action.instances,
+        damages: action.damages,
         success: true
       };
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].LOAD_DAMAGE_FAILURE:
       return {
-        instances: [],
+        damages: [],
         rejected: true
+      };
+
+    case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].ACTIVATE_DAMAGE_INSTANCE:
+      return {
+        damages: state.damages,
+        activeDamageId: action.id
       };
 
     default:

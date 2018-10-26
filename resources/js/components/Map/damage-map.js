@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
-import ActiveDamage from "./active-damage";
+import ActiveDamage from "./damage-list";
 
 const pins = {
   D00: "D00.png",
@@ -40,6 +40,8 @@ class DamageMarker extends Component {
 
 class ActiveDamageInfoWindow extends Component {
   render() {
+    if(!this.props.damage) return null;
+
     return (
       <InfoWindow marker={this.props.marker} visible={this.props.visible}>
         <div>
@@ -52,15 +54,20 @@ class ActiveDamageInfoWindow extends Component {
 }
 
 class DamageMap extends Component {
+  constructor(props) {
+    super(props)
+    this.markers = []
+  }
+
   componentDidMount() {
     this.props.loadDamage();
   }
 
   componentDidUpdate() {
     this.markers = [];
-    heatData = [];
+    var heatData = [];
 
-    this.props.instances.forEach(function(damage) {
+    this.props.damages.forEach(function(damage) {
       this.markers.append(
         <DamageMarker
           key={damage.id}
@@ -85,7 +92,7 @@ class DamageMap extends Component {
     });
 
     const bounds = new window.google.maps.LatLngBounds();
-    this.props.instances.map(damage => {
+    this.props.damages.map(damage => {
       bounds.extend(
         new window.google.maps.LatLng(
           damage.position.latitude,
@@ -118,11 +125,11 @@ class DamageMap extends Component {
         zoom={14}
         onClick={this.onMapClicked.bind(this)}
       >
-        {markers}
+        {this.markers}
         <ActiveDamageInfoWindow
           visible={this.props.activeDamageId}
           marker={this.markers[this.props.activeDamageId]}
-          damage={this.props.instances[this.props.activeDamageId]}
+          damage={this.props.damages[this.props.activeDamageId]}
         />
       </Map>
     );
@@ -130,5 +137,6 @@ class DamageMap extends Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: config.GoogleMapsAPIKey
+  apiKey: config.GoogleMapsAPIKey,
+  libraries: ['places', 'visualization']
 })(DamageMap);

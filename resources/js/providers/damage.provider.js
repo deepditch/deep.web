@@ -1,6 +1,6 @@
 import DamageMap from "../components/Map/damage-map";
+import DamageList from "../components/Map/damage-list";
 import Map from "../components/Map";
-import UserSidebar from "../components/UserSidebar";
 import { connect } from "react-redux";
 
 import {
@@ -22,7 +22,7 @@ export const DamageProvider = c => {
     connect(
       store => {
         return {
-          instances: store.damage.instances,
+          damages: store.damage.damages,
           pending: store.damage.pending,
           success: store.damage.success,
           activeDamageId: store.damage.activeDamageId
@@ -38,20 +38,23 @@ export const DamageProvider = c => {
     )(DamageMap)
   );
 
-  c.register("UserSidebar", c =>
+  c.register("DamageList", c =>
     connect(
       store => {
         return {
-          user: store.user.user,
+          damages: store.damage.damages,
+          pending: store.damage.pending,
+          success: store.damage.success,
+          activeDamageId: store.damage.activeDamageId
         };
       },
       dispatch => {
         return {
-          logout: CreateLogoutActionDispatcher(c.AuthService, dispatch)
+          activateDamage: c.DamageActions.activateDamage(dispatch),
         };
       }
-    )(UserSidebar)
+    )(DamageList)
   );
 
-  c.register("Map", c => Map(c.UserSidebar, c.DamageMap));
+  c.register("Map", c => Map(c.DamageList, c.DamageMap));
 };

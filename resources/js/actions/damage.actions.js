@@ -12,10 +12,10 @@ export const DamageActions = {
   attempt: () => {
     return { type: DamageActionTypes.LOAD_DAMAGE_ATTEMPT };
   },
-  success: instances => {
+  success: damages => {
     return {
       type: DamageActionTypes.LOAD_DAMAGE_SUCCESS,
-      instances: instances
+      damages: damages
     };
   },
   failure: () => {
@@ -39,8 +39,8 @@ export class DamageActionDispatcher {
 
     this.damageService
       .getDamageInstances()
-      .then(instances => {
-        dispatch(DamageActions.success(instances));
+      .then(damages => {
+        dispatch(DamageActions.success(damages));
       })
       .catch(error => {
         dispatch(DamageActions.failure());
