@@ -35,6 +35,10 @@ class CreateRoadDamageReportsTable extends Migration
                 'pending-repair', 'repairing', 'done', 'wont-do'
             ])
             ->after('type');
+            $table->enum('direction', [
+                'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'
+            ])
+            ->after('type');
         });
 
         Schema::table('images', function (Blueprint $table) {

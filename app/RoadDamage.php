@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class RoadDamage extends Model
 {
@@ -22,37 +21,18 @@ class RoadDamage extends Model
     ];
 
     /**
-     * Get the image object.
-     *
-     * @return \App\Image
-     */
-    public function getImage()
-    {
-        return Image::where('roaddamage_id', $this->id)->first() ?? (new Image());
-    }
-
-    /**
-     * Get the image URL.
-     *
-     * @return string image URL
-     */
-    public function getImageUrl()
-    {
-        return env('APP_URL').Storage::url($this->getImage()->image_name);
-    }
-
-    /**
      * Get the right road damage based on provided longitude and latitude
      * values.
      *
-     * http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
+     * Query source http://janmatuschek.de/LatitudeLongitudeBoundingCoordinates
      *
-     * @param float $latitude
-     * @param float $longitude
+     * @param float  $latitude
+     * @param float  $longitude
+     * @param string $direction
      *
      * @return Collection of \App\RoadDamage
      */
-    public static function findRelativeRoadDamage(float $latitude, float $longitude)
+    public static function findRelativeRoadDamage(float $latitude, float $longitude, string $direction)
     {
         $lat_rad = deg2rad($latitude);
         $long_rad = deg2rad($longitude);
@@ -71,8 +51,39 @@ class RoadDamage extends Model
                 ) * 6371000 AS distance"
             ),
         ]
-        )->havingRaw('distance < 10')->get();
+        )->havingRaw('distance < 10')
+        ->whereRaw('direction = ?', [$direction])->get();
 
         return $res;
+    }
+
+    /**
+     * Get the highest confidence report.
+     *
+     * @return \App\RoadDamageReport
+     */
+    public function getHighestConfidenceReport()
+    {
+        $reports = RoadDamageReport::where('roaddamage_id', $this->id)->get();
+        $confidence = 0;
+        $highest = new RoadDamageReport();
+        foreach ($reports as $report) {
+            if ($report->confidence >= $confidence) {
+                $highest = $report;
+            }
+        }
+
+        return $highest;
+    }
+
+    /**
+     * Do we have a verified report?
+     *
+     * @return \App\RoadDamageReport
+     */
+    public function hasVerifiedReport()
+    {
+        return RoadDamageReport::where('roaddamage_id', $this->id)
+            ->where('verified', 'verified')->exists();
     }
 }

@@ -64,12 +64,25 @@ class RoadDamageController extends Controller
         $user = auth('api')->user();
         $location = $request->input('location');
         $damages = $request->input('damages');
+        $direction = $request->input('direction');
         $image = Image::newImageFromBase64($request->input('image'));
 
         $road_damage = RoadDamage::findRelativeRoadDamage(
             $request->input('location.latitude'),
-            $request->input('location.longitude')
-        )->first();
+            $request->input('location.longitude'),
+            $direction
+        );
+
+        if ($road_damage->isEmpty()) {
+            $road_damage = RoadDamage::create([
+                'user_id' => $user->id,
+                'latitude' => $location['latitude'],
+                'longitude' => $location['longitude'],
+                'organization_id' => $user->organization_id,
+            ]);
+        } else {
+            $road_damage = $road_damage->first();
+        }
 
         foreach ($damages as $report) {
             RoadDamageReport::create([
@@ -82,6 +95,6 @@ class RoadDamageController extends Controller
             ]);
         }
 
-        // return new RoadDamageResource($road_damage);
+        return new RoadDamageResource($road_damage);
     }
 }

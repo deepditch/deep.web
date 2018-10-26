@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class RoadDamageReport extends Model
 {
@@ -28,4 +29,24 @@ class RoadDamageReport extends Model
         'latitude',
         'longitude',
     ];
+
+    /**
+     * Get the image object.
+     *
+     * @return \App\Image
+     */
+    public function getImage()
+    {
+        return Image::find($this->image_id) ?? (new Image());
+    }
+
+    /**
+     * Get the image URL.
+     *
+     * @return string image URL
+     */
+    public function getImageUrl()
+    {
+        return env('APP_URL').Storage::url($this->getImage()->image_name);
+    }
 }
