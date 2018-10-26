@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Image extends Model
 {
@@ -10,10 +11,10 @@ class Image extends Model
      * Mime type to image file extensions.
      */
     const MIME_TYPE_FILE_EXTENSIONS = [
-      'image/jpg'  => '.jpg',
+      'image/jpg' => '.jpg',
       'image/jpeg' => '.jpeg',
-      'image/png'  => '.png',
-      'image/gif'  => '.gif',
+      'image/png' => '.png',
+      'image/gif' => '.gif',
     ];
     /**
      * The attributes that are mass assignable.
@@ -31,11 +32,11 @@ class Image extends Model
      *
      * @return App\Image
      */
-    public function newImageFromBase64(string $image): App\Image
+    public static function newImageFromBase64(string $image): Image
     {
-        if (! empty($image)) {
+        if (!empty($image)) {
             try {
-                $filename = uniqid('damage_', true) .
+                $filename = uniqid('damage_', true).
                 Image::MIME_TYPE_FILE_EXTENSIONS[
                     getimagesizefromstring(base64_decode($image))['mime']
                 ];

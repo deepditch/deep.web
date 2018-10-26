@@ -52,19 +52,19 @@ class RoadDamageController extends Controller
     public function insert(Request $request)
     {
         $request->validate([
-            'image'                => 'required',
-            'location.latitude'    => 'required',
-            'location.longitude'   => 'required',
-            'direction'            => 'required',
-            'damages'              => 'required',
-            'damages.*.type'       => 'required',
+            'image' => 'required',
+            'location.latitude' => 'required',
+            'location.longitude' => 'required',
+            'direction' => 'required',
+            'damages' => 'required',
+            'damages.*.type' => 'required',
             'damages.*.confidence' => 'required',
         ]);
 
-        $user     = auth('api')->user();
+        $user = auth('api')->user();
         $location = $request->input('location');
-        $damages  = $request->input('damages');
-        $image    = Image::newImageFromBase64($request->input('image'));
+        $damages = $request->input('damages');
+        $image = Image::newImageFromBase64($request->input('image'));
 
         $road_damage = RoadDamage::findRelativeRoadDamage(
             $request->input('location.latitude'),
@@ -74,11 +74,11 @@ class RoadDamageController extends Controller
         foreach ($damages as $report) {
             RoadDamageReport::create([
                 'roaddamage_id' => $road_damage->id,
-                'user_id'       => $user->id,
-                'image_id'      => $image->id,
-                'confidence'    => $report['confidence'],
-                'latitude'      => $location['latitude'],
-                'longitude'     => $location['longitude'],
+                'user_id' => $user->id,
+                'image_id' => $image->id,
+                'confidence' => $report['confidence'],
+                'latitude' => $location['latitude'],
+                'longitude' => $location['longitude'],
             ]);
         }
 

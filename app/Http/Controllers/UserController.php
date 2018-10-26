@@ -56,9 +56,9 @@ class UserController extends Controller
         $token = str_random(16);
 
         $invite = UserInvite::create([
-            'email'           => $request->input('email'),
+            'email' => $request->input('email'),
             'organization_id' => auth('api')->user()->organization_id,
-            'token'           => $token,
+            'token' => $token,
         ]);
 
         Mail::to($request->input('email'))->send(new UserInviteMailable($invite));

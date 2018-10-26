@@ -38,7 +38,7 @@ class RoadDamage extends Model
      */
     public function getImageUrl()
     {
-        return env('APP_URL') . Storage::url($this->getImage()->image_name);
+        return env('APP_URL').Storage::url($this->getImage()->image_name);
     }
 
     /**
@@ -54,20 +54,12 @@ class RoadDamage extends Model
      */
     public static function findRelativeRoadDamage(float $latitude, float $longitude)
     {
-        $lat_rad  = deg2rad($latitude);
+        $lat_rad = deg2rad($latitude);
         $long_rad = deg2rad($longitude);
 
-        var_dump("acos(
-            sin({$lat_rad}) *
-            sin(RADIANS(latitude)) +
-            cos({$lat_rad}) *
-            cos(RADIANS(latitude)) *
-            cos(RADIANS(longitude) -
-            {$long_rad})
-        ) * 6371000 AS distance");
         $res = self::select(
-            [
-                '*',
+        [
+            '*',
                 DB::raw(
                     "acos(
                     sin({$lat_rad}) *

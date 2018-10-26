@@ -29,8 +29,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email|unique:users,email|max:255',
-            'name'     => 'required|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
+            'name' => 'required|max:255',
             'password' => 'required|min:8',
         ]);
 
@@ -49,11 +49,11 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name'            => $request->input('name'),
-            'email'           => $request->input('email'),
-            'password'        => Hash::make($request->input('password')),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
             'organization_id' => isset($organization) ? $organization->id : config('organization.default_id'),
-            'role'            => $role,
+            'role' => $role,
         ]);
 
         return response()->json(['user' => new UserResource(User::find($user->id))], 200);
@@ -69,11 +69,11 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        if (! $token = auth('api')->attempt([
+        if (!$token = auth('api')->attempt([
             'email' => $request->input('email'),
             'password' => $request->input('password'), ])
         ) {
@@ -143,8 +143,8 @@ class AuthController extends Controller
     {
         return [
             'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => auth('api')->factory()->getTTL() * 60,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
         ];
     }
 }
