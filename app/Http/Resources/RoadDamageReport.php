@@ -19,7 +19,7 @@ class RoadDamageReport extends JsonResource
         'id' => $this->id,
         'user_id' => $this->user_id,
         'roaddamage_id' => $this->roaddamage_id,
-        'type' => $this->type,
+        'type' => $this->getRoadDamage()->type,
         'verified' => $this->verified,
         'confidence' => $this->confidence,
         'latitude' => $this->latitude,
