@@ -2,23 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\User as UserResource;
+use App\Organization;
+use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-use App\Http\Resources\User as UserResource;
-
-use App\User;
-use App\Organization;
 
 class AuthController extends Controller
 {
     /**
      * Create a new AuthController instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -26,9 +20,10 @@ class AuthController extends Controller
     }
 
     /**
-     * Register a user
+     * Register a user.
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
@@ -43,11 +38,11 @@ class AuthController extends Controller
 
         if ($request->input('organization')) {
             $request->validate([
-                'organization' => 'unique:organizations,name|max:255'
+                'organization' => 'unique:organizations,name|max:255',
             ]);
 
             $organization = Organization::create([
-                'name' => $request->input('organization')
+                'name' => $request->input('organization'),
             ]);
 
             $role = User::ADMIN_ROLE;
@@ -58,7 +53,7 @@ class AuthController extends Controller
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
             'organization_id' => isset($organization) ? $organization->id : config('organization.default_id'),
-            'role' => $role
+            'role' => $role,
         ]);
 
         return response()->json(['user' => new UserResource(User::find($user->id))], 200);
@@ -68,18 +63,19 @@ class AuthController extends Controller
      * Log in.
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        if (! $token = auth('api')->attempt([
+        if (!$token = auth('api')->attempt([
             'email' => $request->input('email'),
-            'password' => $request->input('password')])
+            'password' => $request->input('password'), ])
         ) {
             return response()->json(['error' => 'Invalid email or password!'], 401);
         }
@@ -96,6 +92,7 @@ class AuthController extends Controller
      * Get the authenticated User.
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function me(Request $request)
@@ -103,7 +100,7 @@ class AuthController extends Controller
         return [
             'user' => new UserResource(
                 User::find(auth('api')->user()->id)
-            )
+            ),
         ];
     }
 
@@ -111,6 +108,7 @@ class AuthController extends Controller
      * Refresh a token.
      *
      * @param Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh(Request $request)
@@ -119,9 +117,25 @@ class AuthController extends Controller
     }
 
     /**
+     * Log out
+     * Invalidate the token, so user cannot use it anymore
+     * They have to relogin to get a new token.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        auth('api')->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -130,22 +144,7 @@ class AuthController extends Controller
         return [
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
         ];
-    }
-
-    /**
-     * Log out
-     * Invalidate the token, so user cannot use it anymore
-     * They have to relogin to get a new token
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout(Request $request)
-    {
-        auth('api')->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
     }
 }
