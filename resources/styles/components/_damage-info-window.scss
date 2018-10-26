@@ -1,0 +1,53 @@
+@import "../color/lib";
+@import "../type/lib";
+
+.damage-info-window {
+  font-size: 0.8rem;
+  color: $white;
+  background-color: $gray;
+  border: 3px solid $black;
+  border-radius: 15px;
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: left;
+  width: 224px;
+
+  .content {
+    padding: pxtoem(10);
+  }
+
+  img {
+    display: block;
+    width: calc(100% + 6px);
+    margin-left: -3px;
+    margin-top: -3px;
+    border: 3px solid $black;
+    border-bottom: 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  &:after {
+    content: "";
+    width: pxtoem(35);
+    height: pxtoem(35);
+    background-color: $gray;
+    border-bottom: 3px solid $black;
+    border-left: 3px solid $black;
+    border-radius: 3px;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}
+
+.gm-style-iw + div {
+  display: none;
+}
+.gm-style-iw {
+  text-align: center;
+  overflow: visible !important;
+}

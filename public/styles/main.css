@@ -1060,4 +1060,61 @@ button {
     -webkit-transform: translate(0, 0);
             transform: translate(0, 0); } }
 
+/**
+ * Calculate the luminance for a color.
+ * See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+ */
+/**
+ * Calculate the contrast ratio between two colors.
+ * See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+ */
+/**
+ * Determine whether to use dark or light text on top of given color.
+ * Returns black for dark text and white for light text.
+ */
+.damage-info-window {
+  font-size: 0.8rem;
+  color: #ffffff;
+  background-color: #2c3443;
+  border: 3px solid #000;
+  border-radius: 15px;
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+          transform: translate(-50%, 0);
+  text-align: left;
+  width: 224px; }
+  .damage-info-window .content {
+    padding: 0.55556em; }
+  .damage-info-window img {
+    display: block;
+    width: calc(100% + 6px);
+    margin-left: -3px;
+    margin-top: -3px;
+    border: 3px solid #000;
+    border-bottom: 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px; }
+  .damage-info-window:after {
+    content: "";
+    width: 1.94444em;
+    height: 1.94444em;
+    background-color: #2c3443;
+    border-bottom: 3px solid #000;
+    border-left: 3px solid #000;
+    border-radius: 3px;
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%) rotate(-45deg);
+            transform: translate(-50%, -50%) rotate(-45deg); }
+
+.gm-style-iw + div {
+  display: none; }
+
+.gm-style-iw {
+  text-align: center;
+  overflow: visible !important; }
+
 /*# sourceMappingURL=main.css.map */

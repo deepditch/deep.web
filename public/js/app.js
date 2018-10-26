@@ -56422,14 +56422,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ActiveDamage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
+
 
 class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
-    if (!this.props.damage) return null;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    var verified = this.props.verified ? "Verified" : "Unverified";
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "damage-info-window"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       width: "240px",
-      src: this.props.damage.image
-    }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Type: ", this.props.damage.type));
+      src: this.props.image
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "content"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
+      className: "mb-1"
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.position.streetname, " (", this.props.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
+      className: "row align-items-center"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-6"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      className: "h5 small mb-0"
+    }, this.props.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-6"
+    }, verified))));
   }
 
 }
@@ -56469,7 +56485,6 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   render() {
-    console.log(this.props);
     var listItems = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageListItem, {
       key: damage.id,
       onClick: e => this.handleListItemClick(e, damage),
@@ -56519,19 +56534,27 @@ var pinImage = type => "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : 
 
 class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   shouldComponentUpdate(newProps, newState) {
-    return newProps.damages.length != this.props.damages.length;
+    return newProps.damages.length != this.props.damages.length || newProps.visible != this.props.visible;
   }
 
   render() {
     if (!this.props.map) return null;
 
     var _ = this;
-
-    const bounds = new window.google.maps.LatLngBounds();
-    this.props.damages.map(damage => {
-      bounds.extend(new window.google.maps.LatLng(damage.position.latitude, damage.position.longitude));
+    /*
+    const bounds = new _.props.google.maps.LatLngBounds();
+     this.props.damages.map(damage => {
+      bounds.extend(
+        new _.props.google.maps.LatLng(
+          damage.position.latitude,
+          damage.position.longitude
+        )
+      );
     });
-    this.props.map.fitBounds(bounds);
+     this.props.map.fitBounds(bounds);
+    */
+
+
     var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
       name: damage.type,
       key: damage.id,
@@ -56543,8 +56566,10 @@ class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       },
       map: this.props.map,
       google: this.props.google,
+      visible: this.props.visible,
       options: {
-        icon: pinImage(damage.type)
+        icon: pinImage(damage.type),
+        visible: this.props.visible
       }
     }));
     return markers;
@@ -56587,8 +56612,20 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     super(props);
     this.state = {
       showingInfoWindow: false,
-      activeMarker: {}
+      activeMarker: {},
+      markersVisible: true,
+      latitude: 42.331429,
+      longitude: -83.045753
     };
+
+    var geoSuccess = function (position) {
+      this.setState({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    };
+
+    navigator.geolocation.getCurrentPosition(geoSuccess);
   }
 
   componentDidMount() {
@@ -56596,7 +56633,6 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   onMarkerClick(props, marker, e) {
-    console.log(props);
     this.props.activateDamage(props.damage.id);
     this.setState({
       activeMarker: marker,
@@ -56613,25 +56649,38 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         activeMarker: null
       });
     }
+
+    console.log(this.refs.map);
+  }
+
+  onZoomChanged(props) {
+    this.setState({
+      markersVisible: this.refs.map.map.getZoom() >= 14
+    });
   }
 
   render() {
+    var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Map"], {
       ref: "map",
       google: this.props.google,
       zoom: 14,
-      onClick: this.onMapClicked.bind(this)
+      onClick: this.onMapClicked.bind(this),
+      onZoom_changed: this.onZoomChanged.bind(this),
+      initialCenter: {
+        lat: this.state.latitude,
+        lng: this.state.longitude
+      }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MapMarkers, {
       damages: this.props.damages,
-      onMarkerClick: this.onMarkerClick.bind(this)
+      onMarkerClick: this.onMarkerClick.bind(this),
+      visible: this.state.markersVisible
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(HeatMap, {
       damages: this.props.damages
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
       visible: this.state.showingInfoWindow,
       marker: this.state.activeMarker
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      damage: this.props.damages.find(damage => damage.id == this.props.activeDamageId)
-    })));
+    }, activeDamage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_3__["default"], activeDamage) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null)));
   }
 
 }
@@ -56974,6 +57023,49 @@ function createContainer() {
   Object(_providers__WEBPACK_IMPORTED_MODULE_3__["DamageProvider"])(c);
   Object(_providers_users_provider__WEBPACK_IMPORTED_MODULE_4__["UsersProvider"])(c);
   return c;
+}
+
+/***/ }),
+
+/***/ "./js/helpers/damage-types.js":
+/*!************************************!*\
+  !*** ./js/helpers/damage-types.js ***!
+  \************************************/
+/*! exports provided: mapTypeToDescription */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapTypeToDescription", function() { return mapTypeToDescription; });
+function mapTypeToDescription(type) {
+  switch (type) {
+    case "D00":
+      return "Wheel Mark Part";
+
+    case "D01":
+      return "Construction Joint Part (Longitudinal)";
+
+    case "D10":
+      return "Equal interval";
+
+    case "D11":
+      return "Construction Joint Part (Lateral)";
+
+    case "D20":
+      return "Alligator Crack ";
+
+    case "D40":
+      return "Rutting, Bump, Pothole, or Separation";
+
+    case "D43":
+      return "White Line Blur";
+
+    case "D44":
+      return "Crosswalk blur";
+
+    default:
+      return type;
+  }
 }
 
 /***/ }),
