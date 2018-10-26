@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
-import ActiveDamage from "./damage-list";
+import ActiveDamage from "./active-damage";
 
 const pins = {
   D00: "D00.png",
@@ -15,83 +15,21 @@ const pins = {
   default: "D00.png"
 };
 
-var pinImage = {
-  get: function(type) {
-    return (
-      "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"])
-    );
-  }
-};
+var pinImage = type =>
+  "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
 
-class DamageMarker extends Component {
+class MapMarkers extends Component {
+  shouldComponentUpdate(newProps, newState) {
+    return newProps.damages.length != this.props.damages.length;
+  }
+
   render() {
-    return (
-      <Marker
-        name={this.props.damage.type}
-        position={{
-          lat: this.props.damage.position.latitude,
-          lng: this.props.damage.position.longitude
-        }}
-        options={{ icon: `${pinImage[this.props.damage.type]}` }}
-      />
-    );
-  }
-}
+    if (!this.props.map) return null;
 
-class ActiveDamageInfoWindow extends Component {
-  render() {
-    if(!this.props.damage) return null;
-
-    return (
-      <InfoWindow marker={this.props.marker} visible={this.props.visible}>
-        <div>
-          <img width="240px" src={this.props.damage.image} /> <br />
-          <h3>Type: {this.props.damage.type}</h3>
-        </div>
-      </InfoWindow>
-    );
-  }
-}
-
-class DamageMap extends Component {
-  constructor(props) {
-    super(props)
-    this.markers = []
-  }
-
-  componentDidMount() {
-    this.props.loadDamage();
-  }
-
-  componentDidUpdate() {
-    this.markers = [];
-    var heatData = [];
-
-    this.props.damages.forEach(function(damage) {
-      this.markers.append(
-        <DamageMarker
-          key={damage.id}
-          type={damage.type}
-          image={damage.image}
-          onClick={this.onMarkerClick.bind(this)}
-          position={damage.position}
-        />
-      );
-
-      damage.reports.forEach(function(report) {
-        if (report.confidence >= 0.5) {
-          heatData.append({
-            location: new this.props.google.maps.LatLng(
-              report.latitude,
-              report.longitude
-            ),
-            weight: report.confidence
-          });
-        }
-      });
-    });
+    var _ = this;
 
     const bounds = new window.google.maps.LatLngBounds();
+
     this.props.damages.map(damage => {
       bounds.extend(
         new window.google.maps.LatLng(
@@ -101,20 +39,94 @@ class DamageMap extends Component {
       );
     });
 
-    this.refs.map.map.fitBounds(bounds);
+    this.props.map.fitBounds(bounds);
+
+    var markers = this.props.damages.map(damage => (
+      <Marker
+        name={damage.type}
+        key={damage.id}
+        onClick={_.props.onMarkerClick.bind(_)}
+        damage={damage}
+        position={{
+          lat: damage.position.latitude,
+          lng: damage.position.longitude
+        }}
+        map={this.props.map}
+        google={this.props.google}
+        options={{ icon: pinImage(damage.type) }}
+      />
+    ));
+
+    return markers;
+  }
+}
+
+class HeatMap extends Component {
+  shouldComponentUpdate(newProps, newState) {
+    return newProps.damages.length != this.props.damages.length;
+  }
+
+  render() {
+    var _ = this;
+    var heatData = [];
+
+    this.props.damages.forEach(function(damage) {
+      damage.reports.forEach(function(report) {
+        if (report.confidence >= 0.5) {
+          heatData.push({
+            location: new _.props.google.maps.LatLng(
+              report.latitude,
+              report.longitude
+            ),
+            weight: report.confidence
+          });
+        }
+      });
+    });
 
     new this.props.google.maps.visualization.HeatmapLayer({
       data: heatData, //the 'heat' of the heatmap
-      map: this.refs.map.map //the map instance
+      map: this.props.map //the map instance
     });
+
+    return null;
+  }
+}
+
+class DamageMap extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showingInfoWindow: false,
+      activeMarker: {}
+    };
+  }
+
+  componentDidMount() {
+    this.props.loadDamage();
   }
 
   onMarkerClick(props, marker, e) {
-    this.props.activateDamage(props.key);
+    console.log(props);
+
+    this.props.activateDamage(props.damage.id);
+
+    this.setState({
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
   }
 
   onMapClicked(props) {
     if (this.props.activeDamageId) this.props.deactivateDamage();
+
+    if (this.state.showingInfoWindow) {
+      this.setState({
+        showingInfoWindow: false,
+        activeMarker: null
+      });
+    }
   }
 
   render() {
@@ -125,12 +137,23 @@ class DamageMap extends Component {
         zoom={14}
         onClick={this.onMapClicked.bind(this)}
       >
-        {this.markers}
-        <ActiveDamageInfoWindow
-          visible={this.props.activeDamageId}
-          marker={this.markers[this.props.activeDamageId]}
-          damage={this.props.damages[this.props.activeDamageId]}
+        <MapMarkers
+          damages={this.props.damages}
+          onMarkerClick={this.onMarkerClick.bind(this)}
         />
+
+        <HeatMap damages={this.props.damages} />
+
+        <InfoWindow
+          visible={this.state.showingInfoWindow}
+          marker={this.state.activeMarker}
+        >
+          <ActiveDamage
+            damage={this.props.damages.find(
+              damage => damage.id == this.props.activeDamageId
+            )}
+          />
+        </InfoWindow>
       </Map>
     );
   }
@@ -138,5 +161,5 @@ class DamageMap extends Component {
 
 export default GoogleApiWrapper({
   apiKey: config.GoogleMapsAPIKey,
-  libraries: ['places', 'visualization']
+  libraries: ["places", "visualization"]
 })(DamageMap);

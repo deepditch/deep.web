@@ -4,8 +4,7 @@ import Map from "../components/Map";
 import { connect } from "react-redux";
 
 import {
-  DamageActionDispatcher,
-  CreateLogoutActionDispatcher
+  DamageActionDispatcher
 } from "../actions";
 
 import { DamageService } from "../services";
@@ -50,7 +49,7 @@ export const DamageProvider = c => {
       },
       dispatch => {
         return {
-          activateDamage: c.DamageActions.activateDamage(dispatch),
+          activateDamage: c.DamageActions.activateDamage(dispatch)
         };
       }
     )(DamageList)
