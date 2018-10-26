@@ -16,6 +16,9 @@ class RoadDamage extends Model
         'user_id',
         'latitude',
         'longitude',
+        'type',
+        'status',
+        'direction',
         'image_id',
         'organization_id',
     ];
@@ -29,10 +32,11 @@ class RoadDamage extends Model
      * @param float  $latitude
      * @param float  $longitude
      * @param string $direction
+     * @param string $type
      *
      * @return Collection of \App\RoadDamage
      */
-    public static function findRelativeRoadDamage(float $latitude, float $longitude, string $direction)
+    public static function findRelativeRoadDamage(float $latitude, float $longitude, string $direction, string $type)
     {
         $lat_rad = deg2rad($latitude);
         $long_rad = deg2rad($longitude);
@@ -52,7 +56,8 @@ class RoadDamage extends Model
             ),
         ]
         )->havingRaw('distance < 10')
-        ->whereRaw('direction = ?', [$direction])->get();
+        ->whereRaw("direction = '{$direction}'")
+        ->whereRaw("`type` = '{$type}'")->get();
 
         return $res;
     }
