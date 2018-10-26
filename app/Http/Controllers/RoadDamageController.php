@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
-
-use App\RoadDamage;
-use App\Image;
-
 use App\Http\Resources\RoadDamage as RoadDamageResource;
+use App\Image;
+use App\RoadDamage;
+use App\RoadDamageReport;
+use Illuminate\Http\Request;
 
 class RoadDamageController extends Controller
 {
-
     /**
      * Add authentication middleware.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -25,9 +19,10 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Get the base Json data of this model
+     * Get the base Json data of this model.
      *
-     * @param  int $id id of the resource model we're getting
+     * @param int $id id of the resource model we're getting
+     *
      * @return App\Http\Resources\RoadDamage
      */
     public function getJson(int $id)
@@ -36,7 +31,7 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Get the base Json data of all the models for the authenticated user
+     * Get the base Json data of all the models for the authenticated user.
      *
      * @return App\Http\Resources\RoadDamage
      */
@@ -50,37 +45,43 @@ class RoadDamageController extends Controller
     /**
      * Insert a RoadDamage into the database.
      *
-     * @param  Illuminate\Http\Request $request
+     * @param Illuminate\Http\Request $request
+     *
      * @return App\Http\Resources\RoadDamage
      */
     public function insert(Request $request)
     {
         $request->validate([
-            'latitude' => 'required',
-            'longitude' => 'required',
+            'image'                => 'required',
+            'location.latitude'    => 'required',
+            'location.longitude'   => 'required',
+            'direction'            => 'required',
+            'damages'              => 'required',
+            'damages.*.type'       => 'required',
+            'damages.*.confidence' => 'required',
         ]);
 
-        $road_damage = RoadDamage::create([
-          'user_id' => auth('api')->user()->id,
-          'latitude' => $request->input('latitude'),
-          'longitude' => $request->input('longitude'),
-          'organization_id' => auth('api')->user()->organization_id,
-          'type' => $request->input('type') ?? 'D00'
-        ]);
+        $user     = auth('api')->user();
+        $location = $request->input('location');
+        $damages  = $request->input('damages');
+        $image    = Image::newImageFromBase64($request->input('image'));
 
-        if (! empty($request->file('image'))) {
-            try {
-                $file_path = $request->file('image')->store('roaddamage');
-            } catch (\Exception $e) {
-                return $e->getMessage();
-            }
+        $road_damage = RoadDamage::findRelativeRoadDamage(
+            $request->input('location.latitude'),
+            $request->input('location.longitude')
+        )->first();
 
-            Image::create([
-              'roaddamage_id' => $road_damage->id,
-              'image_name' => $file_path
+        foreach ($damages as $report) {
+            RoadDamageReport::create([
+                'roaddamage_id' => $road_damage->id,
+                'user_id'       => $user->id,
+                'image_id'      => $image->id,
+                'confidence'    => $report['confidence'],
+                'latitude'      => $location['latitude'],
+                'longitude'     => $location['longitude'],
             ]);
         }
 
-        return new RoadDamageResource($road_damage);
+        // return new RoadDamageResource($road_damage);
     }
 }

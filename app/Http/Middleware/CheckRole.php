@@ -2,27 +2,26 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Auth;
 use App\User;
-use Illuminate\Support\Facades\Log;
+use Auth;
+use Closure;
 
 class CheckRole
 {
-
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param string $role
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string                   $role
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, string $role)
     {
-        if ($role === User::ADMIN_ROLE && auth('api')->user()->role !== User::ADMIN_ROLE) {
+        if (User::ADMIN_ROLE === $role && User::ADMIN_ROLE !== auth('api')->user()->role) {
             return response()->json([
-                'error' => 'You are not authorized to perform this action.'
+                'error' => 'You are not authorized to perform this action.',
             ], 401);
         }
 
