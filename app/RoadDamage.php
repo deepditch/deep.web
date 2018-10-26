@@ -82,13 +82,27 @@ class RoadDamage extends Model
     }
 
     /**
-     * Do we have a verified report?
+     * Do we have a verified report (and not a false-positive report).
      *
      * @return \App\RoadDamageReport
      */
     public function hasVerifiedReport()
     {
-        return RoadDamageReport::where('roaddamage_id', $this->id)
+        return
+        !RoadDamageReport::where('roaddamage_id', $this->id)
+            ->where('verified', 'false-positive')->exists() &&
+        RoadDamageReport::where('roaddamage_id', $this->id)
             ->where('verified', 'verified')->exists();
+    }
+
+    /**
+     * Do we have a false-positive report.
+     *
+     * @return \App\RoadDamageReport
+     */
+    public function hasFalsePositiveReport()
+    {
+        return RoadDamageReport::where('roaddamage_id', $this->id)
+            ->where('verified', 'false-positive')->exists();
     }
 }
