@@ -67,24 +67,25 @@ class RoadDamageController extends Controller
         $direction = $request->input('direction');
         $image = Image::newImageFromBase64($request->input('image'));
 
-        $road_damage = RoadDamage::findRelativeRoadDamage(
-            $request->input('location.latitude'),
-            $request->input('location.longitude'),
-            $direction
-        );
-
-        if ($road_damage->isEmpty()) {
-            $road_damage = RoadDamage::create([
-                'user_id' => $user->id,
-                'latitude' => $location['latitude'],
-                'longitude' => $location['longitude'],
-                'organization_id' => $user->organization_id,
-            ]);
-        } else {
-            $road_damage = $road_damage->first();
-        }
-
         foreach ($damages as $report) {
+            $road_damage = RoadDamage::findRelativeRoadDamage(
+                $request->input('location.latitude'),
+                $request->input('location.longitude'),
+                $direction,
+                $report['type']
+            );
+            if ($road_damage->isEmpty()) {
+                $road_damage = RoadDamage::create([
+                    'user_id' => $user->id,
+                    'direction' => $direction,
+                    'type' => $report['type'],
+                    'latitude' => $location['latitude'],
+                    'longitude' => $location['longitude'],
+                    'organization_id' => $user->organization_id,
+                ]);
+            } else {
+                $road_damage = $road_damage->first();
+            }
             RoadDamageReport::create([
                 'roaddamage_id' => $road_damage->id,
                 'user_id' => $user->id,
