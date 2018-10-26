@@ -1,0 +1,12 @@
+@import "../type/lib";
+
+.navbar {
+  font-size: pxtoem(16);
+  padding: 0 pxtoem(12);
+}
+
+#navbarNav {
+  .navbar-nav {
+    margin-left: auto;
+  }
+}
