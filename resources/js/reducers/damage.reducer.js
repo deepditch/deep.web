@@ -13,6 +13,8 @@ export default function DamageReducer(state = { instances: [] }, action) {
       return { instances: action.instances, success: true };
     case DamageActionTypes.LOAD_DAMAGE_FAILURE:
       return { instances: [], rejected: true };
+    case DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE:
+      return { instances: state.instances, activeDamageId: action.id };
     default:
       return state;
   }

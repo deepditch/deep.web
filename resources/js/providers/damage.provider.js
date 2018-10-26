@@ -23,12 +23,16 @@ export const DamageProvider = c => {
       store => {
         return {
           instances: store.damage.instances,
-          pending: store.damage.pending
+          pending: store.damage.pending,
+          success: store.damage.success,
+          activeDamageId: store.damage.activeDamageId
         };
       },
       dispatch => {
         return {
-          loadDamage: c.DamageActions.loadDamage(dispatch)
+          loadDamage: c.DamageActions.loadDamage(dispatch),
+          activateDamage: c.DamageActions.activateDamage(dispatch),
+          deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
         };
       }
     )(DamageMap)
