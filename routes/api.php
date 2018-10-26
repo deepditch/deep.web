@@ -32,4 +32,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
     Route::get('road-damage/{id}', 'RoadDamageController@getJson');
+    Route::post('road-damage/report/{id}/edit', 'RoadDamageController@editReport');
+    Route::post('road-damage/{id}/edit', 'RoadDamageController@editDamage');
 });

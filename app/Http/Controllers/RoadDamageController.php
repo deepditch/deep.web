@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\RoadDamage as RoadDamageResource;
+use App\Http\Resources\RoadDamageReport as RoadDamageReportResource;
 use App\Image;
 use App\RoadDamage;
 use App\RoadDamageReport;
@@ -97,5 +98,59 @@ class RoadDamageController extends Controller
         }
 
         return new RoadDamageResource($road_damage);
+    }
+
+    /**
+     * Edit a road damage report.
+     *
+     * @param Illuminate\Http\Request $request
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function editReport(int $id, Request $request)
+    {
+        $request->validate([
+            'verified' => ['required', 'in:verified,unverified,false-positive'],
+        ]);
+
+        try {
+            $report = RoadDamageReport::findOrFail($id);
+        } catch (\Throwable $e) {
+            return request()->json(['Report could not be found.']);
+        }
+
+        if ($request->input('verified')) {
+            $report->verified = $request->input('verified');
+            $report->save();
+        }
+
+        return new RoadDamageReportResource($report);
+    }
+
+    /**
+     * Edit a road damage report.
+     *
+     * @param Illuminate\Http\Request $request
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function editDamage(int $id, Request $request)
+    {
+        $request->validate([
+            'status' => ['required', 'in:pending-repair,repairing,done,wont-do'],
+        ]);
+
+        try {
+            $damage = RoadDamage::findOrFail($id);
+        } catch (\Throwable $e) {
+            return request()->json(['Road damage could not be found.']);
+        }
+
+        if ($request->input('status')) {
+            $damage->status = $request->input('status');
+            $damage->save();
+        }
+
+        return new RoadDamageResource($damage);
     }
 }
