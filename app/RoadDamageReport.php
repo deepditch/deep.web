@@ -49,4 +49,14 @@ class RoadDamageReport extends Model
     {
         return env('APP_URL').Storage::url($this->getImage()->image_name);
     }
+
+    /**
+     * Get road damage.
+     *
+     * @return \App\RoadDamage
+     */
+    public function getRoadDamage()
+    {
+        return RoadDamage::find($this->roaddamage_id) ?? new RoadDamage();
+    }
 }
