@@ -1,0 +1,68 @@
+@import "../color/lib";
+@import "../type/lib";
+
+.damage-list {
+  font-size: pxtoem(16);
+  font-weight: 400;
+  width: 100%;
+  table-layout: fixed;
+
+  th,
+  td {
+    vertical-align: middle;
+    padding: 6px 0 4px;
+    border-bottom: 2px solid rgba($gray, 0.2);
+  }
+
+  th {
+    @include uppercase-headline;
+    font-size: 0.8em;
+    font-weight: 800;
+    padding-top: 0 !important;
+    color: rgba($gray, 0.8);
+  }
+
+  tr {
+    display: flex;
+    flex-direction: row;
+    padding-left: pxtoem(5);
+    padding-right: pxtoem(5);
+    margin-left: pxtoem(-5);
+    margin-right: pxtoem(-5);
+    transition: all 0.15s;
+    border: 3px solid transparent;
+    border-radius: 3px;
+    margin-top: -7px;
+
+    &.active {
+      background-color: $gray;
+      color: $white;
+      border: 3px solid $black;
+      box-shadow: 0 0 5px rgba($gray, 0.6);
+    }
+
+    > .streetname {
+      width: 43%;
+      padding-right: pxtoem(20);
+    }
+
+    > .type {
+      width: 12%;
+      padding-right: pxtoem(20);
+      @include uppercase-headline;
+      font-size: 0.8em;
+      font-weight: 800;
+      padding-top: pxtoem(11);
+    }
+
+    > .label {
+      width: 30%;
+      padding-right: pxtoem(20);
+    }
+
+    > .verified {
+      width: 15%;
+      text-align: center;
+    }
+  }
+}

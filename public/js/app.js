@@ -56464,13 +56464,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
+
 
 
 class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-      className: this.props.active ? "active" : ""
-    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ") ", this.props.damage.type, this.props.damage.label, " ", this.props.damage.verified);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+      className: this.props.active ? "active" : "",
+      onClick: this.props.onClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "streetname"
+    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "type"
+    }, this.props.damage.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "label"
+    }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "verified"
+    }, this.props.damage.verified));
   }
 
 }
@@ -56491,7 +56502,25 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       damage: damage,
       active: this.props.activeDamageId == damage.id
     }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, listItems);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "block-medium-top block-medium-left block-medium-right"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+      className: "h2"
+    }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "block-medium-left block-medium-right block-medium-bottom"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "damage-list"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "streetname"
+    }, "Street"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "type"
+    }, "Type"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "label"
+    }, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "verified"
+    }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, listItems)))));
   }
 
 }
@@ -56558,6 +56587,7 @@ class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
       name: damage.type,
       key: damage.id,
+      ref: damage.id,
       onClick: _.props.onMarkerClick.bind(_),
       damage: damage,
       position: {
@@ -56568,8 +56598,7 @@ class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       google: this.props.google,
       visible: this.props.visible,
       options: {
-        icon: pinImage(damage.type),
-        visible: this.props.visible
+        icon: pinImage(damage.type)
       }
     }));
     return markers;
@@ -56611,8 +56640,6 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.state = {
-      showingInfoWindow: false,
-      activeMarker: {},
       markersVisible: true,
       latitude: 42.331429,
       longitude: -83.045753
@@ -56634,23 +56661,10 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
   onMarkerClick(props, marker, e) {
     this.props.activateDamage(props.damage.id);
-    this.setState({
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
   }
 
   onMapClicked(props) {
-    if (this.props.activeDamageId) this.props.deactivateDamage();
-
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      });
-    }
-
-    console.log(this.refs.map);
+    this.props.deactivateDamage();
   }
 
   onZoomChanged(props) {
@@ -56661,6 +56675,7 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
   render() {
     var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
+    var activeMarker = this.refs.markers && activeDamage ? this.refs.markers.refs[activeDamage.id].marker : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Map"], {
       ref: "map",
       google: this.props.google,
@@ -56672,14 +56687,15 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         lng: this.state.longitude
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MapMarkers, {
+      ref: "markers",
       damages: this.props.damages,
       onMarkerClick: this.onMarkerClick.bind(this),
       visible: this.state.markersVisible
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(HeatMap, {
       damages: this.props.damages
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
-      visible: this.state.showingInfoWindow,
-      marker: this.state.activeMarker
+      visible: activeDamage && activeMarker ? true : false,
+      marker: activeMarker
     }, activeDamage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_3__["default"], activeDamage) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null)));
   }
 
@@ -56910,6 +56926,32 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = (react_table__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ "./js/components/scroll-section.js":
+/*!*****************************************!*\
+  !*** ./js/components/scroll-section.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollSection; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+
+class ScrollSection extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+      className: "scroll-section"
+    }, this.props), this.props.children);
+  }
+
+}
 
 /***/ }),
 
@@ -57539,6 +57581,12 @@ function DamageReducer(state = {
       return {
         damages: state.damages,
         activeDamageId: action.id
+      };
+
+    case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].DEACTIVATE_DAMAGE_INSTANCE:
+      return {
+        damages: state.damages,
+        activeDamageId: null
       };
 
     default:
