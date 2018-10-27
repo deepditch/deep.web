@@ -56506,7 +56506,9 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "block-medium-top block-medium-left block-medium-right"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
       className: "h2"
-    }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, "Filters")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-left block-medium-right block-medium-bottom"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "damage-list"

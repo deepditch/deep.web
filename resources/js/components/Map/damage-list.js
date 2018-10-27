@@ -39,8 +39,7 @@ export default class DamageList extends Component {
       <>
         <div class="block-medium-top block-medium-left block-medium-right">
           <h1 class="h2">Damages</h1>
-
-          <h6>Filters</h6>
+          <div class="divide-30"></div>
         </div>
         <ScrollSection>
           <div class="block-medium-left block-medium-right block-medium-bottom">
