@@ -20,19 +20,22 @@ var pinImage = type =>
 
 class MapMarkers extends Component {
   shouldComponentUpdate(newProps, newState) {
-    return newProps.damages.length != this.props.damages.length;
+    return (
+      newProps.damages.length != this.props.damages.length ||
+      newProps.visible != this.props.visible
+    );
   }
 
   render() {
     if (!this.props.map) return null;
 
     var _ = this;
-
-    const bounds = new window.google.maps.LatLngBounds();
+    /*
+    const bounds = new _.props.google.maps.LatLngBounds();
 
     this.props.damages.map(damage => {
       bounds.extend(
-        new window.google.maps.LatLng(
+        new _.props.google.maps.LatLng(
           damage.position.latitude,
           damage.position.longitude
         )
@@ -40,6 +43,7 @@ class MapMarkers extends Component {
     });
 
     this.props.map.fitBounds(bounds);
+    */
 
     var markers = this.props.damages.map(damage => (
       <Marker
@@ -53,7 +57,8 @@ class MapMarkers extends Component {
         }}
         map={this.props.map}
         google={this.props.google}
-        options={{ icon: pinImage(damage.type) }}
+        visible={this.props.visible}
+        options={{ icon: pinImage(damage.type), visible: this.props.visible }}
       />
     ));
 
@@ -99,8 +104,20 @@ class DamageMap extends Component {
 
     this.state = {
       showingInfoWindow: false,
-      activeMarker: {}
+      activeMarker: {},
+      markersVisible: true,
+      latitude: 42.331429,
+      longitude: -83.045753
     };
+
+    var geoSuccess = function(position) {
+      this.setState({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    };
+
+    navigator.geolocation.getCurrentPosition(geoSuccess);
   }
 
   componentDidMount() {
@@ -108,8 +125,6 @@ class DamageMap extends Component {
   }
 
   onMarkerClick(props, marker, e) {
-    console.log(props);
-
     this.props.activateDamage(props.damage.id);
 
     this.setState({
@@ -127,19 +142,35 @@ class DamageMap extends Component {
         activeMarker: null
       });
     }
+
+    console.log(this.refs.map);
+  }
+
+  onZoomChanged(props) {
+    this.setState({ markersVisible: this.refs.map.map.getZoom() >= 14 });
   }
 
   render() {
+    var activeDamage = this.props.damages.find(
+      damage => damage.id == this.props.activeDamageId
+    );
+
     return (
       <Map
         ref="map"
         google={this.props.google}
         zoom={14}
         onClick={this.onMapClicked.bind(this)}
+        onZoom_changed={this.onZoomChanged.bind(this)}
+        initialCenter={{
+          lat: this.state.latitude,
+          lng: this.state.longitude
+        }}
       >
         <MapMarkers
           damages={this.props.damages}
           onMarkerClick={this.onMarkerClick.bind(this)}
+          visible={this.state.markersVisible}
         />
 
         <HeatMap damages={this.props.damages} />
@@ -148,11 +179,7 @@ class DamageMap extends Component {
           visible={this.state.showingInfoWindow}
           marker={this.state.activeMarker}
         >
-          <ActiveDamage
-            damage={this.props.damages.find(
-              damage => damage.id == this.props.activeDamageId
-            )}
-          />
+          {activeDamage ? <ActiveDamage {...activeDamage} /> : <></>}
         </InfoWindow>
       </Map>
     );
