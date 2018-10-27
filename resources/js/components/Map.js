@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 
-export default (UserSidebar, DamageMap) =>
+export default (DamageList, DamageMap) =>
   class Map extends Component {
     render() {
       return (
           <div class="row no-gutters h-100">
             <div class="col-4">
-              <UserSidebar />
+              <DamageList />
             </div>
             <div class="col-8">
               <DamageMap />

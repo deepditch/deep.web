@@ -1,52 +1,59 @@
 import DamageMap from "../components/Map/damage-map";
+import DamageList from "../components/Map/damage-list";
 import Map from "../components/Map";
-import UserSidebar from "../components/UserSidebar";
 import { connect } from "react-redux";
 
 import {
-  CreateDamageActionDispatcher,
-  CreateLogoutActionDispatcher
+  DamageActionDispatcher
 } from "../actions";
 
-import { RoadDamageService } from "../services";
+import { DamageService } from "../services";
 
 /**
  * Registers dependencies in the container and connects react components to the redux store
  * @param {Container} c the IoC container
  */
 export const DamageProvider = c => {
-  c.register("DamageService", c => new RoadDamageService(c.Axios));
+  c.register("DamageService", c => new DamageService(c.Axios));
+  c.register("DamageActions", c => new DamageActionDispatcher(c.DamageService));
 
   c.register("DamageMap", c =>
     connect(
       store => {
         return {
-          instances: store.damage.instances,
-          pending: store.damage.pending
+          damages: store.damage.damages,
+          pending: store.damage.pending,
+          success: store.damage.success,
+          activeDamageId: store.damage.activeDamageId
         };
       },
       dispatch => {
         return {
-          loadDamage: CreateDamageActionDispatcher(c.DamageService, dispatch)
+          loadDamage: c.DamageActions.loadDamage(dispatch),
+          activateDamage: c.DamageActions.activateDamage(dispatch),
+          deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
         };
       }
     )(DamageMap)
   );
 
-  c.register("UserSidebar", c =>
+  c.register("DamageList", c =>
     connect(
       store => {
         return {
-          user: store.user.user,
+          damages: store.damage.damages,
+          pending: store.damage.pending,
+          success: store.damage.success,
+          activeDamageId: store.damage.activeDamageId
         };
       },
       dispatch => {
         return {
-          logout: CreateLogoutActionDispatcher(c.AuthService, dispatch)
+          activateDamage: c.DamageActions.activateDamage(dispatch)
         };
       }
-    )(UserSidebar)
+    )(DamageList)
   );
 
-  c.register("Map", c => Map(c.UserSidebar, c.DamageMap));
+  c.register("Map", c => Map(c.DamageList, c.DamageMap));
 };

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 class Notify extends Component {
   render() {
@@ -14,11 +13,5 @@ class Notify extends Component {
     );
   }
 }
-
-Notify.propTypes = {
-  notifyType: PropTypes.string,
-  message: PropTypes.node,
-  clear: PropTypes.func.isRequired
-};
 
 export default Notify;

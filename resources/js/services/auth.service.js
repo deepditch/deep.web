@@ -6,13 +6,6 @@ export class AuthService {
   }
 
   /**
-   * Returns true if the user is logged in and false otherwise
-   */
-  get loggedIn() {
-    return !localStorage.getItem("token") === null;
-  }
-
-  /**
    * Logs a user in
    * @param {string} email the user's email
    * @param {string} password the user's password
@@ -38,11 +31,9 @@ export class AuthService {
     this.axios
       .get("/logout")
       .then(response => {
-        localStorage.removeItem("token");
         return response.data;
       })
       .catch(error => {
-        console.error(error.response);
         throw parseErrors(error.response);
       });
   }

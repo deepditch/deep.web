@@ -1,6 +1,6 @@
 import { parseErrors } from "../helpers/errors";
 
-export class RoadDamageService {
+export class DamageService {
   constructor(axios) {
     this.axios = axios;
   }

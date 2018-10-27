@@ -1,41 +1,58 @@
 import { NotifyActions } from "./notify.actions";
-import { parseErrors } from "../helpers/errors";
 
 export const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
   LOAD_DAMAGE_SUCCESS: "load_damage_success",
-  LOAD_DAMAGE_FAILURE: "load_damage_failure"
+  LOAD_DAMAGE_FAILURE: "load_damage_failure",
+  ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance",
+  DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance"
 };
 
 export const DamageActions = {
   attempt: () => {
     return { type: DamageActionTypes.LOAD_DAMAGE_ATTEMPT };
   },
-  success: instances => {
-    return { type: DamageActionTypes.LOAD_DAMAGE_SUCCESS, instances: instances };
+  success: damages => {
+    return {
+      type: DamageActionTypes.LOAD_DAMAGE_SUCCESS,
+      damages: damages
+    };
   },
   failure: () => {
     return { type: DamageActionTypes.LOAD_DAMAGE_FAILURE };
+  },
+  activate: id => {
+    return { type: DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE, id: id };
+  },
+  deactivate: id => {
+    return { type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE };
   }
 };
 
-/**
- * Returns a method that loads damage instances and dispatches redux actions. Delegates get request to DamageService
- * @param {DamageService} DamageService must have a getDamageInstances() method that returns a Promise
- * @param {function} dispatch the redux dispatch method
- * @return a loadDamageInstances method that dispatches redux actions
- */
-export const CreateDamageActionDispatcher = (DamageService, dispatch) => {
-  return () => {
+export class DamageActionDispatcher {
+  constructor(damageService) {
+    this.damageService = damageService;
+  }
+
+  loadDamage = dispatch => () => {
     dispatch(DamageActions.attempt());
 
-    DamageService.getDamageInstances()
-      .then(instances => {
-        dispatch(DamageActions.success(instances));
+    this.damageService
+      .getDamageInstances()
+      .then(damages => {
+        dispatch(DamageActions.success(damages));
       })
       .catch(error => {
         dispatch(DamageActions.failure());
         dispatch(NotifyActions.error(error));
       });
   };
-};
+
+  activateDamage = dispatch => id => {
+    dispatch(DamageActions.activate(id));
+  };
+
+  deactivateDamage = dispatch => () => {
+    dispatch(DamageActions.deactivate());
+  };
+}

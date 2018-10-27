@@ -9,7 +9,7 @@ export default function InvitesReducer(state = { invites: [] }, action) {
   switch (action.type) {
     case InviteUserActionTypes.INVITE_USER_ATTEMPT:
     case InviteUserActionTypes.LOAD_INVITES_ATTEMPT:
-    case InviteUserActionTypes.REVOKE_INVITEc_ATTEMPT:
+    case InviteUserActionTypes.REVOKE_INVITE_ATTEMPT:
       return { invites: [], pending: true };
     case InviteUserActionTypes.INVITE_USER_SUCCESS:
     case InviteUserActionTypes.LOAD_INVITES_SUCCESS:

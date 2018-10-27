@@ -36,19 +36,11 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
     authService
       .login(email, password)
       .then(response => {
-        var token = response.access_token;
-        var user = response.user;
-
-        localStorage.setItem("token", token); // TODO: create middleware for setting localStorage
-        localStorage.setItem("user", JSON.stringify(user));
-
-        dispatch(LoginActions.success(token, user));
-
-        history.push("/");
+        dispatch(LoginActions.success(response.access_token, response.user));
       })
       .catch(error => {
-        dispatch(NotifyActions.error(error));
         dispatch(LoginActions.failure());
+        dispatch(NotifyActions.error(error));
       });
   };
 };
@@ -64,6 +56,5 @@ export const CreateLogoutActionDispatcher = (authService, dispatch) => {
     authService.logout();
     dispatch(LoginActions.logout());
     dispatch(NotifyActions.default("You have been logged out"));
-    history.push("/login");
   };
 };
