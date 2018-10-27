@@ -45,13 +45,15 @@ export default class DamageList extends Component {
         <ScrollSection>
           <div class="block-medium-left block-medium-right block-medium-bottom">
             <table class="damage-list">
-              <tr>
-                <th class="streetname">Street</th>
-                <th class="type">Type</th>
-                <th class="label">Status</th>
-                <th class="verified">Verified</th>
-              </tr>
-              {listItems}
+              <thead>
+                <tr>
+                  <th class="streetname">Street</th>
+                  <th class="type">Type</th>
+                  <th class="label">Status</th>
+                  <th class="verified">Verified</th>
+                </tr>
+              </thead>
+              <tbody>{listItems}</tbody>
             </table>
           </div>
         </ScrollSection>

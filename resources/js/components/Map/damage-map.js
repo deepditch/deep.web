@@ -49,6 +49,7 @@ class MapMarkers extends Component {
       <Marker
         name={damage.type}
         key={damage.id}
+        ref={damage.id}
         onClick={_.props.onMarkerClick.bind(_)}
         damage={damage}
         position={{
@@ -58,7 +59,7 @@ class MapMarkers extends Component {
         map={this.props.map}
         google={this.props.google}
         visible={this.props.visible}
-        options={{ icon: pinImage(damage.type), visible: this.props.visible }}
+        options={{ icon: pinImage(damage.type) }}
       />
     ));
 
@@ -103,8 +104,6 @@ class DamageMap extends Component {
     super(props);
 
     this.state = {
-      showingInfoWindow: false,
-      activeMarker: {},
       markersVisible: true,
       latitude: 42.331429,
       longitude: -83.045753
@@ -126,24 +125,10 @@ class DamageMap extends Component {
 
   onMarkerClick(props, marker, e) {
     this.props.activateDamage(props.damage.id);
-
-    this.setState({
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
   }
 
   onMapClicked(props) {
-    if (this.props.activeDamageId) this.props.deactivateDamage();
-
-    if (this.state.showingInfoWindow) {
-      this.setState({
-        showingInfoWindow: false,
-        activeMarker: null
-      });
-    }
-
-    console.log(this.refs.map);
+    this.props.deactivateDamage();
   }
 
   onZoomChanged(props) {
@@ -154,6 +139,11 @@ class DamageMap extends Component {
     var activeDamage = this.props.damages.find(
       damage => damage.id == this.props.activeDamageId
     );
+
+    var activeMarker =
+      this.refs.markers && activeDamage
+        ? this.refs.markers.refs[activeDamage.id].marker
+        : null;
 
     return (
       <Map
@@ -168,6 +158,7 @@ class DamageMap extends Component {
         }}
       >
         <MapMarkers
+          ref={"markers"}
           damages={this.props.damages}
           onMarkerClick={this.onMarkerClick.bind(this)}
           visible={this.state.markersVisible}
@@ -176,8 +167,8 @@ class DamageMap extends Component {
         <HeatMap damages={this.props.damages} />
 
         <InfoWindow
-          visible={this.state.showingInfoWindow}
-          marker={this.state.activeMarker}
+          visible={activeDamage && activeMarker ? true : false}
+          marker={activeMarker}
         >
           {activeDamage ? <ActiveDamage {...activeDamage} /> : <></>}
         </InfoWindow>

@@ -15,6 +15,8 @@ export default function DamageReducer(state = { damages: [] }, action) {
       return { damages: [], rejected: true };
     case DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE:
       return { damages: state.damages, activeDamageId: action.id };
+    case DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE:
+      return { damages: state.damages, activeDamageId: null };
     default:
       return state;
   }
