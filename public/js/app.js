@@ -56464,13 +56464,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
+
 
 
 class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-      className: this.props.active ? "active" : ""
-    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ") ", this.props.damage.type, this.props.damage.label, " ", this.props.damage.verified);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+      className: this.props.active ? "active" : "",
+      onClick: this.props.onClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "streetname"
+    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "type"
+    }, this.props.damage.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "label"
+    }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "verified"
+    }, this.props.damage.verified));
   }
 
 }
@@ -56491,7 +56502,23 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       damage: damage,
       active: this.props.activeDamageId == damage.id
     }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, listItems);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "block-medium-top block-medium-left block-medium-right"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+      className: "h2"
+    }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, "Filters")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "block-medium-left block-medium-right block-medium-bottom"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "damage-list"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "streetname"
+    }, "Street"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "type"
+    }, "Type"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "label"
+    }, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "verified"
+    }, "Verified")), listItems))));
   }
 
 }
@@ -56910,6 +56937,32 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = (react_table__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ "./js/components/scroll-section.js":
+/*!*****************************************!*\
+  !*** ./js/components/scroll-section.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ScrollSection; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+
+class ScrollSection extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", _extends({
+      className: "scroll-section"
+    }, this.props), this.props.children);
+  }
+
+}
 
 /***/ }),
 
