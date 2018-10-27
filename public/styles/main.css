@@ -788,6 +788,12 @@ large, .large {
   .h-xxl-100 {
     height: 100%; } }
 
+.mb-0 {
+  margin-bottom: 0; }
+
+.mb-1 {
+  margin-bottom: 0.27778em; }
+
 /**
  * Calculate the luminance for a color.
  * See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
@@ -1118,5 +1124,12 @@ button {
 .gm-style-iw {
   text-align: center;
   overflow: visible !important; }
+
+.navbar {
+  font-size: 0.88889em;
+  padding: 0 0.66667em; }
+
+#navbarNav .navbar-nav {
+  margin-left: auto; }
 
 /*# sourceMappingURL=main.css.map */

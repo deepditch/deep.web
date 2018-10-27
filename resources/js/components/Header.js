@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 export default class Header extends Component {
   render() {
     return (
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-gray">
         <h1 class="h6 mb-0">
-          <Link to="/" class="text-white">deep.ditch</Link>
+          <Link to="/" class="text-white">
+            deep.ditch
+          </Link>
         </h1>
         <button
           class="navbar-toggler"

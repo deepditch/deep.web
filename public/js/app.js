@@ -56272,7 +56272,7 @@ __webpack_require__.r(__webpack_exports__);
 class Header extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
-      className: "navbar navbar-expand-lg navbar-dark bg-dark"
+      className: "navbar navbar-expand-lg navbar-dark bg-gray"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
       className: "h6 mb-0"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
