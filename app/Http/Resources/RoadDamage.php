@@ -31,9 +31,7 @@ class RoadDamage extends JsonResource
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'direction' => $this->direction,
-            'streetname' => app('geocoder')
-                ->reverseQuery(\Geocoder\Query\ReverseQuery::fromCoordinates($this->latitude, $this->longitude))
-                ->get()->first()->toArray()['streetName'],
+            'streetname' => $this->getRoadName(),
         ],
         'type' => $this->type,
         'verified' => $this->hasVerifiedReport(),
