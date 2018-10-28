@@ -79,7 +79,7 @@ class RoadDamageController extends Controller
             }
         }
 
-        return $collection->all();
+        return $collection;
     }
 
     /**
