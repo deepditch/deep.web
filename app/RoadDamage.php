@@ -84,9 +84,9 @@ class RoadDamage extends Model
     /**
      * Do we have a verified report (and not a false-positive report).
      *
-     * @return \App\RoadDamageReport
+     * @return bool
      */
-    public function hasVerifiedReport()
+    public function hasVerifiedReport(): bool
     {
         return
         !RoadDamageReport::where('roaddamage_id', $this->id)
@@ -98,11 +98,23 @@ class RoadDamage extends Model
     /**
      * Do we have a false-positive report.
      *
-     * @return \App\RoadDamageReport
+     * @return bool
      */
-    public function hasFalsePositiveReport()
+    public function hasFalsePositiveReport(): bool
     {
         return RoadDamageReport::where('roaddamage_id', $this->id)
             ->where('verified', 'false-positive')->exists();
+    }
+
+    /**
+     * Do we have a false-positive report.
+     *
+     * @return string
+     */
+    public function getRoadName(): string
+    {
+        return app('geocoder')
+            ->reverseQuery(\Geocoder\Query\ReverseQuery::fromCoordinates($this->latitude, $this->longitude))
+            ->get()->first()->toArray()['streetName'];
     }
 }
