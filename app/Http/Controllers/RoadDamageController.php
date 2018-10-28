@@ -34,13 +34,52 @@ class RoadDamageController extends Controller
     /**
      * Get the base Json data of all the models for the authenticated user.
      *
+     * @param Illuminate\Http\Request $request
+     *
      * @return App\Http\Resources\RoadDamage
      */
-    public function getAllJson()
+    public function getAllJson(Request $request)
     {
-        return RoadDamageResource::collection(
+        $request->validate([
+            'filters.status' => ['string', 'in:pending-repair,repairing,done,wont-do'],
+            'filters.verified' => 'boolean',
+            'filters.falsePositive' => 'boolean',
+            'filters.roadname' => 'string',
+        ]);
+
+        $collection = RoadDamageResource::collection(
             RoadDamage::where('organization_id', auth('api')->user()->organization_id)->get()
         );
+
+        if ($request->input('filters.status')) {
+            $collection = $collection->where('status', $request->input('filters.status'));
+        }
+
+        if ($request->has('filters.verified')) {
+            foreach ($collection as $key => $val) {
+                if ($val->hasVerifiedReport() !== $request->input('filters.verified')) {
+                    $collection->forget($key);
+                }
+            }
+        }
+
+        if ($request->has('filters.falsePositive')) {
+            foreach ($collection as $key => $val) {
+                if ($val->hasFalsePositiveReport() !== $request->input('filters.falsePositive')) {
+                    $collection->forget($key);
+                }
+            }
+        }
+
+        if ($request->has('filters.roadname')) {
+            foreach ($collection as $key => $val) {
+                if ($val->getRoadName() !== $request->input('filters.roadname')) {
+                    $collection->forget($key);
+                }
+            }
+        }
+
+        return $collection->all();
     }
 
     /**
