@@ -36,7 +36,7 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
         dispatch(
           NotifyActions.success(
             <>
-              <strong>{user.name}</strong>, you have been registered and may
+              <strong>{response.user.name}</strong>, you have been registered and may
               login.
             </>
           )

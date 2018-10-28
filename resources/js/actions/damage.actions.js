@@ -5,7 +5,8 @@ export const DamageActionTypes = {
   LOAD_DAMAGE_SUCCESS: "load_damage_success",
   LOAD_DAMAGE_FAILURE: "load_damage_failure",
   ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance",
-  DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance"
+  DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance",
+  VERIFY_DAMAGE_REPORT: "verify_damage_report"
 };
 
 export const DamageActions = {
@@ -26,6 +27,9 @@ export const DamageActions = {
   },
   deactivate: id => {
     return { type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE };
+  },
+  verify: id => {
+    return { type: DamageActionTypes.verifyDamageReport, id: id };
   }
 };
 
@@ -54,5 +58,11 @@ export class DamageActionDispatcher {
 
   deactivateDamage = dispatch => () => {
     dispatch(DamageActions.deactivate());
+  };
+
+  verifyDamageReport = dispatch => id => {
+    this.damageService.verifyDamageReport(id).then(response => {
+      dispatch(DamageActions.verify(id));
+    });
   };
 }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ScrollSection from "../scroll-section";
+import Checkbox from "../Form/checkbox";
 
 class DamageListItem extends Component {
   render() {
@@ -14,7 +15,10 @@ class DamageListItem extends Component {
         </td>
         <td class="type">{this.props.damage.type}</td>
         <td class="label">{this.props.damage.label}</td>
-        <td class="verified">{this.props.damage.verified}</td>
+        <td class="verified"> <Checkbox
+              checked={this.props.damage.verified ? true : false}
+              onChange={(e) => console.log(e)}
+            /></td>
       </tr>
     );
   }

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { mapTypeToDescription } from "../../helpers/damage-types";
+import Checkbox from "../Form/checkbox";
 
 export default class ActiveDamage extends Component {
   render() {
-    var verified = this.props.verified ? "Verified" : "Unverified";
-
     return (
       <div class="damage-info-window">
         <img width="240px" src={this.props.image} />
@@ -18,7 +17,10 @@ export default class ActiveDamage extends Component {
               <p class="h5 small mb-0">{this.props.label}</p>
             </div>
             <div class="col-6">
-              {verified}
+            <Checkbox
+              checked={this.props.verified ? true : false}
+              onChange={(e) => console.log(e)}
+            />
             </div>
           </footer>
         </div>
