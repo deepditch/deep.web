@@ -20,7 +20,6 @@ export default class ActiveDamage extends Component {
               <Checkbox
                 checked={this.props.verified ? true : false}
                 onChange={e => {
-                  console.log(e);
                   this.props.verifyDamageReport(e, this.props.reportId);
                 }}
               />

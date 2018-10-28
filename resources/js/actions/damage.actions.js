@@ -66,7 +66,6 @@ export class DamageActionDispatcher {
   };
 
   verifyDamageReport = dispatch => id => {
-    console.log("call")
     this.damageService.verifyDamageReport(id).then(response => {
       dispatch(DamageActions.verify(id));
     });
