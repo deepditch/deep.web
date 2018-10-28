@@ -49,6 +49,7 @@ export const DamageProvider = c => {
       },
       dispatch => {
         return {
+          loadDamage: c.DamageActions.loadDamage(dispatch),
           activateDamage: c.DamageActions.activateDamage(dispatch)
         };
       }
