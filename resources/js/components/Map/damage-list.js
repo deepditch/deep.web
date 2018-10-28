@@ -44,8 +44,6 @@ export default class DamageList extends Component {
   };
 
   render() {
-    console.log(this.props.damages);
-    console.log(this.state);
     var listItems = this.props.damages.map(damage => (
       <DamageListItem
         key={damage.id}
