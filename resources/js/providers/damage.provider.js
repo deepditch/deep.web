@@ -31,7 +31,9 @@ export const DamageProvider = c => {
         return {
           loadDamage: c.DamageActions.loadDamage(dispatch),
           activateDamage: c.DamageActions.activateDamage(dispatch),
-          deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
+          deactivateDamage: c.DamageActions.deactivateDamage(dispatch),
+          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
+          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
         };
       }
     )(DamageMap)
@@ -49,7 +51,9 @@ export const DamageProvider = c => {
       },
       dispatch => {
         return {
-          activateDamage: c.DamageActions.activateDamage(dispatch)
+          activateDamage: c.DamageActions.activateDamage(dispatch),
+          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
+          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
         };
       }
     )(DamageList)

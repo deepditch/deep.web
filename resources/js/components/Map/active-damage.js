@@ -6,7 +6,7 @@ export default class ActiveDamage extends Component {
   render() {
     return (
       <div class="damage-info-window">
-        <img width="240px" src={this.props.image} />
+        <img width="300px" src={this.props.image} />
         <div class="content">
           <h6 class="mb-1">{mapTypeToDescription(this.props.type)}</h6>
           <p>
@@ -17,10 +17,13 @@ export default class ActiveDamage extends Component {
               <p class="h5 small mb-0">{this.props.label}</p>
             </div>
             <div class="col-6">
-            <Checkbox
-              checked={this.props.verified ? true : false}
-              onChange={(e) => console.log(e)}
-            />
+              <Checkbox
+                checked={this.props.verified ? true : false}
+                onChange={e => {
+                  console.log(e);
+                  this.props.verifyDamageReport(e, this.props.reportId);
+                }}
+              />
             </div>
           </footer>
         </div>

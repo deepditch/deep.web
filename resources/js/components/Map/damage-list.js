@@ -3,6 +3,13 @@ import ScrollSection from "../scroll-section";
 import Checkbox from "../Form/checkbox";
 
 class DamageListItem extends Component {
+  _verifyDamageReport(e) {
+    if (e.target.checked)
+      this.props.verifyDamageReport(this.props.damage.reportId);
+    else
+      this.props.unverifyDamageReport(this.props.damage.reportId);
+  }
+
   render() {
     return (
       <tr
@@ -15,10 +22,12 @@ class DamageListItem extends Component {
         </td>
         <td class="type">{this.props.damage.type}</td>
         <td class="label">{this.props.damage.label}</td>
-        <td class="verified"> <Checkbox
-              checked={this.props.damage.verified ? true : false}
-              onChange={(e) => console.log(e)}
-            /></td>
+        <td class="verified">
+          <Checkbox
+            checked={this.props.damage.verified ? true : false}
+            onChange={this._verifyDamageReport.bind(this)}
+          />
+        </td>
       </tr>
     );
   }
@@ -36,6 +45,8 @@ export default class DamageList extends Component {
         onClick={e => this.handleListItemClick(e, damage)}
         damage={damage}
         active={this.props.activeDamageId == damage.id}
+        verifyDamageReport={this.props.verifyDamageReport}
+        unverifyDamageReport={this.props.unverifyDamageReport}
       />
     ));
 
@@ -43,7 +54,7 @@ export default class DamageList extends Component {
       <>
         <div class="block-medium-top block-medium-left block-medium-right">
           <h1 class="h2">Damages</h1>
-          <div class="divide-30"></div>
+          <div class="divide-30" />
         </div>
         <ScrollSection>
           <div class="block-medium-left block-medium-right block-medium-bottom">
