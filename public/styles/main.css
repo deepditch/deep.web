@@ -1274,5 +1274,7 @@ button {
     .damage-list tr > .verified {
       width: 15%;
       text-align: center; }
+  .damage-list .checkbox {
+    line-height: 0; }
 
 /*# sourceMappingURL=main.css.map */

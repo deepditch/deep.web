@@ -13,10 +13,10 @@ export default class ActiveDamage extends Component {
             {this.props.position.streetname} ({this.props.position.direction})
           </p>
           <footer class="row align-items-center">
-            <div class="col-6">
+            <div class="col-9">
               <p class="h5 small mb-0">{this.props.label}</p>
             </div>
-            <div class="col-6">
+            <div class="col-3">
               <Checkbox
                 checked={this.props.verified ? true : false}
                 onChange={e => {

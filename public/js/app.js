@@ -55367,7 +55367,6 @@ class DamageActionDispatcher {
     };
 
     this.verifyDamageReport = dispatch => id => {
-      console.log("call");
       this.damageService.verifyDamageReport(id).then(response => {
         dispatch(DamageActions.verify(id));
       });
@@ -56503,15 +56502,14 @@ class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.position.streetname, " (", this.props.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
       className: "row align-items-center"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-6"
+      className: "col-9"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       className: "h5 small mb-0"
     }, this.props.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-6"
+      className: "col-3"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
       checked: this.props.verified ? true : false,
       onChange: e => {
-        console.log(e);
         this.props.verifyDamageReport(e, this.props.reportId);
       }
     })))));
