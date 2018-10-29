@@ -55334,10 +55334,36 @@ const DamageActions = {
 };
 class DamageActionDispatcher {
   constructor(damageService) {
-    this.loadDamage = dispatch => () => {
+    this.loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null) => {
       dispatch(DamageActions.attempt());
       this.damageService.getDamageInstances().then(damages => {
-        dispatch(DamageActions.success(damages));
+        var filteredArray = damages;
+
+        if (streetname) {
+          filteredArray = filteredArray.filter(el => {
+            return el.position.streetname == streetname;
+          });
+        }
+
+        if (type) {
+          filteredArray = filteredArray.filter(el => {
+            return el.type == type;
+          });
+        }
+
+        if (status) {
+          filteredArray = filteredArray.filter(el => {
+            return el.label == status;
+          });
+        }
+
+        if (verified) {
+          filteredArray = filteredArray.filter(el => {
+            return el.verified == verified;
+          });
+        }
+
+        dispatch(DamageActions.success(filteredArray));
       }).catch(error => {
         dispatch(DamageActions.failure());
         dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
@@ -56400,7 +56426,7 @@ __webpack_require__.r(__webpack_exports__);
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row no-gutters h-100"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-4"
+      className: "col-4 d-flex flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageList, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-8"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMap, null)));
@@ -56487,12 +56513,28 @@ class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 }
 
 class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor(...args) {
-    var _temp;
+  constructor(props) {
+    super(props);
 
-    return _temp = super(...args), this.handleListItemClick = (e, damage) => {
+    this.handleListItemClick = (e, damage) => {
       this.props.activateDamage(damage.id);
-    }, _temp;
+    };
+
+    this.state = {
+      filterStreetname: "",
+      filterType: "",
+      filterStatus: "",
+      filterVerified: ""
+    };
+    this.filterChange = this.filterChange.bind(this);
+  }
+
+  filterChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    }, () => {
+      this.props.loadDamage(this.state.filterStreetname, this.state.filterType, this.state.filterStatus, this.state.filterVerified);
+    });
   }
 
   render() {
@@ -56510,7 +56552,52 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "divide-30"
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-left block-medium-right block-medium-bottom"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "filter"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Streetname", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      name: "filterStreetname",
+      type: "text",
+      onChange: this.filterChange
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Type", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterType",
+      onBlur: this.filterChange
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D00"
+    }, "D00"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D01"
+    }, "D01"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D10"
+    }, "D10"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D11"
+    }, "D11"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D20"
+    }, "D20"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D40"
+    }, "D40"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D43"
+    }, "D43"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D44"
+    }, "D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Status", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterStatus",
+      onChange: this.filterChange
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "pending-repair"
+    }, "pending-repair"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "repairing"
+    }, "repairing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "done"
+    }, "done"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "wont-do"
+    }, "wont-do"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Verified", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterVerified",
+      onBlur: this.filterChange
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "true"
+    }, "Verified"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "false"
+    }, "Unverified")))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "damage-list"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
       className: "streetname"
@@ -56572,7 +56659,7 @@ class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     var _ = this;
     /*
     const bounds = new _.props.google.maps.LatLngBounds();
-     this.props.damages.map(damage => {
+      this.props.damages.map(damage => {
       bounds.extend(
         new _.props.google.maps.LatLng(
           damage.position.latitude,
@@ -56580,7 +56667,7 @@ class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         )
       );
     });
-     this.props.map.fitBounds(bounds);
+      this.props.map.fitBounds(bounds);
     */
 
 
@@ -57335,6 +57422,7 @@ const DamageProvider = c => {
     };
   }, dispatch => {
     return {
+      loadDamage: c.DamageActions.loadDamage(dispatch),
       activateDamage: c.DamageActions.activateDamage(dispatch)
     };
   })(_components_Map_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"]));

@@ -99,6 +99,7 @@ export default class DamageList extends Component {
             </tr>
             </table>
             </form>
+            <div class="divide-30" />
             <table class="damage-list">
               <thead>
                 <tr>
