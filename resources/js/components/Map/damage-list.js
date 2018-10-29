@@ -76,10 +76,7 @@ export default class DamageList extends Component {
         <div class="block-medium-top block-medium-left block-medium-right">
           <h1 class="h2">Damages</h1>
           <div class="divide-30" />
-        </div>
-        <ScrollSection>
-          <div class="block-medium-left block-medium-right block-medium-bottom">
-            <form>
+          <form>
               <table class="filter">
                 <tbody>
                   <tr>
@@ -127,6 +124,9 @@ export default class DamageList extends Component {
                 </tbody>
               </table>
             </form>
+        </div>
+        <ScrollSection>
+          <div class="block-medium-left block-medium-right block-medium-bottom">
             <div class="divide-30" />
             <table class="damage-list">
               <thead>
