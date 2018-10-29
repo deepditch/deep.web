@@ -47,9 +47,6 @@ export class DamageActionDispatcher {
   loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null)  => {
       dispatch(DamageActions.attempt());
 
-      console.log(verified)
-      verified = verified == "true";
-
 
       this.damageService
         .getDamageInstances()
@@ -72,7 +69,9 @@ export class DamageActionDispatcher {
           }
           if (verified != null) {
             filteredArray = filteredArray.filter(el=> {
-              return el.verified == verified;
+              if (verified == "true") return el.verified
+              else if (verified == "false") return !el.verified
+              return true;
             });
           }
           dispatch(DamageActions.success(filteredArray));

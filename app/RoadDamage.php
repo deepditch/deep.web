@@ -115,6 +115,6 @@ class RoadDamage extends Model
     {
         return app('geocoder')
             ->reverseQuery(\Geocoder\Query\ReverseQuery::fromCoordinates($this->latitude, $this->longitude))
-            ->get()->first()->toArray()['streetName'];
+            ->get()->first()->toArray()['streetName'] ?? '';
     }
 }
