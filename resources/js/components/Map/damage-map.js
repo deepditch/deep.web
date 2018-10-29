@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ReactDOM from 'react-dom';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
 import ActiveDamage from "./active-damage";
@@ -30,20 +31,6 @@ class MapMarkers extends Component {
     if (!this.props.map) return null;
 
     var _ = this;
-    /*
-    const bounds = new _.props.google.maps.LatLngBounds();
-
-    this.props.damages.map(damage => {
-      bounds.extend(
-        new _.props.google.maps.LatLng(
-          damage.position.latitude,
-          damage.position.longitude
-        )
-      );
-    });
-
-    this.props.map.fitBounds(bounds);
-    */
 
     var markers = this.props.damages.map(damage => (
       <Marker
@@ -135,14 +122,33 @@ class DamageMap extends Component {
     this.setState({ markersVisible: this.refs.map.map.getZoom() >= 14 });
   }
 
-  render() {
+  _verifyDamageReport(e, reportId) {
+    if (e.target.checked) this.props.verifyDamageReport(reportId);
+    else this.props.unverifyDamageReport(reportId);
+  }
+
+  onInfoWindowOpen(props, e) {
     var activeDamage = this.props.damages.find(
       damage => damage.id == this.props.activeDamageId
     );
 
+    const content = (
+      <ActiveDamage
+        {...activeDamage}
+        verifyDamageReport={this._verifyDamageReport.bind(this)}
+      />
+    );
+
+    ReactDOM.render(
+      React.Children.only(content),
+      document.getElementById("iwc")
+    );
+  }
+
+  render() {
     var activeMarker =
-      this.refs.markers && activeDamage
-        ? this.refs.markers.refs[activeDamage.id].marker
+      this.refs.markers && this.props.activeDamageId
+        ? this.refs.markers.refs[this.props.activeDamageId].marker
         : null;
 
     return (
@@ -167,10 +173,13 @@ class DamageMap extends Component {
         <HeatMap damages={this.props.damages} />
 
         <InfoWindow
-          visible={activeDamage && activeMarker ? true : false}
+          visible={this.props.activeDamageId && activeMarker ? true : false}
           marker={activeMarker}
+          onOpen={e => {
+            this.onInfoWindowOpen(this.props, e);
+          }}
         >
-          {activeDamage ? <ActiveDamage {...activeDamage} /> : <></>}
+          <div id="iwc" />
         </InfoWindow>
       </Map>
     );

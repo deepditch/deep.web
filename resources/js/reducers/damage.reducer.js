@@ -17,6 +17,28 @@ export default function DamageReducer(state = { damages: [] }, action) {
       return { damages: state.damages, activeDamageId: action.id };
     case DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE:
       return { damages: state.damages, activeDamageId: null };
+    case DamageActionTypes.VERIFY_DAMAGE_REPORT:
+      return {
+        ...state,
+        damages: state.damages.map(damage => {
+          // Update the damage where the id matches the highest confidence report id
+          if (action.id == damage.reportId) {
+            return { ...damage, verified: true, false_positive: false };
+          }
+          return damage;
+        })
+      };
+    case DamageActionTypes.UNVERIFY_DAMAGE_REPORT:
+      return {
+        ...state,
+        damages: state.damages.map(damage => {
+          // Update the damage where the id matches the highest confidence report id
+          if (action.id == damage.reportId) {
+            return { ...damage, verified: false };
+          }
+          return damage;
+        })
+      };
     default:
       return state;
   }

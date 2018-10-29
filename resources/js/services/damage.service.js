@@ -15,4 +15,30 @@ export class DamageService {
         throw parseErrors(error.response);
       });
   }
+
+  async verifyDamageReport(id) {
+    return this.axios
+      .post(`/road-damage/report/${id}/edit`, {
+        verified: "verified"
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  async unverifyDamageReport(id) {
+    return this.axios
+      .post(`/road-damage/report/${id}/edit`, {
+        verified: "unverified"
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
 }

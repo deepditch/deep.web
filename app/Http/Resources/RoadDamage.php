@@ -24,6 +24,8 @@ class RoadDamage extends JsonResource
             $list[] = new RoadDamageReportResource($report);
         }
 
+        $highestConfidenceReport = $this->getHighestConfidenceReport();
+
         return [
         'id' => $this->id,
         'user_id' => $this->user_id,
@@ -37,7 +39,8 @@ class RoadDamage extends JsonResource
         'verified' => $this->hasVerifiedReport(),
         'label' => $this->status,
         'false_positive' => $this->hasFalsePositiveReport(),
-        'image' => $this->getHighestConfidenceReport()->getImageUrl(),
+        'image' => $highestConfidenceReport->getImageUrl(),
+        'reportId' => $highestConfidenceReport->id,
         'reports' => $list,
         'created_at' => $this->created_at,
         'updated_at' => $this->updated_at,
