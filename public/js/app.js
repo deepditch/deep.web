@@ -55301,9 +55301,7 @@ const DamageActionTypes = {
   LOAD_DAMAGE_SUCCESS: "load_damage_success",
   LOAD_DAMAGE_FAILURE: "load_damage_failure",
   ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance",
-  DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance",
-  VERIFY_DAMAGE_REPORT: "verify_damage_report",
-  UNVERIFY_DAMAGE_REPORT: "unverify_damage_report"
+  DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance"
 };
 const DamageActions = {
   attempt: () => {
@@ -55332,26 +55330,40 @@ const DamageActions = {
     return {
       type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE
     };
-  },
-  verify: id => {
-    return {
-      type: DamageActionTypes.VERIFY_DAMAGE_REPORT,
-      id: id
-    };
-  },
-  unverify: id => {
-    return {
-      type: DamageActionTypes.UNVERIFY_DAMAGE_REPORT,
-      id: id
-    };
   }
 };
 class DamageActionDispatcher {
   constructor(damageService) {
-    this.loadDamage = dispatch => () => {
+    this.loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null) => {
       dispatch(DamageActions.attempt());
       this.damageService.getDamageInstances().then(damages => {
-        dispatch(DamageActions.success(damages));
+        var filteredArray = damages;
+
+        if (streetname) {
+          filteredArray = filteredArray.filter(el => {
+            return el.position.streetname == streetname;
+          });
+        }
+
+        if (type) {
+          filteredArray = filteredArray.filter(el => {
+            return el.type == type;
+          });
+        }
+
+        if (status) {
+          filteredArray = filteredArray.filter(el => {
+            return el.label == status;
+          });
+        }
+
+        if (verified) {
+          filteredArray = filteredArray.filter(el => {
+            return el.verified == verified;
+          });
+        }
+
+        dispatch(DamageActions.success(filteredArray));
       }).catch(error => {
         dispatch(DamageActions.failure());
         dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
@@ -55364,18 +55376,6 @@ class DamageActionDispatcher {
 
     this.deactivateDamage = dispatch => () => {
       dispatch(DamageActions.deactivate());
-    };
-
-    this.verifyDamageReport = dispatch => id => {
-      this.damageService.verifyDamageReport(id).then(response => {
-        dispatch(DamageActions.verify(id));
-      });
-    };
-
-    this.unverifyDamageReport = dispatch => id => {
-      this.damageService.unverifyDamageReport(id).then(response => {
-        dispatch(DamageActions.unverify(id));
-      });
     };
 
     this.damageService = damageService;
@@ -55633,7 +55633,7 @@ const CreateRegisterActionDispatcher = (authService, dispatch) => {
     dispatch(RegisterActions.attempt());
     authService.register(userName, email, password, organizationName).then(response => {
       dispatch(RegisterActions.success(response.user));
-      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].success(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, response.user.name), ", you have been registered and may login.")));
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].success(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, user.name), ", you have been registered and may login.")));
     }).catch(error => {
       dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].error(error));
       dispatch(RegisterActions.failure());
@@ -55894,41 +55894,6 @@ Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])(react__WEBPACK_IMPORTED
 }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Router"], {
   history: _history__WEBPACK_IMPORTED_MODULE_5__["history"]
 }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(App, null))), document.getElementById("react-container"));
-
-/***/ }),
-
-/***/ "./js/components/Form/checkbox.js":
-/*!****************************************!*\
-  !*** ./js/components/Form/checkbox.js ***!
-  \****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Checkbox; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-class Checkbox extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      className: "checkbox"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "checkbox",
-      name: this.props.name,
-      value: this.props.value,
-      checked: this.props.checked,
-      onChange: this.props.onChange
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-      className: "box"
-    }));
-  }
-
-}
-Checkbox.defaultProps = {
-  checked: false
-};
 
 /***/ }),
 
@@ -56484,16 +56449,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
-/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-
 
 
 class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
+    var verified = this.props.verified ? "Verified" : "Unverified";
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "damage-info-window"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      width: "300px",
+      width: "240px",
       src: this.props.image
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "content"
@@ -56502,17 +56466,12 @@ class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.position.streetname, " (", this.props.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
       className: "row align-items-center"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-9"
+      className: "col-6"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       className: "h5 small mb-0"
     }, this.props.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-3"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      checked: this.props.verified ? true : false,
-      onChange: e => {
-        this.props.verifyDamageReport(e, this.props.reportId);
-      }
-    })))));
+      className: "col-6"
+    }, verified))));
   }
 
 }
@@ -56532,16 +56491,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
-/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-
 
 
 
 class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  _verifyDamageReport(e) {
-    if (e.target.checked) this.props.verifyDamageReport(this.props.damage.reportId);else this.props.unverifyDamageReport(this.props.damage.reportId);
-  }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
       className: this.props.active ? "active" : "",
@@ -56554,21 +56507,34 @@ class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "label"
     }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "verified"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      checked: this.props.damage.verified ? true : false,
-      onChange: this._verifyDamageReport.bind(this)
-    })));
+    }, this.props.damage.verified));
   }
 
 }
 
 class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor(...args) {
-    var _temp;
+  constructor(props) {
+    super(props);
 
-    return _temp = super(...args), this.handleListItemClick = (e, damage) => {
+    this.handleListItemClick = (e, damage) => {
       this.props.activateDamage(damage.id);
-    }, _temp;
+    };
+
+    this.state = {
+      filterStreetname: "",
+      filterType: "",
+      filterStatus: "",
+      filterVerified: ""
+    };
+    this.filterChange = this.filterChange.bind(this);
+  }
+
+  filterChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    }, () => {
+      this.props.loadDamage(this.state.filterStreetname, this.state.filterType, this.state.filterStatus, this.state.filterVerified);
+    });
   }
 
   render() {
@@ -56576,9 +56542,7 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       key: damage.id,
       onClick: e => this.handleListItemClick(e, damage),
       damage: damage,
-      active: this.props.activeDamageId == damage.id,
-      verifyDamageReport: this.props.verifyDamageReport,
-      unverifyDamageReport: this.props.unverifyDamageReport
+      active: this.props.activeDamageId == damage.id
     }));
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-top block-medium-left block-medium-right"
@@ -56588,7 +56552,52 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "divide-30"
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-left block-medium-right block-medium-bottom"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "filter"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Streetname", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      name: "filterStreetname",
+      type: "text",
+      onChange: this.filterChange
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Type", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterType",
+      onBlur: this.filterChange
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D00"
+    }, "D00"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D01"
+    }, "D01"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D10"
+    }, "D10"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D11"
+    }, "D11"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D20"
+    }, "D20"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D40"
+    }, "D40"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D43"
+    }, "D43"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "D44"
+    }, "D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Status", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterStatus",
+      onChange: this.filterChange
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "pending-repair"
+    }, "pending-repair"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "repairing"
+    }, "repairing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "done"
+    }, "done"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "wont-do"
+    }, "wont-do"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Verified", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterVerified",
+      onBlur: this.filterChange
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "true"
+    }, "Verified"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      name: "false"
+    }, "Unverified")))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
       className: "damage-list"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
       className: "streetname"
@@ -56616,16 +56625,11 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "../node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
-/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./active-damage */ "./js/components/Map/active-damage.js");
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
+/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./active-damage */ "./js/components/Map/active-damage.js");
 
 
 
@@ -56653,8 +56657,21 @@ class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     if (!this.props.map) return null;
 
     var _ = this;
+    /*
+    const bounds = new _.props.google.maps.LatLngBounds();
+      this.props.damages.map(damage => {
+      bounds.extend(
+        new _.props.google.maps.LatLng(
+          damage.position.latitude,
+          damage.position.longitude
+        )
+      );
+    });
+      this.props.map.fitBounds(bounds);
+    */
 
-    var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["Marker"], {
+
+    var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
       name: damage.type,
       key: damage.id,
       ref: damage.id,
@@ -56743,21 +56760,10 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     });
   }
 
-  _verifyDamageReport(e, reportId) {
-    if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
-  }
-
-  onInfoWindowOpen(props, e) {
-    var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
-    const content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, activeDamage, {
-      verifyDamageReport: this._verifyDamageReport.bind(this)
-    }));
-    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(content), document.getElementById("iwc"));
-  }
-
   render() {
-    var activeMarker = this.refs.markers && this.props.activeDamageId ? this.refs.markers.refs[this.props.activeDamageId].marker : null;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["Map"], {
+    var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
+    var activeMarker = this.refs.markers && activeDamage ? this.refs.markers.refs[activeDamage.id].marker : null;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Map"], {
       ref: "map",
       google: this.props.google,
       zoom: 14,
@@ -56774,21 +56780,16 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       visible: this.state.markersVisible
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(HeatMap, {
       damages: this.props.damages
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["InfoWindow"], {
-      visible: this.props.activeDamageId && activeMarker ? true : false,
-      marker: activeMarker,
-      onOpen: e => {
-        this.onInfoWindowOpen(this.props, e);
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      id: "iwc"
-    })));
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["InfoWindow"], {
+      visible: activeDamage && activeMarker ? true : false,
+      marker: activeMarker
+    }, activeDamage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_3__["default"], activeDamage) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null)));
   }
 
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["GoogleApiWrapper"])({
-  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_3___default.a.GoogleMapsAPIKey,
+/* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["GoogleApiWrapper"])({
+  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_2___default.a.GoogleMapsAPIKey,
   libraries: ["places", "visualization"]
 })(DamageMap));
 
@@ -57409,9 +57410,7 @@ const DamageProvider = c => {
     return {
       loadDamage: c.DamageActions.loadDamage(dispatch),
       activateDamage: c.DamageActions.activateDamage(dispatch),
-      deactivateDamage: c.DamageActions.deactivateDamage(dispatch),
-      verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-      unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+      deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
     };
   })(_components_Map_damage_map__WEBPACK_IMPORTED_MODULE_0__["default"]));
   c.register("DamageList", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
@@ -57423,9 +57422,8 @@ const DamageProvider = c => {
     };
   }, dispatch => {
     return {
-      activateDamage: c.DamageActions.activateDamage(dispatch),
-      verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-      unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+      loadDamage: c.DamageActions.loadDamage(dispatch),
+      activateDamage: c.DamageActions.activateDamage(dispatch)
     };
   })(_components_Map_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"]));
   c.register("Map", c => Object(_components_Map__WEBPACK_IMPORTED_MODULE_2__["default"])(c.DamageList, c.DamageMap));
@@ -57638,10 +57636,6 @@ const UsersProvider = c => {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageReducer; });
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions */ "./js/actions/index.js");
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 /**
  * Updates the damage state based on the provided action
@@ -57682,35 +57676,6 @@ function DamageReducer(state = {
         damages: state.damages,
         activeDamageId: null
       };
-
-    case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].VERIFY_DAMAGE_REPORT:
-      return _objectSpread({}, state, {
-        damages: state.damages.map(damage => {
-          // Update the damage where the id matches the highest confidence report id
-          if (action.id == damage.reportId) {
-            return _objectSpread({}, damage, {
-              verified: true,
-              false_positive: false
-            });
-          }
-
-          return damage;
-        })
-      });
-
-    case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].UNVERIFY_DAMAGE_REPORT:
-      return _objectSpread({}, state, {
-        damages: state.damages.map(damage => {
-          // Update the damage where the id matches the highest confidence report id
-          if (action.id == damage.reportId) {
-            return _objectSpread({}, damage, {
-              verified: false
-            });
-          }
-
-          return damage;
-        })
-      });
 
     default:
       return state;
@@ -58168,26 +58133,6 @@ class DamageService {
   async getDamageInstances() {
     return this.axios.get("/road-damage").then(response => {
       return Promise.resolve(response.data.data);
-    }).catch(error => {
-      throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
-    });
-  }
-
-  async verifyDamageReport(id) {
-    return this.axios.post(`/road-damage/report/${id}/edit`, {
-      verified: "verified"
-    }).then(response => {
-      return response.data;
-    }).catch(error => {
-      throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
-    });
-  }
-
-  async unverifyDamageReport(id) {
-    return this.axios.post(`/road-damage/report/${id}/edit`, {
-      verified: "unverified"
-    }).then(response => {
-      return response.data;
     }).catch(error => {
       throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
     });

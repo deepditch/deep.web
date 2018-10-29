@@ -51,6 +51,7 @@ export const DamageProvider = c => {
       },
       dispatch => {
         return {
+          loadDamage: c.DamageActions.loadDamage(dispatch),
           activateDamage: c.DamageActions.activateDamage(dispatch),
           verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
           unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)

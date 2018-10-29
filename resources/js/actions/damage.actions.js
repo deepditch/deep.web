@@ -43,18 +43,38 @@ export class DamageActionDispatcher {
     this.damageService = damageService;
   }
 
-  loadDamage = dispatch => () => {
-    dispatch(DamageActions.attempt());
-
-    this.damageService
-      .getDamageInstances()
-      .then(damages => {
-        dispatch(DamageActions.success(damages));
-      })
-      .catch(error => {
-        dispatch(DamageActions.failure());
-        dispatch(NotifyActions.error(error));
-      });
+  loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null)  => {
+      dispatch(DamageActions.attempt());
+      this.damageService
+        .getDamageInstances()
+        .then(damages => {
+          var filteredArray = damages;
+          if (streetname) {
+            filteredArray = filteredArray.filter(el=> {
+              return el.position.streetname == streetname;
+            });
+          }
+          if (type) {
+            filteredArray = filteredArray.filter(el=> {
+              return el.type == type;
+            });
+          }
+          if (status) {
+            filteredArray = filteredArray.filter(el=> {
+              return el.label == status;
+            });
+          }
+          if (verified) {
+            filteredArray = filteredArray.filter(el=> {
+              return el.verified == verified;
+            });
+          }
+          dispatch(DamageActions.success(filteredArray));
+        })
+        .catch(error => {
+          dispatch(DamageActions.failure());
+          dispatch(NotifyActions.error(error));
+        });
   };
 
   activateDamage = dispatch => id => {
