@@ -1,4 +1,5 @@
 import { NotifyActions } from "./notify.actions";
+import { isNullOrUndefined } from "util";
 
 export const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
@@ -45,6 +46,11 @@ export class DamageActionDispatcher {
 
   loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null)  => {
       dispatch(DamageActions.attempt());
+
+      console.log(verified)
+      verified = verified == "true";
+
+
       this.damageService
         .getDamageInstances()
         .then(damages => {
@@ -64,7 +70,7 @@ export class DamageActionDispatcher {
               return el.label == status;
             });
           }
-          if (verified) {
+          if (verified != null) {
             filteredArray = filteredArray.filter(el=> {
               return el.verified == verified;
             });
