@@ -1,13 +1,26 @@
-import DamageMap from "../components/Map/damage-map";
-import DamageList from "../components/Map/damage-list";
 import Map from "../components/Map";
+import DamageList, { DamageListItem } from "../components/damage-list";
+import DamageMap, {
+  ActiveDamage,
+  MapMarkers,
+  HeatMap
+} from "../components/damage-map";
 import { connect } from "react-redux";
-
-import {
-  DamageActionDispatcher
-} from "../actions";
-
+import { DamageActionDispatcher } from "../actions";
 import { DamageService } from "../services";
+import { createSelector } from "reselect";
+
+const getDamages = store => store.damage.damages;
+
+const getDamageIds = createSelector([getDamages], damages =>
+  damages.map(damage => damage.id).toList()
+);
+
+const getActiveDamage = store =>
+  store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
+
+const getDamage = (store, ownProps) =>
+  store.damage.damages.find(damage => damage.id == ownProps.damageId);
 
 /**
  * Registers dependencies in the container and connects react components to the redux store
@@ -21,7 +34,7 @@ export const DamageProvider = c => {
     connect(
       store => {
         return {
-          damages: store.damage.damages,
+          damages: getDamageIds(store),
           pending: store.damage.pending,
           success: store.damage.success,
           activeDamageId: store.damage.activeDamageId
@@ -43,7 +56,7 @@ export const DamageProvider = c => {
     connect(
       store => {
         return {
-          damages: store.damage.damages,
+          damages: damageIdsSelector(store),
           pending: store.damage.pending,
           success: store.damage.success,
           activeDamageId: store.damage.activeDamageId
@@ -58,6 +71,24 @@ export const DamageProvider = c => {
         };
       }
     )(DamageList)
+  );
+
+  c.register("DamageListItem", c =>
+    connect(
+      (store, ownProps) => {
+        return {
+          damage: getDamage(store, ownProps),
+          active: store.damage.activeDamageId == ownProps.damageId
+        };
+      },
+      dispatch => {
+        return {
+          activateDamage: c.DamageActions.activateDamage(dispatch),
+          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
+          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+        };
+      }
+    )
   );
 
   c.register("Map", c => Map(c.DamageList, c.DamageMap));

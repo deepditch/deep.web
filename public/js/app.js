@@ -54018,6 +54018,142 @@ if ("development" !== 'production' && typeof isCrushed.name === 'string' && isCr
 
 /***/ }),
 
+/***/ "../node_modules/reselect/es/index.js":
+/*!********************************************!*\
+  !*** ../node_modules/reselect/es/index.js ***!
+  \********************************************/
+/*! exports provided: defaultMemoize, createSelectorCreator, createSelector, createStructuredSelector */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaultMemoize", function() { return defaultMemoize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSelectorCreator", function() { return createSelectorCreator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSelector", function() { return createSelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createStructuredSelector", function() { return createStructuredSelector; });
+function defaultEqualityCheck(a, b) {
+  return a === b;
+}
+
+function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
+  if (prev === null || next === null || prev.length !== next.length) {
+    return false;
+  }
+
+  // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
+  var length = prev.length;
+  for (var i = 0; i < length; i++) {
+    if (!equalityCheck(prev[i], next[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function defaultMemoize(func) {
+  var equalityCheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCheck;
+
+  var lastArgs = null;
+  var lastResult = null;
+  // we reference arguments instead of spreading them for performance reasons
+  return function () {
+    if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
+      // apply arguments instead of spreading for performance.
+      lastResult = func.apply(null, arguments);
+    }
+
+    lastArgs = arguments;
+    return lastResult;
+  };
+}
+
+function getDependencies(funcs) {
+  var dependencies = Array.isArray(funcs[0]) ? funcs[0] : funcs;
+
+  if (!dependencies.every(function (dep) {
+    return typeof dep === 'function';
+  })) {
+    var dependencyTypes = dependencies.map(function (dep) {
+      return typeof dep;
+    }).join(', ');
+    throw new Error('Selector creators expect all input-selectors to be functions, ' + ('instead received the following types: [' + dependencyTypes + ']'));
+  }
+
+  return dependencies;
+}
+
+function createSelectorCreator(memoize) {
+  for (var _len = arguments.length, memoizeOptions = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    memoizeOptions[_key - 1] = arguments[_key];
+  }
+
+  return function () {
+    for (var _len2 = arguments.length, funcs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      funcs[_key2] = arguments[_key2];
+    }
+
+    var recomputations = 0;
+    var resultFunc = funcs.pop();
+    var dependencies = getDependencies(funcs);
+
+    var memoizedResultFunc = memoize.apply(undefined, [function () {
+      recomputations++;
+      // apply arguments instead of spreading for performance.
+      return resultFunc.apply(null, arguments);
+    }].concat(memoizeOptions));
+
+    // If a selector is called with the exact same arguments we don't need to traverse our dependencies again.
+    var selector = memoize(function () {
+      var params = [];
+      var length = dependencies.length;
+
+      for (var i = 0; i < length; i++) {
+        // apply arguments instead of spreading and mutate a local list of params for performance.
+        params.push(dependencies[i].apply(null, arguments));
+      }
+
+      // apply arguments instead of spreading for performance.
+      return memoizedResultFunc.apply(null, params);
+    });
+
+    selector.resultFunc = resultFunc;
+    selector.dependencies = dependencies;
+    selector.recomputations = function () {
+      return recomputations;
+    };
+    selector.resetRecomputations = function () {
+      return recomputations = 0;
+    };
+    return selector;
+  };
+}
+
+var createSelector = createSelectorCreator(defaultMemoize);
+
+function createStructuredSelector(selectors) {
+  var selectorCreator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : createSelector;
+
+  if (typeof selectors !== 'object') {
+    throw new Error('createStructuredSelector expects first argument to be an object ' + ('where each property is a selector, instead received a ' + typeof selectors));
+  }
+  var objectKeys = Object.keys(selectors);
+  return selectorCreator(objectKeys.map(function (key) {
+    return selectors[key];
+  }), function () {
+    for (var _len3 = arguments.length, values = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      values[_key3] = arguments[_key3];
+    }
+
+    return values.reduce(function (composition, value, index) {
+      composition[objectKeys[index]] = value;
+      return composition;
+    }, {});
+  });
+}
+
+/***/ }),
+
 /***/ "../node_modules/resolve-pathname/index.js":
 /*!*************************************************!*\
   !*** ../node_modules/resolve-pathname/index.js ***!
@@ -56001,8 +56137,6 @@ class DamageActionDispatcher {
   constructor(damageService) {
     this.loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null) => {
       dispatch(DamageActions.attempt());
-      console.log(verified);
-      verified = verified == "true";
       this.damageService.getDamageInstances().then(damages => {
         var filteredArray = damages;
 
@@ -56026,7 +56160,8 @@ class DamageActionDispatcher {
 
         if (verified != null) {
           filteredArray = filteredArray.filter(el => {
-            return el.verified == verified;
+            if (verified == "true") return el.verified;else if (verified == "false") return !el.verified;
+            return true;
           });
         }
 
@@ -57138,399 +57273,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ((DamageList, DamageMap) => class Map extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row no-gutters h-100"
+      className: "row no-gutters",
+      style: {
+        height: "calc(100vh - 40px)"
+      }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-4 d-flex flex-column"
+      className: "col-4 h-100 d-flex flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageList, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-8"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMap, null)));
   }
 
 });
-
-/***/ }),
-
-/***/ "./js/components/Map/active-damage.js":
-/*!********************************************!*\
-  !*** ./js/components/Map/active-damage.js ***!
-  \********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ActiveDamage; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
-/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-
-
-
-class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "damage-info-window"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      width: "300px",
-      src: this.props.image
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "content"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
-      className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.position.streetname, " (", this.props.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
-      className: "row align-items-center"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-9"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-      className: "h5 small mb-0"
-    }, this.props.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-3"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      checked: this.props.verified ? true : false,
-      onChange: e => {
-        this.props.verifyDamageReport(e, this.props.reportId);
-      }
-    })))));
-  }
-
-}
-
-/***/ }),
-
-/***/ "./js/components/Map/damage-list.js":
-/*!******************************************!*\
-  !*** ./js/components/Map/damage-list.js ***!
-  \******************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageList; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
-/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-
-
-
-
-class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  _verifyDamageReport(e) {
-    if (e.target.checked) this.props.verifyDamageReport(this.props.damage.reportId);else this.props.unverifyDamageReport(this.props.damage.reportId);
-  }
-
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
-      className: this.props.active ? "active" : "",
-      onClick: this.props.onClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-      className: "streetname"
-    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-      className: "type"
-    }, this.props.damage.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-      className: "label"
-    }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-      className: "verified"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      checked: this.props.damage.verified ? true : false,
-      onChange: this._verifyDamageReport.bind(this)
-    })));
-  }
-
-}
-
-class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor(props) {
-    super(props);
-
-    this.handleListItemClick = (e, damage) => {
-      this.props.activateDamage(damage.id);
-    };
-
-    this.state = {
-      filterStreetname: "",
-      filterType: "",
-      filterStatus: "",
-      filterVerified: ""
-    };
-    this.filterChange = this.filterChange.bind(this);
-  }
-
-  filterChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    }, () => {
-      this.props.loadDamage(this.state.filterStreetname, this.state.filterType, this.state.filterStatus, this.state.filterVerified);
-    });
-  }
-
-  render() {
-    var listItems = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageListItem, {
-      key: damage.id,
-      onClick: e => this.handleListItemClick(e, damage),
-      damage: damage,
-      active: this.props.activeDamageId == damage.id,
-      verifyDamageReport: this.props.verifyDamageReport,
-      unverifyDamageReport: this.props.unverifyDamageReport
-    }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "block-medium-top block-medium-left block-medium-right"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
-      className: "h2"
-    }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "divide-30"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "block-medium-left block-medium-right block-medium-bottom"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-      className: "filter"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Streetname", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      name: "filterStreetname",
-      type: "text",
-      onChange: this.filterChange
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Type", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      name: "filterType",
-      onBlur: this.filterChange
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D00"
-    }, "D00"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D01"
-    }, "D01"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D10"
-    }, "D10"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D11"
-    }, "D11"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D20"
-    }, "D20"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D40"
-    }, "D40"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D43"
-    }, "D43"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "D44"
-    }, "D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Status", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      name: "filterStatus",
-      onChange: this.filterChange
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "pending-repair"
-    }, "pending-repair"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "repairing"
-    }, "repairing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "done"
-    }, "done"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "wont-do"
-    }, "wont-do"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Verified", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
-      name: "filterVerified",
-      onBlur: this.filterChange
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "true"
-    }, "Verified"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-      value: "false"
-    }, "Unverified"))))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "divide-30"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
-      className: "damage-list"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-      className: "streetname"
-    }, "Street"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-      className: "type"
-    }, "Type"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-      className: "label"
-    }, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-      className: "verified"
-    }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, listItems)))));
-  }
-
-}
-
-/***/ }),
-
-/***/ "./js/components/Map/damage-map.js":
-/*!*****************************************!*\
-  !*** ./js/components/Map/damage-map.js ***!
-  \*****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "../node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
-/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./active-damage */ "./js/components/Map/active-damage.js");
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-
-
-
-
-
-const pins = {
-  D00: "D00.png",
-  D01: "D01.png",
-  D10: "D10.png",
-  D11: "D11.png",
-  D20: "D20.png",
-  D40: "D40.png",
-  D43: "D43.png",
-  D44: "D44.png",
-  default: "D00.png"
-};
-
-var pinImage = type => "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
-
-class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  shouldComponentUpdate(newProps, newState) {
-    return newProps.damages.length != this.props.damages.length || newProps.visible != this.props.visible;
-  }
-
-  render() {
-    if (!this.props.map) return null;
-
-    var _ = this;
-
-    var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["Marker"], {
-      name: damage.type,
-      key: damage.id,
-      ref: damage.id,
-      onClick: _.props.onMarkerClick.bind(_),
-      damage: damage,
-      position: {
-        lat: damage.position.latitude,
-        lng: damage.position.longitude
-      },
-      map: this.props.map,
-      google: this.props.google,
-      visible: this.props.visible,
-      options: {
-        icon: pinImage(damage.type)
-      }
-    }));
-    return markers;
-  }
-
-}
-
-class HeatMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  shouldComponentUpdate(newProps, newState) {
-    return newProps.damages.length != this.props.damages.length;
-  }
-
-  render() {
-    var _ = this;
-
-    var heatData = [];
-    this.props.damages.forEach(function (damage) {
-      damage.reports.forEach(function (report) {
-        if (report.confidence >= 0.5) {
-          heatData.push({
-            location: new _.props.google.maps.LatLng(report.latitude, report.longitude),
-            weight: report.confidence
-          });
-        }
-      });
-    });
-    new this.props.google.maps.visualization.HeatmapLayer({
-      data: heatData,
-      //the 'heat' of the heatmap
-      map: this.props.map //the map instance
-
-    });
-    return null;
-  }
-
-}
-
-class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  constructor(props) {
-    super(props);
-    this.state = {
-      markersVisible: true,
-      latitude: 42.331429,
-      longitude: -83.045753
-    };
-
-    var geoSuccess = function (position) {
-      this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      });
-    };
-
-    navigator.geolocation.getCurrentPosition(geoSuccess);
-  }
-
-  componentDidMount() {
-    this.props.loadDamage();
-  }
-
-  onMarkerClick(props, marker, e) {
-    this.props.activateDamage(props.damage.id);
-  }
-
-  onMapClicked(props) {
-    this.props.deactivateDamage();
-  }
-
-  onZoomChanged(props) {
-    this.setState({
-      markersVisible: this.refs.map.map.getZoom() >= 14
-    });
-  }
-
-  _verifyDamageReport(e, reportId) {
-    if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
-  }
-
-  onInfoWindowOpen(props, e) {
-    var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
-    const content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, activeDamage, {
-      verifyDamageReport: this._verifyDamageReport.bind(this)
-    }));
-    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(content), document.getElementById("iwc"));
-  }
-
-  render() {
-    var activeMarker = this.refs.markers && this.props.activeDamageId ? this.refs.markers.refs[this.props.activeDamageId].marker : null;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["Map"], {
-      ref: "map",
-      google: this.props.google,
-      zoom: 14,
-      onClick: this.onMapClicked.bind(this),
-      onZoom_changed: this.onZoomChanged.bind(this),
-      initialCenter: {
-        lat: this.state.latitude,
-        lng: this.state.longitude
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MapMarkers, {
-      ref: "markers",
-      damages: this.props.damages,
-      onMarkerClick: this.onMarkerClick.bind(this),
-      visible: this.state.markersVisible
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(HeatMap, {
-      damages: this.props.damages
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["InfoWindow"], {
-      visible: this.props.activeDamageId && activeMarker ? true : false,
-      marker: activeMarker,
-      onOpen: e => {
-        this.onInfoWindowOpen(this.props, e);
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      id: "iwc"
-    })));
-  }
-
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["GoogleApiWrapper"])({
-  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_3___default.a.GoogleMapsAPIKey,
-  libraries: ["places", "visualization"]
-})(DamageMap));
 
 /***/ }),
 
@@ -57733,6 +57487,470 @@ function AuthorizedRoute(_ref) {
       to: "/login"
     })
   }));
+}
+
+/***/ }),
+
+/***/ "./js/components/damage-list/damage-filters.js":
+/*!*****************************************************!*\
+  !*** ./js/components/damage-list/damage-filters.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageFilters; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+class DamageFilters extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  filterChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    }, () => {
+      this.props.loadDamage(this.state.filterStreetname, this.state.filterType, this.state.filterStatus, this.state.filterVerified);
+    });
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "filter"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Streetname", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      name: "filterStreetname",
+      type: "text",
+      onChange: this.filterChange.bind(this)
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Type", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterType",
+      onChange: this.filterChange.bind(this)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D00"
+    }, "D00"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D01"
+    }, "D01"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D10"
+    }, "D10"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D11"
+    }, "D11"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D20"
+    }, "D20"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D40"
+    }, "D40"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D43"
+    }, "D43"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "D44"
+    }, "D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Status", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterStatus",
+      onChange: this.filterChange.bind(this)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "pending-repair"
+    }, "pending-repair"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "repairing"
+    }, "repairing"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "done"
+    }, "done"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "wont-do"
+    }, "wont-do"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, "Verified", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      name: "filterVerified",
+      onChange: this.filterChange.bind(this)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "true"
+    }, "Verified"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+      value: "false"
+    }, "Unverified")))))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./js/components/damage-list/damage-list-item.js":
+/*!*******************************************************!*\
+  !*** ./js/components/damage-list/damage-list-item.js ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageListItem; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
+
+
+class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  _verifyDamageReport(e) {
+    if (e.target.checked) this.props.verifyDamageReport(this.props.damage.reportId);else this.props.unverifyDamageReport(this.props.damage.reportId);
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+      className: this.props.active ? "active" : "",
+      onClick: this.props.onClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "streetname"
+    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "type"
+    }, this.props.damage.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "label"
+    }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+      className: "verified"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Checkbox, {
+      checked: this.props.damage.verified ? true : false,
+      onChange: this._verifyDamageReport.bind(this)
+    })));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./js/components/damage-list/index.js":
+/*!********************************************!*\
+  !*** ./js/components/damage-list/index.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageList; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
+/* harmony import */ var _damage_filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./damage-filters */ "./js/components/damage-list/damage-filters.js");
+/* harmony import */ var _damage_list_item__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./damage-list-item */ "./js/components/damage-list/damage-list-item.js");
+/* empty/unused harmony star reexport *//* empty/unused harmony star reexport */
+
+
+
+class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filterStreetname: "",
+      filterType: "",
+      filterStatus: "",
+      filterVerified: ""
+    };
+  }
+
+  render() {
+    var listItems = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_damage_list_item__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      key: damage.id,
+      activateDamage: this.props.activateDamage,
+      damage: damage,
+      active: this.props.activeDamageId == damage.id,
+      verifyDamageReport: this.props.verifyDamageReport,
+      unverifyDamageReport: this.props.unverifyDamageReport
+    }));
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "block-medium-top block-medium-left block-medium-right"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+      className: "h2"
+    }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_damage_filters__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      loadDamage: this.props.loadDamage
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "block-medium-left block-medium-right block-medium-bottom"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+      className: "damage-list"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "streetname"
+    }, "Street"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "type"
+    }, "Type"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "label"
+    }, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+      className: "verified"
+    }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, listItems)))));
+  }
+
+}
+
+
+
+/***/ }),
+
+/***/ "./js/components/damage-map/active-damage.js":
+/*!***************************************************!*\
+  !*** ./js/components/damage-map/active-damage.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ActiveDamage; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
+/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
+
+
+
+class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "damage-info-window"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      width: "300px",
+      src: this.props.image
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "content"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
+      className: "mb-1"
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.position.streetname, " (", this.props.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
+      className: "row align-items-center"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-9"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      className: "h5 small mb-0"
+    }, this.props.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-3"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      checked: this.props.verified ? true : false,
+      onChange: e => {
+        this.props.verifyDamageReport(e, this.props.reportId);
+      }
+    })))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./js/components/damage-map/heat-map.js":
+/*!**********************************************!*\
+  !*** ./js/components/damage-map/heat-map.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HeatMap; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+class HeatMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  shouldComponentUpdate(newProps, newState) {
+    return newProps.damages.length != this.props.damages.length;
+  }
+
+  render() {
+    var _ = this;
+
+    var heatData = [];
+    this.props.damages.forEach(function (damage) {
+      damage.reports.forEach(function (report) {
+        if (report.confidence >= 0.5) {
+          heatData.push({
+            location: new _.props.google.maps.LatLng(report.latitude, report.longitude),
+            weight: report.confidence
+          });
+        }
+      });
+    });
+    new this.props.google.maps.visualization.HeatmapLayer({
+      data: heatData,
+      //the 'heat' of the heatmap
+      map: this.props.map //the map instance
+
+    });
+    return null;
+  }
+
+}
+
+/***/ }),
+
+/***/ "./js/components/damage-map/index.js":
+/*!*******************************************!*\
+  !*** ./js/components/damage-map/index.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "../node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
+/* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./active-damage */ "./js/components/damage-map/active-damage.js");
+/* harmony import */ var _heat_map__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./heat-map */ "./js/components/damage-map/heat-map.js");
+/* harmony import */ var _map_markers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./map-markers */ "./js/components/damage-map/map-markers.js");
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+
+
+
+
+
+
+
+
+class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.state = {
+      markersVisible: true,
+      latitude: 42.331429,
+      longitude: -83.045753
+    };
+
+    var geoSuccess = function (position) {
+      this.setState({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      });
+    };
+
+    navigator.geolocation.getCurrentPosition(geoSuccess);
+  }
+
+  componentDidMount() {
+    this.props.loadDamage();
+  }
+
+  onMapClicked(props) {
+    this.props.deactivateDamage();
+  }
+
+  onZoomChanged(props) {
+    this.setState({
+      markersVisible: this.refs.map.map.getZoom() >= 14
+    });
+  }
+
+  _verifyDamageReport(e, reportId) {
+    if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
+  }
+
+  onInfoWindowOpen(props, e) {
+    var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
+    const content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, activeDamage, {
+      verifyDamageReport: this._verifyDamageReport.bind(this)
+    }));
+    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(content), document.getElementById("iwc"));
+  }
+
+  render() {
+    var activeMarker = this.refs.markers && this.props.activeDamageId ? this.refs.markers.getMarker(this.props.activeDamageId) : null;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["Map"], {
+      ref: "map",
+      google: this.props.google,
+      zoom: 14,
+      onClick: this.onMapClicked.bind(this),
+      onZoom_changed: this.onZoomChanged.bind(this),
+      initialCenter: {
+        lat: this.state.latitude,
+        lng: this.state.longitude
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_map_markers__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      ref: "markers",
+      damages: this.props.damages,
+      activateDamage: this.props.activateDamage,
+      visible: this.state.markersVisible
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_heat_map__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      damages: this.props.damages
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["InfoWindow"], {
+      visible: this.props.activeDamageId && activeMarker ? true : false,
+      marker: activeMarker,
+      onOpen: e => {
+        this.onInfoWindowOpen(this.props, e);
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      id: "iwc"
+    })));
+  }
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["GoogleApiWrapper"])({
+  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_3___default.a.GoogleMapsAPIKey,
+  libraries: ["places", "visualization"]
+})(DamageMap));
+
+/***/ }),
+
+/***/ "./js/components/damage-map/map-markers.js":
+/*!*************************************************!*\
+  !*** ./js/components/damage-map/map-markers.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MapMarkers; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const pins = {
+  D00: "D00.png",
+  D01: "D01.png",
+  D10: "D10.png",
+  D11: "D11.png",
+  D20: "D20.png",
+  D40: "D40.png",
+  D43: "D43.png",
+  D44: "D44.png",
+  default: "D00.png"
+};
+
+var pinImage = type => "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
+
+class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  shouldComponentUpdate(newProps, newState) {
+    return newProps.damages.length != this.props.damages.length || newProps.visible != this.props.visible;
+  }
+
+  onMarkerClick(props, marker, e) {
+    this.props.activateDamage(props.damageId);
+  }
+
+  getMarker(damageId) {
+    return this.refs[damageId].marker;
+  }
+
+  render() {
+    if (!this.props.map) return null;
+
+    var _ = this;
+
+    var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
+      name: damage.type,
+      damageId: damage.id,
+      ref: damage.id,
+      key: damage.id,
+      onClick: _.onMarkerClick.bind(_),
+      position: {
+        lat: damage.position.latitude,
+        lng: damage.position.longitude
+      },
+      options: {
+        icon: pinImage(damage.type)
+      },
+      map: this.props.map,
+      google: this.props.google,
+      visible: this.props.visible
+    }));
+    return markers;
+  }
+
 }
 
 /***/ }),
@@ -58118,29 +58336,40 @@ const RedirectMiddleware = Object(_createMiddleware__WEBPACK_IMPORTED_MODULE_1__
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageProvider", function() { return DamageProvider; });
-/* harmony import */ var _components_Map_damage_map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Map/damage-map */ "./js/components/Map/damage-map.js");
-/* harmony import */ var _components_Map_damage_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Map/damage-list */ "./js/components/Map/damage-list.js");
-/* harmony import */ var _components_Map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Map */ "./js/components/Map.js");
+/* harmony import */ var _components_Map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Map */ "./js/components/Map.js");
+/* harmony import */ var _components_damage_list__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/damage-list */ "./js/components/damage-list/index.js");
+/* harmony import */ var _components_damage_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/damage-map */ "./js/components/damage-map/index.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "../node_modules/react-redux/es/index.js");
 /* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../actions */ "./js/actions/index.js");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services */ "./js/services/index.js");
+/* harmony import */ var reselect__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! reselect */ "../node_modules/reselect/es/index.js");
 
 
 
 
 
 
+
+
+const getDamages = store => store.damage.damages;
+
+const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelector"])([getDamages], damages => damages.map(damage => damage.id).toList());
+
+const getActiveDamage = store => store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
+
+const getDamage = (store, ownProps) => store.damage.damages.find(damage => damage.id == ownProps.damageId);
 /**
  * Registers dependencies in the container and connects react components to the redux store
  * @param {Container} c the IoC container
  */
+
 
 const DamageProvider = c => {
   c.register("DamageService", c => new _services__WEBPACK_IMPORTED_MODULE_5__["DamageService"](c.Axios));
   c.register("DamageActions", c => new _actions__WEBPACK_IMPORTED_MODULE_4__["DamageActionDispatcher"](c.DamageService));
   c.register("DamageMap", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
     return {
-      damages: store.damage.damages,
+      damages: getDamageIds(store),
       pending: store.damage.pending,
       success: store.damage.success,
       activeDamageId: store.damage.activeDamageId
@@ -58153,10 +58382,10 @@ const DamageProvider = c => {
       verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
       unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
     };
-  })(_components_Map_damage_map__WEBPACK_IMPORTED_MODULE_0__["default"]));
+  })(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["default"]));
   c.register("DamageList", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
     return {
-      damages: store.damage.damages,
+      damages: damageIdsSelector(store),
       pending: store.damage.pending,
       success: store.damage.success,
       activeDamageId: store.damage.activeDamageId
@@ -58168,8 +58397,20 @@ const DamageProvider = c => {
       verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
       unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
     };
-  })(_components_Map_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"]));
-  c.register("Map", c => Object(_components_Map__WEBPACK_IMPORTED_MODULE_2__["default"])(c.DamageList, c.DamageMap));
+  })(_components_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"]));
+  c.register("DamageListItem", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])((store, ownProps) => {
+    return {
+      damage: getDamage(store, ownProps),
+      active: store.damage.activeDamageId == ownProps.damageId
+    };
+  }, dispatch => {
+    return {
+      activateDamage: c.DamageActions.activateDamage(dispatch),
+      verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
+      unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+    };
+  }));
+  c.register("Map", c => Object(_components_Map__WEBPACK_IMPORTED_MODULE_0__["default"])(c.DamageList, c.DamageMap));
 };
 
 /***/ }),
