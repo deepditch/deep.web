@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class DamageFilters extends Component {
+export class DamageFilters extends Component {
   filterChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
       this.props.loadDamage(

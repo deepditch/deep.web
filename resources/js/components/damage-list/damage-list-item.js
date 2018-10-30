@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import ScrollSection from "../scroll-section";
 
-export default class DamageListItem extends Component {
+export class DamageListItem extends Component {
   _verifyDamageReport(e) {
     if (e.target.checked)
       this.props.verifyDamageReport(this.props.damage.reportId);

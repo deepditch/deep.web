@@ -57495,12 +57495,12 @@ function AuthorizedRoute(_ref) {
 /*!*****************************************************!*\
   !*** ./js/components/damage-list/damage-filters.js ***!
   \*****************************************************/
-/*! exports provided: default */
+/*! exports provided: DamageFilters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageFilters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageFilters", function() { return DamageFilters; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -57568,16 +57568,14 @@ class DamageFilters extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!*******************************************************!*\
   !*** ./js/components/damage-list/damage-list-item.js ***!
   \*******************************************************/
-/*! exports provided: default */
+/*! exports provided: DamageListItem */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageListItem; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageListItem", function() { return DamageListItem; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
-
 
 class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   _verifyDamageReport(e) {
@@ -57610,22 +57608,25 @@ class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!********************************************!*\
   !*** ./js/components/damage-list/index.js ***!
   \********************************************/
-/*! exports provided: default */
+/*! exports provided: default, DamageFilters, DamageListItem */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return DamageList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _scroll_section__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scroll-section */ "./js/components/scroll-section.js");
 /* harmony import */ var _damage_filters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./damage-filters */ "./js/components/damage-list/damage-filters.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DamageFilters", function() { return _damage_filters__WEBPACK_IMPORTED_MODULE_2__["DamageFilters"]; });
+
 /* harmony import */ var _damage_list_item__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./damage-list-item */ "./js/components/damage-list/damage-list-item.js");
-/* empty/unused harmony star reexport *//* empty/unused harmony star reexport */
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DamageListItem", function() { return _damage_list_item__WEBPACK_IMPORTED_MODULE_3__["DamageListItem"]; });
 
 
 
-class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+
+
+/* harmony default export */ __webpack_exports__["default"] = ((DamageListItem, DamageFilters) => class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.state = {
@@ -57637,23 +57638,13 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   }
 
   render() {
-    var listItems = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_damage_list_item__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      key: damage.id,
-      activateDamage: this.props.activateDamage,
-      damage: damage,
-      active: this.props.activeDamageId == damage.id,
-      verifyDamageReport: this.props.verifyDamageReport,
-      unverifyDamageReport: this.props.unverifyDamageReport
-    }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-top block-medium-left block-medium-right"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
       className: "h2"
     }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "divide-30"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_damage_filters__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      loadDamage: this.props.loadDamage
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageFilters, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-left block-medium-right block-medium-bottom"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "divide-30"
@@ -57667,12 +57658,13 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "label"
     }, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
       className: "verified"
-    }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, listItems)))));
+    }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.props.damages && this.props.damages.map(damageId => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageListItem, {
+      key: damageId,
+      damageId: id
+    })))))));
   }
 
-}
-
-
+});
 
 /***/ }),
 
@@ -57680,12 +57672,12 @@ class DamageList extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!***************************************************!*\
   !*** ./js/components/damage-map/active-damage.js ***!
   \***************************************************/
-/*! exports provided: default */
+/*! exports provided: ActiveDamage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ActiveDamage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActiveDamage", function() { return ActiveDamage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
@@ -57694,30 +57686,91 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  _verifyDamageReport(e, reportId) {
+    if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
+  }
+
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "damage-info-window"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       width: "300px",
-      src: this.props.image
+      src: this.props.damage.image
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "content"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
       className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.position.streetname, " (", this.props.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_1__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
       className: "row align-items-center"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-9"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       className: "h5 small mb-0"
-    }, this.props.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, this.props.damage.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-3"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      checked: this.props.verified ? true : false,
+      checked: this.props.damage.verified ? true : false,
       onChange: e => {
-        this.props.verifyDamageReport(e, this.props.reportId);
+        this._verifyDamageReport(e, this.props.damage.reportId).bind(this);
       }
     })))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./js/components/damage-map/damage-marker.js":
+/*!***************************************************!*\
+  !*** ./js/components/damage-map/damage-marker.js ***!
+  \***************************************************/
+/*! exports provided: DamageMarker */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DamageMarker", function() { return DamageMarker; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
+/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const pins = {
+  D00: "D00.png",
+  D01: "D01.png",
+  D10: "D10.png",
+  D11: "D11.png",
+  D20: "D20.png",
+  D40: "D40.png",
+  D43: "D43.png",
+  D44: "D44.png",
+  default: "D00.png"
+};
+
+var pinImage = type => "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
+
+class DamageMarker extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  onClick(props, marker, e) {
+    this.props.activateDamage(props.damageId);
+  }
+
+  render() {
+    if (!this.props.map) return null;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
+      name: this.props.damage.type,
+      onClick: this.onClick.bind(this),
+      position: {
+        lat: this.props.damage.position.latitude,
+        lng: this.props.damage.position.longitude
+      },
+      options: {
+        icon: pinImage(this.props.damage.type)
+      },
+      map: this.props.map,
+      google: this.props.google,
+      visible: this.props.visible
+    });
   }
 
 }
@@ -57728,12 +57781,12 @@ class ActiveDamage extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!**********************************************!*\
   !*** ./js/components/damage-map/heat-map.js ***!
   \**********************************************/
-/*! exports provided: default */
+/*! exports provided: HeatMap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HeatMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HeatMap", function() { return HeatMap; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -57773,7 +57826,7 @@ class HeatMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!*******************************************!*\
   !*** ./js/components/damage-map/index.js ***!
   \*******************************************/
-/*! exports provided: default */
+/*! exports provided: default, HeatMap, DamageMarker, ActiveDamage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57786,10 +57839,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../project.config */ "../project.config.js");
 /* harmony import */ var _project_config__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_project_config__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./active-damage */ "./js/components/damage-map/active-damage.js");
-/* harmony import */ var _heat_map__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./heat-map */ "./js/components/damage-map/heat-map.js");
-/* harmony import */ var _map_markers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./map-markers */ "./js/components/damage-map/map-markers.js");
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+/* harmony import */ var _heat_map__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./heat-map */ "./js/components/damage-map/heat-map.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "HeatMap", function() { return _heat_map__WEBPACK_IMPORTED_MODULE_4__["HeatMap"]; });
+
+/* harmony import */ var _damage_marker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./damage-marker */ "./js/components/damage-map/damage-marker.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "DamageMarker", function() { return _damage_marker__WEBPACK_IMPORTED_MODULE_5__["DamageMarker"]; });
+
+/* harmony import */ var _active_damage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./active-damage */ "./js/components/damage-map/active-damage.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActiveDamage", function() { return _active_damage__WEBPACK_IMPORTED_MODULE_6__["ActiveDamage"]; });
 
 
 
@@ -57799,7 +57856,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 
 
-class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+const DamageMap = (DamageMarker, HeatMap, ActiveDamage) => class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.state = {
@@ -57813,7 +57870,7 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude
       });
-    };
+    }.bind(this);
 
     navigator.geolocation.getCurrentPosition(geoSuccess);
   }
@@ -57832,20 +57889,12 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     });
   }
 
-  _verifyDamageReport(e, reportId) {
-    if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
-  }
-
   onInfoWindowOpen(props, e) {
-    var activeDamage = this.props.damages.find(damage => damage.id == this.props.activeDamageId);
-    const content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_active_damage__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, activeDamage, {
-      verifyDamageReport: this._verifyDamageReport.bind(this)
-    }));
-    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(content), document.getElementById("iwc"));
+    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ActiveDamage, null)), document.getElementById("iwc"));
   }
 
   render() {
-    var activeMarker = this.refs.markers && this.props.activeDamageId ? this.refs.markers.getMarker(this.props.activeDamageId) : null;
+    var activeMarker = this.refs[this.props.activeDamageId];
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["Map"], {
       ref: "map",
       google: this.props.google,
@@ -57856,14 +57905,12 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         lat: this.state.latitude,
         lng: this.state.longitude
       }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_map_markers__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      ref: "markers",
-      damages: this.props.damages,
-      activateDamage: this.props.activateDamage,
+    }, this.props.damages && this.props.damages.map(damageId => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMarker, {
+      damageId: damageId,
+      key: damageId,
+      ref: damageId,
       visible: this.state.markersVisible
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_heat_map__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      damages: this.props.damages
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["InfoWindow"], {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(HeatMap, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["InfoWindow"], {
       visible: this.props.activeDamageId && activeMarker ? true : false,
       marker: activeMarker,
       onOpen: e => {
@@ -57874,84 +57921,12 @@ class DamageMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     })));
   }
 
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (Object(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["GoogleApiWrapper"])({
-  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_3___default.a.GoogleMapsAPIKey,
-  libraries: ["places", "visualization"]
-})(DamageMap));
-
-/***/ }),
-
-/***/ "./js/components/damage-map/map-markers.js":
-/*!*************************************************!*\
-  !*** ./js/components/damage-map/map-markers.js ***!
-  \*************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MapMarkers; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_1__);
-
-
-const pins = {
-  D00: "D00.png",
-  D01: "D01.png",
-  D10: "D10.png",
-  D11: "D11.png",
-  D20: "D20.png",
-  D40: "D40.png",
-  D43: "D43.png",
-  D44: "D44.png",
-  default: "D00.png"
 };
 
-var pinImage = type => "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
-
-class MapMarkers extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  shouldComponentUpdate(newProps, newState) {
-    return newProps.damages.length != this.props.damages.length || newProps.visible != this.props.visible;
-  }
-
-  onMarkerClick(props, marker, e) {
-    this.props.activateDamage(props.damageId);
-  }
-
-  getMarker(damageId) {
-    return this.refs[damageId].marker;
-  }
-
-  render() {
-    if (!this.props.map) return null;
-
-    var _ = this;
-
-    var markers = this.props.damages.map(damage => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_1__["Marker"], {
-      name: damage.type,
-      damageId: damage.id,
-      ref: damage.id,
-      key: damage.id,
-      onClick: _.onMarkerClick.bind(_),
-      position: {
-        lat: damage.position.latitude,
-        lng: damage.position.longitude
-      },
-      options: {
-        icon: pinImage(damage.type)
-      },
-      map: this.props.map,
-      google: this.props.google,
-      visible: this.props.visible
-    }));
-    return markers;
-  }
-
-}
+/* harmony default export */ __webpack_exports__["default"] = ((DamageMarker, HeatMap, ActiveDamage) => Object(google_maps_react__WEBPACK_IMPORTED_MODULE_2__["GoogleApiWrapper"])({
+  apiKey: _project_config__WEBPACK_IMPORTED_MODULE_3___default.a.GoogleMapsAPIKey,
+  libraries: ["places", "visualization"]
+})(DamageMap(DamageMarker, HeatMap, ActiveDamage)));
 
 /***/ }),
 
@@ -58353,7 +58328,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const getDamages = store => store.damage.damages;
 
-const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelector"])([getDamages], damages => damages.map(damage => damage.id).toList());
+const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelector"])([getDamages], damages => damages.map(damage => damage.id));
 
 const getActiveDamage = store => store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
 
@@ -58367,37 +58342,44 @@ const getDamage = (store, ownProps) => store.damage.damages.find(damage => damag
 const DamageProvider = c => {
   c.register("DamageService", c => new _services__WEBPACK_IMPORTED_MODULE_5__["DamageService"](c.Axios));
   c.register("DamageActions", c => new _actions__WEBPACK_IMPORTED_MODULE_4__["DamageActionDispatcher"](c.DamageService));
+  c.register("DamageMarker", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])((store, ownProps) => {
+    return {
+      damage: getDamage(store, ownProps),
+      active: store.damage.activeDamageId == ownProps.damageId
+    };
+  }, dispatch => {
+    return {
+      activateDamage: c.DamageActions.activateDamage(dispatch)
+    };
+  })(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["DamageMarker"]));
+  c.register("HeatMap", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
+    return {
+      damages: getDamages(store)
+    };
+  })(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["HeatMap"]));
+  c.register("ActiveDamage", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
+    return {
+      damage: getActiveDamage(store)
+    };
+  }, dispatch => {
+    return {
+      verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
+      unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+    };
+  })(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["ActiveDamage"]));
   c.register("DamageMap", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
     return {
       damages: getDamageIds(store),
-      pending: store.damage.pending,
-      success: store.damage.success,
       activeDamageId: store.damage.activeDamageId
     };
   }, dispatch => {
     return {
       loadDamage: c.DamageActions.loadDamage(dispatch),
-      activateDamage: c.DamageActions.activateDamage(dispatch),
       deactivateDamage: c.DamageActions.deactivateDamage(dispatch),
       verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
       unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
     };
-  })(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["default"]));
-  c.register("DamageList", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
-    return {
-      damages: damageIdsSelector(store),
-      pending: store.damage.pending,
-      success: store.damage.success,
-      activeDamageId: store.damage.activeDamageId
-    };
-  }, dispatch => {
-    return {
-      loadDamage: c.DamageActions.loadDamage(dispatch),
-      activateDamage: c.DamageActions.activateDamage(dispatch),
-      verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-      unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
-    };
-  })(_components_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"]));
+  })(Object(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["default"])(c.DamageMarker, c.HeatMap, c.ActiveDamage)));
   c.register("DamageListItem", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])((store, ownProps) => {
     return {
       damage: getDamage(store, ownProps),
@@ -58409,7 +58391,17 @@ const DamageProvider = c => {
       verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
       unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
     };
-  }));
+  })(_components_damage_list__WEBPACK_IMPORTED_MODULE_1__["DamageListItem"]));
+  c.register("DamageFilters", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(null, dispatch => {
+    return {
+      loadDamage: c.DamageActions.loadDamage(dispatch)
+    };
+  })(_components_damage_list__WEBPACK_IMPORTED_MODULE_1__["DamageFilters"]));
+  c.register("DamageList", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(store => {
+    return {
+      damages: getDamageIds(store)
+    };
+  })(Object(_components_damage_list__WEBPACK_IMPORTED_MODULE_1__["default"])(c.DamageListItem, c.DamageFilters)));
   c.register("Map", c => Object(_components_Map__WEBPACK_IMPORTED_MODULE_0__["default"])(c.DamageList, c.DamageMap));
 };
 

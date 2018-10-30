@@ -2,107 +2,94 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { Map, InfoWindow, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
-import ActiveDamage from "./active-damage";
-import HeatMap from "./heat-map";
-import MapMarkers from "./map-markers";
 
-class DamageMap extends Component {
-  constructor(props) {
-    super(props);
+export * from "./heat-map";
+export * from "./damage-marker";
+export * from "./active-damage";
 
-    this.state = {
-      markersVisible: true,
-      latitude: 42.331429,
-      longitude: -83.045753
-    };
+const DamageMap = (DamageMarker, HeatMap, ActiveDamage) =>
+  class DamageMap extends Component {
+    constructor(props) {
+      super(props);
 
-    var geoSuccess = function(position) {
-      this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      });
-    };
+      this.state = {
+        markersVisible: true,
+        latitude: 42.331429,
+        longitude: -83.045753
+      };
 
-    navigator.geolocation.getCurrentPosition(geoSuccess);
-  }
+      var geoSuccess = function(position) {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+      }.bind(this);
 
-  componentDidMount() {
-    this.props.loadDamage();
-  }
+      navigator.geolocation.getCurrentPosition(geoSuccess);
+    }
 
-  onMapClicked(props) {
-    this.props.deactivateDamage();
-  }
+    componentDidMount() {
+      this.props.loadDamage();
+    }
 
-  onZoomChanged(props) {
-    this.setState({ markersVisible: this.refs.map.map.getZoom() >= 14 });
-  }
+    onMapClicked(props) {
+      this.props.deactivateDamage();
+    }
 
-  _verifyDamageReport(e, reportId) {
-    if (e.target.checked) this.props.verifyDamageReport(reportId);
-    else this.props.unverifyDamageReport(reportId);
-  }
+    onZoomChanged(props) {
+      this.setState({ markersVisible: this.refs.map.map.getZoom() >= 14 });
+    }
 
-  onInfoWindowOpen(props, e) {
-    var activeDamage = this.props.damages.find(
-      damage => damage.id == this.props.activeDamageId
-    );
+    onInfoWindowOpen(props, e) {
+      ReactDOM.render(
+        React.Children.only(<ActiveDamage />),
+        document.getElementById("iwc")
+      );
+    }
 
-    const content = (
-      <ActiveDamage
-        {...activeDamage}
-        verifyDamageReport={this._verifyDamageReport.bind(this)}
-      />
-    );
+    render() {
+      var activeMarker = this.refs[this.props.activeDamageId];
 
-    ReactDOM.render(
-      React.Children.only(content),
-      document.getElementById("iwc")
-    );
-  }
-
-  render() {
-    var activeMarker =
-      this.refs.markers && this.props.activeDamageId
-        ? this.refs.markers.getMarker(this.props.activeDamageId)
-        : null;
-
-    return (
-      <Map
-        ref="map"
-        google={this.props.google}
-        zoom={14}
-        onClick={this.onMapClicked.bind(this)}
-        onZoom_changed={this.onZoomChanged.bind(this)}
-        initialCenter={{
-          lat: this.state.latitude,
-          lng: this.state.longitude
-        }}
-      >
-        <MapMarkers
-          ref={"markers"}
-          damages={this.props.damages}
-          activateDamage={this.props.activateDamage}
-          visible={this.state.markersVisible}
-        />
-
-        <HeatMap damages={this.props.damages} />
-
-        <InfoWindow
-          visible={this.props.activeDamageId && activeMarker ? true : false}
-          marker={activeMarker}
-          onOpen={e => {
-            this.onInfoWindowOpen(this.props, e);
+      return (
+        <Map
+          ref="map"
+          google={this.props.google}
+          zoom={14}
+          onClick={this.onMapClicked.bind(this)}
+          onZoom_changed={this.onZoomChanged.bind(this)}
+          initialCenter={{
+            lat: this.state.latitude,
+            lng: this.state.longitude
           }}
         >
-          <div id="iwc" />
-        </InfoWindow>
-      </Map>
-    );
-  }
-}
+          {this.props.damages &&
+            this.props.damages.map(damageId => (
+              <DamageMarker
+                damageId={damageId}
+                key={damageId}
+                ref={damageId}
+                visible={this.state.markersVisible}
+              />
+            ))}
 
-export default GoogleApiWrapper({
-  apiKey: config.GoogleMapsAPIKey,
-  libraries: ["places", "visualization"]
-})(DamageMap);
+          <HeatMap />
+
+          <InfoWindow
+            visible={this.props.activeDamageId && activeMarker ? true : false}
+            marker={activeMarker}
+            onOpen={e => {
+              this.onInfoWindowOpen(this.props, e);
+            }}
+          >
+            <div id="iwc" />
+          </InfoWindow>
+        </Map>
+      );
+    }
+  };
+
+export default (DamageMarker, HeatMap, ActiveDamage) =>
+  GoogleApiWrapper({
+    apiKey: config.GoogleMapsAPIKey,
+    libraries: ["places", "visualization"]
+  })(DamageMap(DamageMarker, HeatMap, ActiveDamage));

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-export default class HeatMap extends Component {
+export class HeatMap extends Component {
   shouldComponentUpdate(newProps, newState) {
     return newProps.damages.length != this.props.damages.length;
   }
