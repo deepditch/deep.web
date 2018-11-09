@@ -14,11 +14,11 @@ export default function DamageReducer(state = { damages: [], filters: {} }, acti
     case DamageActionTypes.LOAD_DAMAGE_FAILURE:
       return { damages: [], filters: {}, rejected: true };
     case DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE:
-      return { damages: state.damages, filters: {}, activeDamageId: action.id };
+      return { ...state, damages: state.damages, activeDamageId: action.id };
     case DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE:
-      return { damages: state.damages, filters: {}, activeDamageId: null };
+      return { ...state, damages: state.damages, activeDamageId: null };
     case DamageActionTypes.FILTER_DAMAGE:
-      return { ...state, filters: action.filters };
+      return { ...state, filters: action.filters, activeDamageId: null };
     case DamageActionTypes.VERIFY_DAMAGE_REPORT:
       return {
         ...state,

@@ -57675,21 +57675,19 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************!*\
   !*** ./js/components/damage-map/active-damage-window.js ***!
   \**********************************************************/
-/*! exports provided: ActiveDamageWindow */
+/*! exports provided: ActiveDamageWindow, MapPopup */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ActiveDamageWindow", function() { return ActiveDamageWindow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MapPopup", function() { return MapPopup; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "../node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! google-maps-react */ "../node_modules/google-maps-react/dist/index.js");
-/* harmony import */ var google_maps_react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(google_maps_react__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-
+/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
 
 
 
@@ -57699,8 +57697,19 @@ class ActiveDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component"]
     if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
   }
 
-  onInfoWindowOpen(e) {
-    react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(MapPopup, {
+      visible: this.props.damage ? true : false,
+      position: this.props.damage ? {
+        lat: this.props.damage.position.latitude,
+        lng: this.props.damage.position.longitude
+      } : {
+        lat: 0,
+        lng: 0
+      },
+      google: this.props.google,
+      map: this.props.map
+    }, this.props.damage && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "damage-info-window"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       width: "300px",
@@ -57717,30 +57726,149 @@ class ActiveDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component"]
       className: "h5 small mb-0"
     }, this.props.damage.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-3"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_3__["default"], {
       checked: this.props.damage.verified ? true : false,
       onChange: e => {
         this._verifyDamageReport(e, this.props.damage.reportId).bind(this);
       }
-    })))))), document.getElementById("iwc"));
+    }))))));
+  }
+
+}
+class MapPopup extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  componentDidMount() {
+    this.content = document.createElement("div");
+    this.mapHasLoaded = false;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.map !== prevProps.map) {
+      this.renderPopup();
+    }
+
+    if (!this.popup) return;
+
+    if (this.props.position !== prevProps.position) {
+      this.popup.setPosition(new this.props.google.maps.LatLng(this.props.position.lat, this.props.position.lng));
+    }
+
+    if (this.props.visible) this.popup.open();else this.popup.close();
+    if (this.props.children !== prevProps.children && this.props.children) react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.only(this.props.children), this.content);
+    if (this.mapHasLoaded) this.popup.draw();
+  }
+
+  definePopupClass(google) {
+    /**
+     * A customized popup on the map.
+     * @param {!google.maps.LatLng} position
+     * @param {!Element} content
+     * @constructor
+     * @extends {google.maps.OverlayView}
+     */
+    const Popup = function (position, content) {
+      this.position = position;
+      content.classList.add("popup-bubble-content");
+      var pixelOffset = document.createElement("div");
+      pixelOffset.classList.add("popup-bubble-anchor");
+      pixelOffset.appendChild(content);
+      this.anchor = document.createElement("div");
+      this.anchor.classList.add("popup-tip-anchor");
+      this.anchor.appendChild(pixelOffset);
+      this.visible = false;
+      this.inbounds = false; // Optionally stop clicks, etc., from bubbling up to the map.
+
+      this.stopEventPropagation();
+    }; // NOTE: google.maps.OverlayView is only defined once the Maps API has
+    // loaded. That is why Popup is defined inside initMap().
+
+
+    Popup.prototype = Object.create(google.maps.OverlayView.prototype);
+    /** Called when the popup is added to the map. */
+
+    Popup.prototype.onAdd = function () {
+      this.getPanes().floatPane.appendChild(this.anchor);
+    };
+    /** Called when the popup is removed from the map. */
+
+
+    Popup.prototype.onRemove = function () {
+      if (this.anchor.parentElement) {
+        this.anchor.parentElement.removeChild(this.anchor);
+      }
+    };
+    /** Called when the popup needs to draw itself. */
+
+
+    Popup.prototype.draw = function () {
+      var divPosition = this.getProjection().fromLatLngToDivPixel(this.position); // Hide the popup when it is far out of view.
+
+      this.inbounds = Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000;
+      var visible = this.visible && this.inbounds;
+
+      if (visible) {
+        this.anchor.style.left = divPosition.x + "px";
+        this.anchor.style.top = divPosition.y + "px";
+      }
+
+      var display = visible ? "block" : "none";
+
+      if (this.anchor.style.display !== display) {
+        this.anchor.style.display = display;
+      }
+    };
+
+    Popup.prototype.setPosition = function (position) {
+      this.position = position;
+    };
+
+    Popup.prototype.open = function () {
+      this.visible = true;
+      var visible = this.visible && this.inbounds;
+      var display = visible ? "block" : "none";
+
+      if (this.anchor.style.display !== display) {
+        this.anchor.style.display = display;
+      }
+    };
+
+    Popup.prototype.close = function () {
+      this.visible = false;
+      var visible = this.visible && this.inbounds;
+      var display = visible ? "block" : "none";
+
+      if (this.anchor.style.display !== display) {
+        this.anchor.style.display = display;
+      }
+    };
+    /** Stops clicks/drags from bubbling up to the map. */
+
+
+    Popup.prototype.stopEventPropagation = function () {
+      var anchor = this.anchor;
+      anchor.style.cursor = "auto";
+      ["click", "dblclick", "contextmenu", "wheel", "mousedown", "touchstart", "pointerdown"].forEach(function (event) {
+        anchor.addEventListener(event, function (e) {
+          e.stopPropagation();
+        });
+      });
+    };
+
+    return Popup;
+  }
+
+  renderPopup() {
+    if (!this.props.map) return;
+    var Popup = this.definePopupClass(this.props.google);
+    this.popup = new Popup(new this.props.google.maps.LatLng(this.props.position.lat, this.props.position.lng), this.content);
+    this.popup.setMap(this.props.map);
+    this.props.google.maps.event.addListenerOnce(this.props.map, "bounds_changed", function () {
+      console.log("load");
+      this.mapHasLoaded = true;
+    }.bind(this));
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(google_maps_react__WEBPACK_IMPORTED_MODULE_3__["InfoWindow"], {
-      ref: "infoWindow",
-      visible: this.props.damage ? true : false,
-      position: this.props.damage ? {
-        lat: this.props.damage.position.latitude,
-        lng: this.props.damage.position.longitude
-      } : null,
-      map: this.props.map,
-      google: this.props.google,
-      onOpen: e => {
-        this.onInfoWindowOpen(e);
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      id: "iwc"
-    }));
+    return null;
   }
 
 }
@@ -57884,7 +58012,7 @@ class HeatMap extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 /*!*******************************************!*\
   !*** ./js/components/damage-map/index.js ***!
   \*******************************************/
-/*! exports provided: default, HeatMap, DamageMarker, DamageMarkers, ActiveDamageWindow */
+/*! exports provided: default, HeatMap, DamageMarker, DamageMarkers, ActiveDamageWindow, MapPopup */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57906,6 +58034,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _active_damage_window__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./active-damage-window */ "./js/components/damage-map/active-damage-window.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ActiveDamageWindow", function() { return _active_damage_window__WEBPACK_IMPORTED_MODULE_6__["ActiveDamageWindow"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapPopup", function() { return _active_damage_window__WEBPACK_IMPORTED_MODULE_6__["MapPopup"]; });
 
 
 
@@ -58708,22 +58838,21 @@ function DamageReducer(state = {
       };
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].ACTIVATE_DAMAGE_INSTANCE:
-      return {
+      return _objectSpread({}, state, {
         damages: state.damages,
-        filters: {},
         activeDamageId: action.id
-      };
+      });
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].DEACTIVATE_DAMAGE_INSTANCE:
-      return {
+      return _objectSpread({}, state, {
         damages: state.damages,
-        filters: {},
         activeDamageId: null
-      };
+      });
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].FILTER_DAMAGE:
       return _objectSpread({}, state, {
-        filters: action.filters
+        filters: action.filters,
+        activeDamageId: null
       });
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].VERIFY_DAMAGE_REPORT:
