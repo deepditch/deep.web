@@ -14,11 +14,23 @@ import { DamageActionDispatcher } from "../actions";
 import { DamageService } from "../services";
 import { createSelector } from "reselect";
 
-const getDamages = store => store.damage.damages;
+const damage = store => (store.damage);
 
-const getDamageIds = createSelector([getDamages], damages =>
-  damages.map(damage => damage.id)
-);
+const getDamageIds = createSelector([damage], damage => {
+  var filters = damage.filters;
+
+  var filteredArray = damage.damages.filter(el => {
+
+    var containsKeyword = filters.streetname ? el.position.streetname.includes(filters.streetname) : true
+    var isType = filters.type ? el.type == filters.type : true
+    var isStatus = filters.status ? el.label == filters.status : true
+    var isVerified = filters.verified ? (filters.verified == "true" ? el.verified : !el.verified) : true
+
+    return containsKeyword && isType && isStatus && isVerified
+  });
+
+  return filteredArray.map(damage => damage.id);
+});
 
 const getActiveDamage = store =>
   store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
@@ -46,7 +58,7 @@ export const DamageProvider = c => {
         return {
           activate: () => {
             c.DamageActions.activateDamage(dispatch)(ownProps.damageId);
-          },
+          }
         };
       }
     )(DamageMarker)
@@ -54,20 +66,18 @@ export const DamageProvider = c => {
 
   // List of Damage Markers
   c.register("DamageMarkers", c =>
-    connect(
-      store => {
-        return {
-          damages: getDamageIds(store)
-        };
-      }
-    )(DamageMarkers(c.DamageMarker))
-  )
+    connect(store => {
+      return {
+        damages: getDamageIds(store)
+      };
+    })(DamageMarkers(c.DamageMarker))
+  );
 
   // Heatmap of damage reports
   c.register("HeatMap", c =>
     connect(store => {
       return {
-        damages: getDamages(store)
+        damages: store.damage.damages
       };
     })(HeatMap)
   );
@@ -126,7 +136,7 @@ export const DamageProvider = c => {
       null,
       dispatch => {
         return {
-          loadDamage: c.DamageActions.loadDamage(dispatch)
+          filterDamages: c.DamageActions.filterDamages(dispatch)
         };
       }
     )(DamageFilters)

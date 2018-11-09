@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { Map, InfoWindow, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
 
@@ -39,11 +38,10 @@ const DamageMap = (DamageMarkers, HeatMap, ActiveDamageWindow) =>
     }
 
     onZoomChanged(props) {
-      this.setState({ markersVisible: this.refs.map.map.getZoom() >= 16 });
+      this.setState({ markersVisible: this.refs.map.map.getZoom() >= 15 });
     }
 
     render() {
-      console.log(ActiveDamageWindow)
       return (
         <Map
           ref="map"

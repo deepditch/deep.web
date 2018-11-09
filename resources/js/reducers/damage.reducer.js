@@ -5,18 +5,20 @@ import { DamageActionTypes } from "../actions";
  * @param {JSON} state The previous login state
  * @param {JSON} action A redux action
  */
-export default function DamageReducer(state = { damages: [] }, action) {
+export default function DamageReducer(state = { damages: [], filters: {} }, action) {
   switch (action.type) {
     case DamageActionTypes.LOAD_DAMAGE_ATTEMPT:
-      return { damages: [], pending: true };
+      return { damages: [], filters: {}, pending: true };
     case DamageActionTypes.LOAD_DAMAGE_SUCCESS:
-      return { damages: action.damages, success: true };
+      return { damages: action.damages, filters: {}, success: true };
     case DamageActionTypes.LOAD_DAMAGE_FAILURE:
-      return { damages: [], rejected: true };
+      return { damages: [], filters: {}, rejected: true };
     case DamageActionTypes.ACTIVATE_DAMAGE_INSTANCE:
-      return { damages: state.damages, activeDamageId: action.id };
+      return { damages: state.damages, filters: {}, activeDamageId: action.id };
     case DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE:
-      return { damages: state.damages, activeDamageId: null };
+      return { damages: state.damages, filters: {}, activeDamageId: null };
+    case DamageActionTypes.FILTER_DAMAGE:
+      return { ...state, filters: action.filters };
     case DamageActionTypes.VERIFY_DAMAGE_REPORT:
       return {
         ...state,

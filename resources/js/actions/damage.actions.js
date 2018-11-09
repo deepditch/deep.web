@@ -8,7 +8,8 @@ export const DamageActionTypes = {
   ACTIVATE_DAMAGE_INSTANCE: "activate_damage_instance",
   DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance",
   VERIFY_DAMAGE_REPORT: "verify_damage_report",
-  UNVERIFY_DAMAGE_REPORT: "unverify_damage_report"
+  UNVERIFY_DAMAGE_REPORT: "unverify_damage_report",
+  FILTER_DAMAGE: "filter_damage"
 };
 
 export const DamageActions = {
@@ -36,7 +37,17 @@ export const DamageActions = {
   unverify: id => {
     return { type: DamageActionTypes.UNVERIFY_DAMAGE_REPORT, id: id };
   },
-
+  filter: (streetname, type, status, verified) => {
+    return {
+      type: DamageActionTypes.FILTER_DAMAGE,
+      filters: {
+        streetname: streetname,
+        type: type,
+        status: status,
+        verified: verified
+      }
+    };
+  }
 };
 
 export class DamageActionDispatcher {
@@ -44,42 +55,22 @@ export class DamageActionDispatcher {
     this.damageService = damageService;
   }
 
-  loadDamage = dispatch => (streetname = null, type = null, status = null, verified = null)  => {
-      dispatch(DamageActions.attempt());
+  loadDamage = dispatch => () => {
+    dispatch(DamageActions.attempt());
 
+    this.damageService
+      .getDamageInstances()
+      .then(damages => {
+        dispatch(DamageActions.success(damages));
+      })
+      .catch(error => {
+        dispatch(DamageActions.failure());
+        dispatch(NotifyActions.error(error));
+      });
+  };
 
-      this.damageService
-        .getDamageInstances()
-        .then(damages => {
-          var filteredArray = damages;
-          if (streetname) {
-            filteredArray = filteredArray.filter(el=> {
-              return el.position.streetname == streetname;
-            });
-          }
-          if (type) {
-            filteredArray = filteredArray.filter(el=> {
-              return el.type == type;
-            });
-          }
-          if (status) {
-            filteredArray = filteredArray.filter(el=> {
-              return el.label == status;
-            });
-          }
-          if (verified != null) {
-            filteredArray = filteredArray.filter(el=> {
-              if (verified == "true") return el.verified
-              else if (verified == "false") return !el.verified
-              return true;
-            });
-          }
-          dispatch(DamageActions.success(filteredArray));
-        })
-        .catch(error => {
-          dispatch(DamageActions.failure());
-          dispatch(NotifyActions.error(error));
-        });
+  filterDamages = dispatch => (searchText, type, status, verified) => {
+    dispatch(DamageActions.filter(searchText, type, status, verified));
   };
 
   activateDamage = dispatch => id => {
@@ -100,5 +91,5 @@ export class DamageActionDispatcher {
     this.damageService.unverifyDamageReport(id).then(response => {
       dispatch(DamageActions.unverify(id));
     });
-  }
+  };
 }
