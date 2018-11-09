@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Checkbox from "../Form/checkbox";
 
 export class DamageListItem extends Component {
   _verifyDamageReport(e) {
@@ -11,7 +12,7 @@ export class DamageListItem extends Component {
     return (
       <tr
         class={this.props.active ? "active" : ""}
-        onClick={this.props.onClick}
+        onClick={this.props.activate}
       >
         <td class="streetname">
           {this.props.damage.position.streetname} (

@@ -5,27 +5,29 @@ import config from "../../../../project.config";
 
 export * from "./heat-map";
 export * from "./damage-marker";
-export * from "./active-damage";
+export * from "./damage-markers";
+export * from "./active-damage-window";
 
-const DamageMap = (DamageMarker, HeatMap, ActiveDamage) =>
+const DamageMap = (DamageMarkers, HeatMap, ActiveDamageWindow) =>
   class DamageMap extends Component {
     constructor(props) {
       super(props);
 
       this.state = {
         markersVisible: true,
+        heatMapVisible: true,
         latitude: 42.331429,
         longitude: -83.045753
       };
 
-      var geoSuccess = function(position) {
-        this.setState({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        });
-      }.bind(this);
+      // var geoSuccess = function(position) {
+      //   this.setState({
+      //     latitude: position.coords.latitude,
+      //     longitude: position.coords.longitude
+      //   });
+      // }.bind(this);
 
-      navigator.geolocation.getCurrentPosition(geoSuccess);
+      // navigator.geolocation.getCurrentPosition(geoSuccess);
     }
 
     componentDidMount() {
@@ -37,19 +39,11 @@ const DamageMap = (DamageMarker, HeatMap, ActiveDamage) =>
     }
 
     onZoomChanged(props) {
-      this.setState({ markersVisible: this.refs.map.map.getZoom() >= 14 });
-    }
-
-    onInfoWindowOpen(props, e) {
-      ReactDOM.render(
-        React.Children.only(<ActiveDamage />),
-        document.getElementById("iwc")
-      );
+      this.setState({ markersVisible: this.refs.map.map.getZoom() >= 16 });
     }
 
     render() {
-      var activeMarker = this.refs[this.props.activeDamageId];
-
+      console.log(ActiveDamageWindow)
       return (
         <Map
           ref="map"
@@ -62,27 +56,9 @@ const DamageMap = (DamageMarker, HeatMap, ActiveDamage) =>
             lng: this.state.longitude
           }}
         >
-          {this.props.damages &&
-            this.props.damages.map(damageId => (
-              <DamageMarker
-                damageId={damageId}
-                key={damageId}
-                ref={damageId}
-                visible={this.state.markersVisible}
-              />
-            ))}
-
-          <HeatMap />
-
-          <InfoWindow
-            visible={this.props.activeDamageId && activeMarker ? true : false}
-            marker={activeMarker}
-            onOpen={e => {
-              this.onInfoWindowOpen(this.props, e);
-            }}
-          >
-            <div id="iwc" />
-          </InfoWindow>
+          <ActiveDamageWindow />
+          <DamageMarkers visible={this.state.markersVisible} />
+          <HeatMap visible={this.state.heatMapVisible}/>
         </Map>
       );
     }

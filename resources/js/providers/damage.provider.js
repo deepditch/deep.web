@@ -4,8 +4,9 @@ import DamageList, {
   DamageFilters
 } from "../components/damage-list";
 import DamageMap, {
-  ActiveDamage,
+  ActiveDamageWindow,
   DamageMarker,
+  DamageMarkers,
   HeatMap
 } from "../components/damage-map";
 import { connect } from "react-redux";
@@ -33,22 +34,36 @@ export const DamageProvider = c => {
   c.register("DamageService", c => new DamageService(c.Axios));
   c.register("DamageActions", c => new DamageActionDispatcher(c.DamageService));
 
+  // Single damage marker
   c.register("DamageMarker", c =>
     connect(
       (store, ownProps) => {
         return {
-          damage: getDamage(store, ownProps),
-          active: store.damage.activeDamageId == ownProps.damageId
+          damage: getDamage(store, ownProps)
         };
       },
-      dispatch => {
+      (dispatch, ownProps) => {
         return {
-          activateDamage: c.DamageActions.activateDamage(dispatch)
+          activate: () => {
+            c.DamageActions.activateDamage(dispatch)(ownProps.damageId);
+          },
         };
       }
     )(DamageMarker)
   );
 
+  // List of Damage Markers
+  c.register("DamageMarkers", c =>
+    connect(
+      store => {
+        return {
+          damages: getDamageIds(store)
+        };
+      }
+    )(DamageMarkers(c.DamageMarker))
+  )
+
+  // Heatmap of damage reports
   c.register("HeatMap", c =>
     connect(store => {
       return {
@@ -57,7 +72,8 @@ export const DamageProvider = c => {
     })(HeatMap)
   );
 
-  c.register("ActiveDamage", c =>
+  // Active damage info window content
+  c.register("ActiveDamageWindow", c =>
     connect(
       store => {
         return {
@@ -70,26 +86,19 @@ export const DamageProvider = c => {
           unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
         };
       }
-    )(ActiveDamage)
+    )(ActiveDamageWindow)
   );
 
   c.register("DamageMap", c =>
     connect(
-      store => {
-        return {
-          damages: getDamageIds(store),
-          activeDamageId: store.damage.activeDamageId
-        };
-      },
+      null,
       dispatch => {
         return {
           loadDamage: c.DamageActions.loadDamage(dispatch),
-          deactivateDamage: c.DamageActions.deactivateDamage(dispatch),
-          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+          deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
         };
       }
-    )(DamageMap(c.DamageMarker, c.HeatMap, c.ActiveDamage))
+    )(DamageMap(c.DamageMarkers, c.HeatMap, c.ActiveDamageWindow))
   );
 
   c.register("DamageListItem", c =>
@@ -100,9 +109,11 @@ export const DamageProvider = c => {
           active: store.damage.activeDamageId == ownProps.damageId
         };
       },
-      dispatch => {
+      (dispatch, ownProps) => {
         return {
-          activateDamage: c.DamageActions.activateDamage(dispatch),
+          activate: () => {
+            c.DamageActions.activateDamage(dispatch)(ownProps.damageId);
+          },
           verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
           unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
         };

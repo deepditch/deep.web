@@ -39,7 +39,7 @@ export default (DamageListItem, DamageFilters) =>
                 <tbody>
                   {this.props.damages &&
                     this.props.damages.map(damageId => (
-                      <DamageListItem key={damageId} damageId={id} />
+                      <DamageListItem key={damageId} damageId={damageId} />
                     ))}
                 </tbody>
               </table>

@@ -13,12 +13,14 @@ const pins = {
   default: "D00.png"
 };
 
+
 var pinImage = type =>
   "/img/pins/" + (pins.hasOwnProperty(type) ? pins[type] : pins["default"]);
 
+
 export class DamageMarker extends Component {
   onClick(props, marker, e) {
-    this.props.activateDamage(props.damageId);
+    this.props.activate();
   }
 
   render() {
@@ -26,6 +28,7 @@ export class DamageMarker extends Component {
 
     return (
       <Marker
+        ref="marker"
         name={this.props.damage.type}
         onClick={this.onClick.bind(this)}
         position={{
