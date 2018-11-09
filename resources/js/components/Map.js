@@ -4,12 +4,14 @@ export default (DamageList, DamageMap) =>
   class Map extends Component {
     render() {
       return (
-        <div class="row no-gutters" style={{ height: "calc(100vh - 40px)" }}>
-          <div class="col-4 h-100 d-flex flex-column">
-            <DamageList />
-          </div>
-          <div class="col-8">
-            <DamageMap />
+        <div class="map-container">
+          <div class="row no-gutters h-100">
+            <div class="col-4 h-100">
+              <DamageList />
+            </div>
+            <div class="col-8 h-100">
+              <DamageMap />
+            </div>
           </div>
         </div>
       );

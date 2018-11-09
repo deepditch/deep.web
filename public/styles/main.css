@@ -277,6 +277,9 @@ large, .large {
   flex-direction: column;
   overflow: hidden; }
 
+.map-container {
+  height: calc(100vh - 40px); }
+
 .divide-5 {
   width: 100%;
   display: block;
@@ -793,6 +796,12 @@ large, .large {
 
 .mb-1 {
   margin-bottom: 0.27778em; }
+
+.flex-1 {
+  flex: 1; }
+
+.flex-0 {
+  flex: 0; }
 
 /**
  * Calculate the luminance for a color.

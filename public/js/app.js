@@ -57262,15 +57262,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ((DamageList, DamageMap) => class Map extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "row no-gutters",
-      style: {
-        height: "calc(100vh - 40px)"
-      }
+      className: "map-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-4 h-100 d-flex flex-column"
+      className: "row no-gutters h-100"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-4 h-100"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageList, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-8"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMap, null)));
+      className: "col-8 h-100"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageMap, null))));
   }
 
 });
@@ -57638,13 +57637,17 @@ __webpack_require__.r(__webpack_exports__);
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "h-100 d-flex flex-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-top block-medium-left block-medium-right"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
       className: "h2"
     }, "Damages"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "divide-30"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageFilters, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageFilters, null)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "flex-1 overflow-hidden"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_scroll_section__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "block-medium-left block-medium-right block-medium-bottom"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "divide-30"
@@ -57661,7 +57664,7 @@ __webpack_require__.r(__webpack_exports__);
     }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.props.damages && this.props.damages.map(damageId => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageListItem, {
       key: damageId,
       damageId: damageId
-    })))))));
+    }))))))));
   }
 
 });

@@ -18,33 +18,35 @@ export default (DamageListItem, DamageFilters) =>
 
     render() {
       return (
-        <div>
+        <div class="h-100 d-flex flex-column">
           <div class="block-medium-top block-medium-left block-medium-right">
             <h1 class="h2">Damages</h1>
             <div class="divide-30" />
             <DamageFilters />
           </div>
-          <ScrollSection>
-            <div class="block-medium-left block-medium-right block-medium-bottom">
-              <div class="divide-30" />
-              <table class="damage-list">
-                <thead>
-                  <tr>
-                    <th class="streetname">Street</th>
-                    <th class="type">Type</th>
-                    <th class="label">Status</th>
-                    <th class="verified">Verified</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.props.damages &&
-                    this.props.damages.map(damageId => (
-                      <DamageListItem key={damageId} damageId={damageId} />
-                    ))}
-                </tbody>
-              </table>
-            </div>
-          </ScrollSection>
+          <div class="flex-1 overflow-hidden">
+            <ScrollSection>
+              <div class="block-medium-left block-medium-right block-medium-bottom">
+                <div class="divide-30" />
+                <table class="damage-list">
+                  <thead>
+                    <tr>
+                      <th class="streetname">Street</th>
+                      <th class="type">Type</th>
+                      <th class="label">Status</th>
+                      <th class="verified">Verified</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.props.damages &&
+                      this.props.damages.map(damageId => (
+                        <DamageListItem key={damageId} damageId={damageId} />
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </ScrollSection>
+          </div>
         </div>
       );
     }
