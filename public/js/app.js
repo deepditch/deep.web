@@ -58504,7 +58504,7 @@ const damage = store => store.damage;
 const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelector"])([damage], damage => {
   var filters = damage.filters;
   var filteredArray = damage.damages.filter(el => {
-    var containsKeyword = filters.streetname ? el.position.streetname.includes(filters.streetname) : true;
+    var containsKeyword = filters.streetname ? el.position.streetname.toLowerCase().includes(filters.streetname.toLowerCase()) : true;
     var isType = filters.type ? el.type == filters.type : true;
     var isStatus = filters.status ? el.label == filters.status : true;
     var isVerified = filters.verified ? filters.verified == "true" ? el.verified : !el.verified : true;
