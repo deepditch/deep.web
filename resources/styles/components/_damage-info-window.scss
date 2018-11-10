@@ -2,28 +2,24 @@
 @import "../type/lib";
 
 .damage-info-window {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: $white;
   background-color: $gray;
-  border: 3px solid $black;
+  border: 4px solid $black;
   border-radius: 15px;
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translate(-50%, 0);
   text-align: left;
-  width: 224px;
+  width: pxtoem(320);
 
   .content {
-    padding: pxtoem(10);
+    padding: pxtoem(15);
   }
 
   img {
     display: block;
-    width: calc(100% + 6px);
-    margin-left: -3px;
-    margin-top: -3px;
-    border: 3px solid $black;
+    width: calc(100% + 8px);
+    margin-left: -4px;
+    margin-top: -4px;
+    border: 4px solid $black;
     border-bottom: 0;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -34,20 +30,35 @@
     width: pxtoem(35);
     height: pxtoem(35);
     background-color: $gray;
-    border-bottom: 3px solid $black;
-    border-left: 3px solid $black;
-    border-radius: 3px;
+    border-bottom: 4px solid $black;
+    border-left: 4px solid $black;
+    border-radius: 0;
     position: absolute;
-    top: calc(100% + 2px);
+    top: calc(100% - 1px);
     left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 }
 
-.gm-style-iw + div {
-  display: none;
+.popup-tip-anchor {
+  height: 0;
+  position: absolute;
+  /* The max width of the info window. */
+  width: 200px;
 }
-.gm-style-iw {
-  text-align: center;
-  overflow: visible !important;
+
+/* The bubble is anchored above the tip. */
+.popup-bubble-anchor {
+  position: absolute;
+  width: 100%;
+  bottom: 18px;
+  left: 0;
+}
+
+/* The popup bubble itself. */
+.popup-bubble-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -100%);
 }
