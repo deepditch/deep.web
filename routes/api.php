@@ -34,4 +34,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('road-damage/{id}', 'RoadDamageController@getJson');
     Route::post('road-damage/report/{id}/edit', 'RoadDamageController@editReport');
     Route::post('road-damage/{id}/edit', 'RoadDamageController@editDamage');
+    Route::get('road-damage/verified-images', 'RoadDamageController@getVerifiedImages');
+    Route::post('machine-learning/upload-model', 'MachineLearningController@insert')
+        ->middleware('role:machine');
+    Route::get('machine-learning/get-latest', 'MachineLearningController@getLatestJson')
 });

@@ -32,6 +32,18 @@ class RoadDamageController extends Controller
     }
 
     /**
+     * Get verified instance images after a provided date
+     *
+     * @param Illuminate\Http\Request $request
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function getVerifiedImages(Request $request)
+    {
+        // TODO
+    }
+
+    /**
      * Get the base Json data of all the models for the authenticated user.
      *
      * @param Illuminate\Http\Request $request
