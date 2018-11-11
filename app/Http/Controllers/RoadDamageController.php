@@ -8,6 +8,7 @@ use App\Image;
 use App\RoadDamage;
 use App\RoadDamageReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoadDamageController extends Controller
 {
@@ -40,7 +41,23 @@ class RoadDamageController extends Controller
      */
     public function getVerifiedImages(Request $request)
     {
-        // TODO
+        $request->validate([
+            'after' => ['required', 'date'],
+        ]);
+
+        $reports = RoadDamageReport::where('verified', '=', 'verified')
+            ->where('created_at', '>=', $request->input('after'))
+            ->get();
+
+        $images = [];
+        foreach ($reports as $report) {
+            $images[] = [
+                'type' => $report->getRoadDamage()->type,
+                'url' => $report->getImageUrl()
+            ];
+        }
+
+        return $images;
     }
 
     /**
