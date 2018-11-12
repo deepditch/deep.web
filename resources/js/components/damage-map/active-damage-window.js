@@ -10,6 +10,7 @@ export class ActiveDamageWindow extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <MapPopup
         visible={this.props.damage ? true : false}
@@ -29,10 +30,12 @@ export class ActiveDamageWindow extends Component {
       >
         {this.props.damage && (
           <div class="damage-info-window">
+            <button class="expand" onClick={this.props.expand} />
             <img width="300px" src={this.props.damage.image} />
             <div class="content">
               <h6 class="mb-1">
-                {mapTypeToDescription(this.props.damage.type)}
+                {mapTypeToDescription(this.props.damage.type)} (
+                {this.props.damage.type})
               </h6>
               <p>
                 {this.props.damage.position.streetname} (
@@ -73,7 +76,7 @@ export class MapPopup extends Component {
       this.renderPopup();
     }
 
-    if(!this.popup) return
+    if (!this.popup) return;
 
     if (this.props.position !== prevProps.position) {
       this.popup.setPosition(
@@ -195,7 +198,6 @@ export class MapPopup extends Component {
       anchor.style.cursor = "auto";
 
       [
-        "click",
         "dblclick",
         "contextmenu",
         "wheel",
@@ -213,7 +215,7 @@ export class MapPopup extends Component {
   }
 
   renderPopup() {
-    if(!this.props.map) return
+    if (!this.props.map) return;
 
     var Popup = this.definePopupClass(this.props.google);
 
@@ -231,7 +233,6 @@ export class MapPopup extends Component {
       this.props.map,
       "bounds_changed",
       function() {
-        console.log("load")
         this.mapHasLoaded = true;
       }.bind(this)
     );

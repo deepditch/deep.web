@@ -7,7 +7,8 @@ import DamageMap, {
   ActiveDamageWindow,
   DamageMarker,
   DamageMarkers,
-  HeatMap
+  HeatMap,
+  ExpandedDamageWindow,
 } from "../components/damage-map";
 import { connect } from "react-redux";
 import { DamageActionDispatcher } from "../actions";
@@ -93,10 +94,30 @@ export const DamageProvider = c => {
       dispatch => {
         return {
           verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
+          expand: c.DamageActions.expand(dispatch)
         };
       }
     )(ActiveDamageWindow)
+  );
+
+    // Active damage info window content
+  c.register("ExpandedDamageWindow", c =>
+    connect(
+      store => {
+        return {
+          damage: getActiveDamage(store),
+          visible: store.damage.expanded
+        };
+      },
+      dispatch => {
+        return {
+          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
+          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
+          close: c.DamageActions.close(dispatch)
+        };
+      }
+    )(ExpandedDamageWindow)
   );
 
   c.register("DamageMap", c =>
@@ -108,7 +129,7 @@ export const DamageProvider = c => {
           deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
         };
       }
-    )(DamageMap(c.DamageMarkers, c.HeatMap, c.ActiveDamageWindow))
+    )(DamageMap(c.DamageMarkers, c.HeatMap, c.ActiveDamageWindow, c.ExpandedDamageWindow))
   );
 
   c.register("DamageListItem", c =>

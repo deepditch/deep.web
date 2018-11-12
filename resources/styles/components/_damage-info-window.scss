@@ -1,5 +1,6 @@
 @import "../color/lib";
 @import "../type/lib";
+@import "../util/lib";
 
 .damage-info-window {
   font-size: 0.9rem;
@@ -9,6 +10,21 @@
   border-radius: 15px;
   text-align: left;
   width: pxtoem(320);
+
+  .expand {
+    @include psuedo-x(13px, 2px);
+    color: #757575;
+    color: $gray;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: $white;
+    border: 0;
+    outline: 0;
+    z-index: 50;
+  }
 
   .content {
     padding: pxtoem(15);
@@ -61,4 +77,46 @@
   top: 0;
   left: 0;
   transform: translate(-50%, -100%);
+}
+
+.expanded-damage-window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: $white;
+  color: $gray;
+  border-left: 2px solid rgba($gray, .5);
+
+  .image {
+    width: calc(100% + 2px);
+    margin-left: -2px;
+    padding-bottom: (1080/1920) * 100%;
+    position: relative;
+    background: $dark-gray;
+
+    img {
+      @include absolute-center();
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0 auto;
+    }
+  }
+
+  .close {
+    @include psuedo-x(13px, 2px);
+    color: #757575;
+    color: $gray;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: $white;
+    border: 0;
+    outline: 0;
+    z-index: 50;
+  }
 }

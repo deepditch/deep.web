@@ -9,7 +9,7 @@ export default (DamageList, DamageMap) =>
             <div class="col-4 h-100">
               <DamageList />
             </div>
-            <div class="col-8 h-100">
+            <div class="col-8 h-100 relative">
               <DamageMap />
             </div>
           </div>

@@ -9,7 +9,9 @@ export const DamageActionTypes = {
   DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance",
   VERIFY_DAMAGE_REPORT: "verify_damage_report",
   UNVERIFY_DAMAGE_REPORT: "unverify_damage_report",
-  FILTER_DAMAGE: "filter_damage"
+  FILTER_DAMAGE: "filter_damage",
+  EXPAND_ACTIVE_DAMAGE: "expand_active_damage",
+  CLOSE_ACTIVE_DAMAGE: "close_active_damage"
 };
 
 export const DamageActions = {
@@ -47,6 +49,16 @@ export const DamageActions = {
         verified: verified
       }
     };
+  },
+  expand: () => {
+    return {
+      type: DamageActionTypes.EXPAND_ACTIVE_DAMAGE
+    }
+  },
+  close: () => {
+    return {
+      type: DamageActionTypes.CLOSE_ACTIVE_DAMAGE
+    }
   }
 };
 
@@ -91,5 +103,14 @@ export class DamageActionDispatcher {
     this.damageService.unverifyDamageReport(id).then(response => {
       dispatch(DamageActions.unverify(id));
     });
+  };
+
+  expand = dispatch => () => {
+    console.log("expand");
+    dispatch(DamageActions.expand());
+  };
+
+  close = dispatch => () => {
+    dispatch(DamageActions.close());
   };
 }

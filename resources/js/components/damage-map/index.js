@@ -1,13 +1,19 @@
 import React, { Component } from "react";
-import { Map, InfoWindow, GoogleApiWrapper } from "google-maps-react";
+import { Map, GoogleApiWrapper } from "google-maps-react";
 import config from "../../../../project.config";
 
 export * from "./heat-map";
 export * from "./damage-marker";
 export * from "./damage-markers";
 export * from "./active-damage-window";
+export * from "./expanded-damage-window";
 
-const DamageMap = (DamageMarkers, HeatMap, ActiveDamageWindow) =>
+const DamageMap = (
+  DamageMarkers,
+  HeatMap,
+  ActiveDamageWindow,
+  ExpandedDamageWindow
+) =>
   class DamageMap extends Component {
     constructor(props) {
       super(props);
@@ -18,6 +24,10 @@ const DamageMap = (DamageMarkers, HeatMap, ActiveDamageWindow) =>
         latitude: 42.331429,
         longitude: -83.045753
       };
+    }
+
+    componentDidMount() {
+      this.props.loadDamage();
 
       // var geoSuccess = function(position) {
       //   this.setState({
@@ -25,12 +35,7 @@ const DamageMap = (DamageMarkers, HeatMap, ActiveDamageWindow) =>
       //     longitude: position.coords.longitude
       //   });
       // }.bind(this);
-
       // navigator.geolocation.getCurrentPosition(geoSuccess);
-    }
-
-    componentDidMount() {
-      this.props.loadDamage();
     }
 
     onMapClicked(props) {
@@ -43,27 +48,30 @@ const DamageMap = (DamageMarkers, HeatMap, ActiveDamageWindow) =>
 
     render() {
       return (
-        <Map
-          ref="map"
-          google={this.props.google}
-          zoom={14}
-          onClick={this.onMapClicked.bind(this)}
-          onZoom_changed={this.onZoomChanged.bind(this)}
-          initialCenter={{
-            lat: this.state.latitude,
-            lng: this.state.longitude
-          }}
-        >
-          <ActiveDamageWindow />
-          <DamageMarkers visible={this.state.markersVisible} />
-          <HeatMap visible={this.state.heatMapVisible}/>
-        </Map>
+        <>
+          <ExpandedDamageWindow />
+          <Map
+            ref="map"
+            google={this.props.google}
+            zoom={14}
+            onClick={this.onMapClicked.bind(this)}
+            onZoom_changed={this.onZoomChanged.bind(this)}
+            initialCenter={{
+              lat: this.state.latitude,
+              lng: this.state.longitude
+            }}
+          >
+            <ActiveDamageWindow />
+            <DamageMarkers visible={this.state.markersVisible} />
+            <HeatMap visible={this.state.heatMapVisible} />
+          </Map>
+        </>
       );
     }
   };
 
-export default (DamageMarker, HeatMap, ActiveDamage) =>
+export default (DamageMarker, HeatMap, ActiveDamage, ExpandedDamageWindow) =>
   GoogleApiWrapper({
     apiKey: config.GoogleMapsAPIKey,
     libraries: ["places", "visualization"]
-  })(DamageMap(DamageMarker, HeatMap, ActiveDamage));
+  })(DamageMap(DamageMarker, HeatMap, ActiveDamage, ExpandedDamageWindow));

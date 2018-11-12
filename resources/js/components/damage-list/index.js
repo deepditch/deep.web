@@ -20,8 +20,6 @@ export default (DamageListItem, DamageFilters) =>
       return (
         <div class="h-100 d-flex flex-column">
           <div class="block-medium-top block-medium-left block-medium-right">
-            <h1 class="h2">Damages</h1>
-            <div class="divide-30" />
             <DamageFilters />
           </div>
           <div class="flex-1 overflow-hidden">
