@@ -25,6 +25,14 @@ class CheckRole
             ], 401);
         }
 
+        var_dump(auth('api')->user()->role);
+        var_dump(User::ML_ROLE);
+        if (User::ML_ROLE === $role && User::ML_ROLE !== auth('api')->user()->role) {
+            return response()->json([
+                'error' => 'You are not authorized to perform this action.',
+            ], 401);
+        }
+
         return $next($request);
     }
 }
