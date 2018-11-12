@@ -10,7 +10,6 @@ export class ActiveDamageWindow extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <MapPopup
         visible={this.props.damage ? true : false}
@@ -29,8 +28,16 @@ export class ActiveDamageWindow extends Component {
         map={this.props.map}
       >
         {this.props.damage && (
-          <div class="damage-info-window">
-            <button class="expand" onClick={this.props.expand} />
+          <div
+            class="damage-info-window"
+            ref={ref => ref && this.props.google.maps.OverlayView.preventMapHitsFrom(ref)}
+          >
+            <button
+              class="expand"
+              onClick={this.props.expand}
+            >
+              <span></span>
+            </button>
             <img width="300px" src={this.props.damage.image} />
             <div class="content">
               <h6 class="mb-1">
@@ -117,11 +124,13 @@ export class MapPopup extends Component {
       this.anchor.classList.add("popup-tip-anchor");
       this.anchor.appendChild(pixelOffset);
 
+      this.anchor.style.cursor = "auto";
+
       this.visible = false;
       this.inbounds = false;
 
       // Optionally stop clicks, etc., from bubbling up to the map.
-      this.stopEventPropagation();
+      // this.stopEventPropagation();
     };
 
     // NOTE: google.maps.OverlayView is only defined once the Maps API has
@@ -195,9 +204,9 @@ export class MapPopup extends Component {
     /** Stops clicks/drags from bubbling up to the map. */
     Popup.prototype.stopEventPropagation = function() {
       var anchor = this.anchor;
-      anchor.style.cursor = "auto";
 
       [
+        "click",
         "dblclick",
         "contextmenu",
         "wheel",

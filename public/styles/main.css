@@ -1162,12 +1162,7 @@ button {
   text-align: left;
   width: 17.77778em; }
   .damage-info-window .expand {
-    display: inline-block;
-    position: relative;
-    width: 13px;
-    height: 13px;
     color: #757575;
-    color: #2c3443;
     width: 24px;
     height: 24px;
     position: absolute;
@@ -1176,21 +1171,31 @@ button {
     background: #ffffff;
     border: 0;
     outline: 0;
-    z-index: 50; }
-    .damage-info-window .expand:before, .damage-info-window .expand:after {
-      content: '';
+    z-index: 50;
+    padding: 0; }
+    .damage-info-window .expand span {
       display: block;
-      height: 18.38473px;
-      border-left: 2px solid;
-      position: absolute;
-      top: 50%;
-      left: 50%; }
-    .damage-info-window .expand:before {
-      -webkit-transform: translate(-50%, -50%) rotate(-45deg);
-              transform: translate(-50%, -50%) rotate(-45deg); }
-    .damage-info-window .expand:after {
-      -webkit-transform: translate(-50%, -50%) rotate(45deg);
-              transform: translate(-50%, -50%) rotate(45deg); }
+      color: #ffffff;
+      border: 2px solid #757575;
+      margin: 5px;
+      display: inline-block;
+      position: relative;
+      width: 14px;
+      height: 14px; }
+      .damage-info-window .expand span:before, .damage-info-window .expand span:after {
+        content: '';
+        display: block;
+        height: 14px;
+        border-left: 4px solid;
+        position: absolute;
+        top: 50%;
+        left: 50%; }
+      .damage-info-window .expand span:before {
+        -webkit-transform: translate(-50%, -50%) rotate(90deg);
+                transform: translate(-50%, -50%) rotate(90deg); }
+      .damage-info-window .expand span:after {
+        -webkit-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%); }
   .damage-info-window .content {
     padding: 0.83333em; }
   .damage-info-window img {
@@ -1268,7 +1273,6 @@ button {
     width: 13px;
     height: 13px;
     color: #757575;
-    color: #2c3443;
     width: 24px;
     height: 24px;
     position: absolute;
