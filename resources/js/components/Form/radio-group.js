@@ -16,6 +16,19 @@ const RadioGroupOption = ({ name, value, defaultChecked, onChange }) => (
   </label>
 );
 
+const CheckboxGroupOption = ({ name, value, defaultChecked, onChange }) => (
+  <label class="pill">
+    <input
+      type="checkbox"
+      name={name}
+      value={value}
+      defaultChecked={defaultChecked}
+      onChange={onChange}
+    />
+    <span>{value}</span>
+  </label>
+);
+
 /*
  * Component for creating a group of radio inputs
  */
@@ -34,4 +47,4 @@ class RadioGroup extends Component {
   }
 }
 
-export { RadioGroup, RadioGroupOption };
+export { RadioGroup, RadioGroupOption, CheckboxGroupOption };

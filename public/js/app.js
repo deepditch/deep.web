@@ -58880,13 +58880,14 @@ LoginForm.propTypes = {
 /*!*******************************************!*\
   !*** ./js/components/Form/radio-group.js ***!
   \*******************************************/
-/*! exports provided: RadioGroup, RadioGroupOption */
+/*! exports provided: RadioGroup, RadioGroupOption, CheckboxGroupOption */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadioGroup", function() { return RadioGroup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RadioGroupOption", function() { return RadioGroupOption; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CheckboxGroupOption", function() { return CheckboxGroupOption; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -58903,6 +58904,21 @@ const RadioGroupOption = ({
   className: "pill"
 }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
   type: "radio",
+  name: name,
+  value: value,
+  defaultChecked: defaultChecked,
+  onChange: onChange
+}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, value));
+
+const CheckboxGroupOption = ({
+  name,
+  value,
+  defaultChecked,
+  onChange
+}) => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+  className: "pill"
+}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+  type: "checkbox",
   name: name,
   value: value,
   defaultChecked: defaultChecked,
@@ -59990,7 +60006,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
+/* harmony import */ var _Form_radio_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/radio-group */ "./js/components/Form/radio-group.js");
+/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
+
 
 
 
@@ -60018,19 +60036,35 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
       className: "content block"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
       className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])(this.props.damage.type), " (", this.props.damage.type, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
-      className: "row align-items-center"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-9"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-      className: "h5 small mb-0"
-    }, this.props.damage.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "col-3"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      checked: this.props.damage.verified ? true : false,
-      onChange: e => {
-        this._verifyDamageReport(e, this.props.damage.reportId).bind(this);
-      }
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])(this.props.damage.type), " (", this.props.damage.type, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
+      name: "StatusLabel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+      value: "Won't Repair"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+      value: "Needs Repair",
+      defaultChecked: true
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+      value: "Repair In Progress"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+      value: "Repaired"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
+      name: "DamageType"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D00"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D01"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D10"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D11"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D20"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D40"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D43"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D44"
     })))));
   }
 

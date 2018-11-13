@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Checkbox from "../Form/checkbox";
+import { RadioGroup, RadioGroupOption, CheckboxGroupOption } from "../Form/radio-group";
 import { mapTypeToDescription } from "../../helpers/damage-types";
 
 export class ExpandedDamageWindow extends Component {
@@ -30,20 +31,45 @@ export class ExpandedDamageWindow extends Component {
             {this.props.damage.position.streetname} (
             {this.props.damage.position.direction})
           </p>
-          <footer class="row align-items-center">
-            <div class="col-9">
-              <p class="h5 small mb-0">{this.props.damage.label}</p>
-            </div>
-            <div class="col-3">
-              <Checkbox
-                checked={this.props.damage.verified ? true : false}
-                onChange={e => {
-                  this._verifyDamageReport(e, this.props.damage.reportId).bind(
-                    this
-                  );
-                }}
-              />
-            </div>
+          <footer>
+
+              <RadioGroup name="StatusLabel">
+                <RadioGroupOption
+                  value="Won't Repair"
+                />
+                <RadioGroupOption value="Needs Repair" defaultChecked />
+                <RadioGroupOption
+                  value="Repair In Progress"
+                />
+                <RadioGroupOption
+                  value="Repaired"
+                />
+              </RadioGroup>
+              <RadioGroup name="DamageType">
+                <CheckboxGroupOption
+                  value="D00"
+                />
+                <CheckboxGroupOption value="D01" />
+                <CheckboxGroupOption
+                  value="D10"
+                />
+                <CheckboxGroupOption
+                  value="D11"
+                />
+                <CheckboxGroupOption
+                  value="D20"
+                />
+                <CheckboxGroupOption
+                  value="D40"
+                />
+                <CheckboxGroupOption
+                  value="D43"
+                />
+                <CheckboxGroupOption
+                  value="D44"
+                />
+              </RadioGroup>
+
           </footer>
         </div>
       </div>
