@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\File;
 class MachineLearningController extends Controller
 {
     /**
+     * Add authentication middleware.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
+    /**
      * Insert a machine learning model.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -27,13 +35,13 @@ class MachineLearningController extends Controller
 
         try {
             $path = $request->file('model')->storeAs(
-                '/models', $name
+                '/models',
+                $name
             );
         } catch (\Exception $e) {
             return $e->getMessage();
         }
 
-        var_dump($path);
         $mlmodel = MachineLearning::create([
             'path' => $path
         ]);
@@ -51,5 +59,4 @@ class MachineLearningController extends Controller
     {
         return new MachineLearningResource(MachineLearning::latest()->first());
     }
-
 }

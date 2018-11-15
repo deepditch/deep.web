@@ -31,5 +31,4 @@ class MachineLearning extends Model
     {
         return url($this->path);
     }
-
 }
