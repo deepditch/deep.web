@@ -31,7 +31,14 @@ Route::group(['middleware' => 'api'], function ($router) {
         ->middleware('role:admin');
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
+    Route::get('road-damage/verified-images', 'RoadDamageController@getVerifiedImages');
     Route::get('road-damage/{id}', 'RoadDamageController@getJson');
     Route::post('road-damage/report/{id}/edit', 'RoadDamageController@editReport');
     Route::post('road-damage/{id}/edit', 'RoadDamageController@editDamage');
+    Route::post('machine-learning/upload-model', 'MachineLearningController@insert')
+        ->middleware('role:machine');
+    Route::get('machine-learning/get-latest', 'MachineLearningController@getLatestJson');
+    Route::any('/{path?}', function () {
+        return request()->json(['Non-existent endpoint'], 404);
+    })->where('path', '.*');
 });

@@ -8,6 +8,7 @@ use App\Image;
 use App\RoadDamage;
 use App\RoadDamageReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoadDamageController extends Controller
 {
@@ -29,6 +30,34 @@ class RoadDamageController extends Controller
     public function getJson(int $id)
     {
         return new RoadDamageResource(RoadDamage::findOrFail($id));
+    }
+
+    /**
+     * Get verified instance images after a provided date
+     *
+     * @param Illuminate\Http\Request $request
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function getVerifiedImages(Request $request)
+    {
+        $request->validate([
+            'after' => ['required', 'date'],
+        ]);
+
+        $reports = RoadDamageReport::where('verified', '=', 'verified')
+            ->where('created_at', '>=', $request->input('after'))
+            ->get();
+
+        $images = [];
+        foreach ($reports as $report) {
+            $images[] = [
+                'type' => $report->getRoadDamage()->type,
+                'url' => $report->getImageUrl()
+            ];
+        }
+
+        return $images;
     }
 
     /**
