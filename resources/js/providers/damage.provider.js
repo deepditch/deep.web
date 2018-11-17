@@ -144,9 +144,7 @@ export const DamageProvider = c => {
         return {
           activate: () => {
             c.DamageActions.activateDamage(dispatch)(ownProps.damageId);
-          },
-          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+          }
         };
       }
     )(DamageListItem)

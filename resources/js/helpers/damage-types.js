@@ -7,17 +7,17 @@ export function mapTypeToDescription(type) {
     case "D01":
       return "Construction Joint Part (Longitudinal)";
     case "D10":
-      return "Equal interval";
+      return "Equal Interval";
     case "D11":
       return "Construction Joint Part (Lateral)";
     case "D20":
-      return "Alligator Crack ";
+      return "Alligator Crack";
     case "D40":
       return "Rutting, Bump, Pothole, or Separation";
     case "D43":
       return "White Line Blur";
     case "D44":
-      return "Crosswalk blur";
+      return "Crosswalk Blur";
     default:
       return type;
   }

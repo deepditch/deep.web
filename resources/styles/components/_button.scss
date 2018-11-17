@@ -28,6 +28,23 @@
     box-shadow: -1px 2px 3px 0 rgba(0, 0, 0, 0.2);
   }
 
+  &-small {
+    padding: pxtoem(4, 16) pxtoem(10, 16) pxtoem(5, 16);
+    line-height: 1.5;
+  }
+
+  &.link {
+    padding-right: pxtoem(50);
+
+    &:after {
+      margin: 0;
+      position: absolute;
+      right: pxtoem(20);
+      top: 50%;
+      transform: translate(0, -50%) rotate(-45deg);
+    }
+  }
+
   &.bg {
     @include colors {
       color: choose-contrast-color($color);
@@ -41,15 +58,8 @@
     }
   }
 
-  &.link {
-    padding-right: pxtoem(50);
-
-    &:after {
-      margin: 0;
-      position: absolute;
-      right: pxtoem(20);
-      top: 50%;
-      transform: translate(0, -50%) rotate(-45deg);
-    }
+  // Color overrides
+  &.bg-green {
+    color: $white;
   }
 }

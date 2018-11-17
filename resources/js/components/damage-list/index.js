@@ -31,7 +31,7 @@ export default (DamageListItem, DamageFilters) =>
                     <tr>
                       <th class="streetname">Street</th>
                       <th class="type">Type</th>
-                      <th class="label">Status</th>
+                      <th class="status">Status</th>
                       <th class="verified">Verified</th>
                     </tr>
                   </thead>

@@ -58728,18 +58728,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Checkbox; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 class Checkbox extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      className: "checkbox"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "checkbox",
-      name: this.props.name,
-      value: this.props.value,
-      checked: this.props.checked,
-      onChange: this.props.onChange
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "checkbox" + (this.props.disabled ? " disabled" : "")
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", _extends({
+      type: "checkbox"
+    }, this.props)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "box"
     }));
   }
@@ -58895,35 +58893,35 @@ __webpack_require__.r(__webpack_exports__);
  * Component for creating a radio option. For use within RadioGroup
  */
 
-const RadioGroupOption = ({
-  name,
-  value,
-  defaultChecked,
-  onChange
-}) => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-  className: "pill"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-  type: "radio",
-  name: name,
-  value: value,
-  defaultChecked: defaultChecked,
-  onChange: onChange
-}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, value));
+class RadioGroupOption extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "pill"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "radio",
+      name: this.props.name,
+      value: this.props.value,
+      defaultChecked: this.props.defaultChecked,
+      onChange: this.props.onChange
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, this.props.children ? this.props.children : this.props.value));
+  }
 
-const CheckboxGroupOption = ({
-  name,
-  value,
-  defaultChecked,
-  onChange
-}) => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-  className: "pill"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-  type: "checkbox",
-  name: name,
-  value: value,
-  defaultChecked: defaultChecked,
-  onChange: onChange
-}), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, value));
+}
+
+class CheckboxGroupOption extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "pill"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "checkbox",
+      name: this.props.name,
+      value: this.props.value,
+      checked: this.props.checked,
+      onChange: this.props.onChange
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, this.props.children ? this.props.children : this.props.value));
+  }
+
+}
 /*
  * Component for creating a group of radio inputs
  */
@@ -58935,7 +58933,7 @@ class RadioGroup extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     const childrenWithName = react__WEBPACK_IMPORTED_MODULE_0___default.a.Children.map(this.props.children, child => react__WEBPACK_IMPORTED_MODULE_0___default.a.cloneElement(child, {
       name: this.props.name
     }));
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "input-group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "pill-radio"
@@ -59609,10 +59607,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
-  _verifyDamageReport(e) {
-    if (e.target.checked) this.props.verifyDamageReport(this.props.damage.reportId);else this.props.unverifyDamageReport(this.props.damage.reportId);
-  }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
       className: this.props.active ? "active" : "",
@@ -59622,12 +59616,12 @@ class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "type"
     }, this.props.damage.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
-      className: "label"
+      className: "status"
     }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "verified"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_1__["default"], {
       checked: this.props.damage.verified ? true : false,
-      onChange: this._verifyDamageReport.bind(this)
+      disabled: true
     })));
   }
 
@@ -59686,7 +59680,7 @@ __webpack_require__.r(__webpack_exports__);
     }, "Street"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
       className: "type"
     }, "Type"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-      className: "label"
+      className: "status"
     }, "Status"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
       className: "verified"
     }, "Verified"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, this.props.damages && this.props.damages.map(damageId => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(DamageListItem, {
@@ -59750,7 +59744,7 @@ class ActiveDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component"]
       className: "content"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
       className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])(this.props.damage.type), " (", this.props.damage.type, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", "(", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
       className: "row align-items-center"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-9"
@@ -60013,12 +60007,31 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.state = {
+      editOpen: false
+    };
+  }
+
   _verifyDamageReport(e, reportId) {
     if (e.target.checked) this.props.verifyDamageReport(reportId);else this.props.unverifyDamageReport(reportId);
   }
 
   _close(e) {
     this.props.close();
+  }
+
+  _openEdit() {
+    this.setState({
+      editOpen: true
+    });
+  }
+
+  _closeEdit() {
+    this.setState({
+      editOpen: false
+    });
   }
 
   render() {
@@ -60033,10 +60046,16 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       src: this.props.damage.image
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "content block"
+      className: "content block-medium"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row align-items-center"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-md-5"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
       className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])(this.props.damage.type), " (", this.props.damage.type, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", " ", "(", this.props.damage.position.direction, ")")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-md-7"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
       name: "StatusLabel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
       value: "Won't Repair"
@@ -60047,25 +60066,58 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
       value: "Repair In Progress"
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
       value: "Repaired"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
-      name: "DamageType"
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-15"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+      className: "label"
+    }, "Damage Visible In This Image", this.state.editOpen && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, " - ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "small light-gray-text"
+    }, "Select all that apply"))), this.state.editOpen ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
+      name: "StatusLabel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
       value: "D00"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D00")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
       value: "D01"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D01")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
       value: "D10"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D10")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
       value: "D11"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D11")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
       value: "D20"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D20")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
       value: "D40"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
-      value: "D43"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
-      value: "D44"
-    })))));
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D40")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D43",
+      checked: true
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D43")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+      value: "D44",
+      checked: true
+    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "btn btn-small bg-green link verify"
+    }, "Verify"))) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row narrow-gutters"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-auto"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "tag tag-D44 active"
+    }, "White Line Blur")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-auto"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "tag tag-D43 link"
+    }, "Crosswalk Blur")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-auto"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "pipe"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-auto"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "btn btn-small link edit",
+      onClick: this._openEdit.bind(this)
+    }, "Edit")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-auto"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "btn btn-small bg-green link verify"
+    }, "Verify")))));
   }
 
 }
@@ -60393,13 +60445,13 @@ function mapTypeToDescription(type) {
       return "Construction Joint Part (Longitudinal)";
 
     case "D10":
-      return "Equal interval";
+      return "Equal Interval";
 
     case "D11":
       return "Construction Joint Part (Lateral)";
 
     case "D20":
-      return "Alligator Crack ";
+      return "Alligator Crack";
 
     case "D40":
       return "Rutting, Bump, Pothole, or Separation";
@@ -60408,7 +60460,7 @@ function mapTypeToDescription(type) {
       return "White Line Blur";
 
     case "D44":
-      return "Crosswalk blur";
+      return "Crosswalk Blur";
 
     default:
       return type;
@@ -60702,9 +60754,7 @@ const DamageProvider = c => {
     return {
       activate: () => {
         c.DamageActions.activateDamage(dispatch)(ownProps.damageId);
-      },
-      verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-      unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch)
+      }
     };
   })(_components_damage_list__WEBPACK_IMPORTED_MODULE_1__["DamageListItem"]));
   c.register("DamageFilters", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_3__["connect"])(null, dispatch => {
@@ -60978,8 +61028,7 @@ function DamageReducer(state = {
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].FILTER_DAMAGE:
       return _objectSpread({}, state, {
-        filters: action.filters,
-        activeDamageId: null
+        filters: action.filters
       });
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].EXPAND_ACTIVE_DAMAGE:

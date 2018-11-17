@@ -30,23 +30,23 @@ export class ActiveDamageWindow extends Component {
         {this.props.damage && (
           <div
             class="damage-info-window"
-            ref={ref => ref && this.props.google.maps.OverlayView.preventMapHitsFrom(ref)}
+            ref={ref =>
+              ref && this.props.google.maps.OverlayView.preventMapHitsFrom(ref)
+            }
           >
-            <button
-              class="expand"
-              onClick={this.props.expand}
-            >
-              <span></span>
+            <button class="expand" onClick={this.props.expand}>
+              <span />
             </button>
             <img width="300px" src={this.props.damage.image} />
             <div class="content">
               <h6 class="mb-1">
-                {mapTypeToDescription(this.props.damage.type)} (
-                {this.props.damage.type})
+                {mapTypeToDescription(this.props.damage.type)}
               </h6>
               <p>
-                {this.props.damage.position.streetname} (
-                {this.props.damage.position.direction})
+                {this.props.damage.position.streetname
+                  ? this.props.damage.position.streetname
+                  : "Street Unknown"}
+                ({this.props.damage.position.direction})
               </p>
               <footer class="row align-items-center">
                 <div class="col-9">

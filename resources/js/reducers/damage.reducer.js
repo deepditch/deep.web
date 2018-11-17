@@ -27,7 +27,7 @@ export default function DamageReducer(
     case DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE:
       return { ...state, activeDamageId: null };
     case DamageActionTypes.FILTER_DAMAGE:
-      return { ...state, filters: action.filters, activeDamageId: null };
+      return { ...state, filters: action.filters };
     case DamageActionTypes.EXPAND_ACTIVE_DAMAGE:
       return { ...state, expanded: true };
     case DamageActionTypes.CLOSE_ACTIVE_DAMAGE:
