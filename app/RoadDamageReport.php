@@ -58,4 +58,14 @@ class RoadDamageReport extends Model
     {
         return RoadDamage::find($this->roaddamage_id) ?? new RoadDamage();
     }
+
+    /**
+    * Is this report verified?
+    *
+    * @return bool
+    */
+    public function isVerified() : bool
+    {
+        return $this->verified === 'verified';
+    }
 }

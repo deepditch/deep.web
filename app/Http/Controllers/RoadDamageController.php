@@ -49,15 +49,27 @@ class RoadDamageController extends Controller
             ->where('created_at', '>=', $request->input('after'))
             ->get();
 
-        $images = [];
+        $reports_array = [];
         foreach ($reports as $report) {
-            $images[] = [
-                'type' => $report->getRoadDamage()->type,
+            if (! array_key_exists($report->getImage()->image_name, $reports_array)) {
+                $reports_array[$report->getImage()->image_name] = [];
+            }
+            $data = [
+                'types' => $report->getRoadDamage()->type,
                 'url' => $report->getImageUrl()
             ];
+            $reports_array[$report->getImage()->image_name] = array_merge_recursive(
+                $reports_array[$report->getImage()->image_name],
+                $data
+            );
+            $reports_array[$report->getImage()->image_name] = $this->super_unique($reports_array[$report->getImage()->image_name]);
+            $url = $reports_array[$report->getImage()->image_name]['url'];
+            $reports_array[$report->getImage()->image_name]['url'] = is_array($url) ?
+                array_values($url)[0] :
+                $url;
         }
 
-        return $images;
+        return $reports_array;
     }
 
     /**
@@ -220,5 +232,24 @@ class RoadDamageController extends Controller
         }
 
         return new RoadDamageResource($damage);
+    }
+
+    /**
+     * TODO: refactor this into a custom helper https://laravel-news.com/creating-helpers
+     *
+     * @param array $array
+     * @return array
+     */
+    private function super_unique($array)
+    {
+        $result = array_map("unserialize", array_unique(array_map("serialize", $array)));
+
+        foreach ($result as $key => $value) {
+            if (is_array($value)) {
+                $result[$key] = $this->super_unique($value);
+            }
+        }
+
+        return $result;
     }
 }
