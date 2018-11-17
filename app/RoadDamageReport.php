@@ -68,4 +68,33 @@ class RoadDamageReport extends Model
     {
         return $this->verified === 'verified';
     }
+
+    /**
+     * Get associated RoadDamageReport IDs with the same image
+     *
+     * @return array
+     */
+    public function getAssociatedReportIds() {
+        return RoadDamageReport::where('image_id', '=', $this->image_id)->pluck('id')->toArray();
+    }
+
+    /**
+     * Get associated RoadDamage IDs with the same image
+     *
+     * @return array
+     */
+    public function getAssociatedDamageIds() {
+        return RoadDamageReport::where('image_id', '=', $this->image_id)->pluck('roaddamage_id')->toArray();
+    }
+
+    /**
+     * Get associated road damage and reports that share this reports image
+     *
+     * @return array
+     */
+    public function getAssociatedIds() {
+        return RoadDamageReport::select('id', 'roaddamage_id')->where('image_id', '=', $this->image_id)->get()->toArray();
+    }
+
+
 }
