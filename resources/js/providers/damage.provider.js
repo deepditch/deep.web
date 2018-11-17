@@ -101,7 +101,7 @@ export const DamageProvider = c => {
     )(ActiveDamageWindow)
   );
 
-    // Active damage info window content
+  // Active damage info window content
   c.register("ExpandedDamageWindow", c =>
     connect(
       store => {
@@ -110,10 +110,11 @@ export const DamageProvider = c => {
           visible: store.damage.expanded
         };
       },
-      dispatch => {
+      (dispatch, ownProps) => {
         return {
           verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
           unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
+          changeStatus: c.DamageActions.changeDamageStatus(dispatch, ownProps.damageId),
           close: c.DamageActions.close(dispatch)
         };
       }

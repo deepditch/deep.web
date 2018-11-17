@@ -12,6 +12,7 @@ class RadioGroupOption extends Component {
           name={this.props.name}
           value={this.props.value}
           defaultChecked={this.props.defaultChecked}
+          checked={this.props.checked}
           onChange={this.props.onChange}
         />
         <span>{this.props.children ? this.props.children : this.props.value}</span>

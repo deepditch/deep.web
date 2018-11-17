@@ -15,6 +15,7 @@ export class ExpandedDamageWindow extends Component {
       editOpen: false
     };
   }
+
   _verifyDamageReport(e, reportId) {
     if (e.target.checked) this.props.verifyDamageReport(reportId);
     else this.props.unverifyDamageReport(reportId);
@@ -30,6 +31,11 @@ export class ExpandedDamageWindow extends Component {
 
   _closeEdit() {
     this.setState({ editOpen: false });
+  }
+
+  _handleStatusRadioChange(e) {
+    console.log(e.currentTarget.value);
+    this.props.changeStatus(e.currentTarget.value);
   }
 
   render() {
@@ -56,10 +62,34 @@ export class ExpandedDamageWindow extends Component {
             </div>
             <div class="col-md-7">
               <RadioGroup name="StatusLabel">
-                <RadioGroupOption value="Won't Repair" />
-                <RadioGroupOption value="Needs Repair" defaultChecked />
-                <RadioGroupOption value="Repair In Progress" />
-                <RadioGroupOption value="Repaired" />
+                <RadioGroupOption
+                  value="wont-do"
+                  checked={this.props.damage.label == "wont-do"}
+                  onChange={this._handleStatusRadioChange.bind(this)}
+                >
+                  Won't Repair
+                </RadioGroupOption>
+                <RadioGroupOption
+                  value="pending-repair"
+                  checked={this.props.damage.label == "pending-repair"}
+                  onChange={this._handleStatusRadioChange.bind(this)}
+                >
+                  Needs Repair
+                </RadioGroupOption>
+                <RadioGroupOption
+                  value="repairing"
+                  checked={this.props.damage.label == "repairing"}
+                  onChange={this._handleStatusRadioChange.bind(this)}
+                >
+                  Repair In Progress
+                </RadioGroupOption>
+                <RadioGroupOption
+                  value="done"
+                  checked={this.props.damage.label == "done"}
+                  onChange={this._handleStatusRadioChange.bind(this)}
+                >
+                  Repaired
+                </RadioGroupOption>
               </RadioGroup>
             </div>
           </div>

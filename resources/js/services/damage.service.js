@@ -41,4 +41,17 @@ export class DamageService {
         throw parseErrors(error.response);
       });
   }
+
+  async changeDamageStatus(id, status) {
+    return this.axios
+      .post(`/road-damage/${id}/edit`, {
+        label: status
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
 }

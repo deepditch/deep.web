@@ -1,5 +1,4 @@
 import { NotifyActions } from "./notify.actions";
-import { isNullOrUndefined } from "util";
 
 export const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
@@ -11,7 +10,8 @@ export const DamageActionTypes = {
   UNVERIFY_DAMAGE_REPORT: "unverify_damage_report",
   FILTER_DAMAGE: "filter_damage",
   EXPAND_ACTIVE_DAMAGE: "expand_active_damage",
-  CLOSE_ACTIVE_DAMAGE: "close_active_damage"
+  CLOSE_ACTIVE_DAMAGE: "close_active_damage",
+  CHANGE_DAMAGE_STATUS: "change_damage_status"
 };
 
 export const DamageActions = {
@@ -53,12 +53,18 @@ export const DamageActions = {
   expand: () => {
     return {
       type: DamageActionTypes.EXPAND_ACTIVE_DAMAGE
-    }
+    };
   },
   close: () => {
     return {
       type: DamageActionTypes.CLOSE_ACTIVE_DAMAGE
-    }
+    };
+  },
+  changeStatus: status => {
+    return {
+      type: DamageActionTypes.CHANGE_DAMAGE_STATUS,
+      status: status
+    };
   }
 };
 
@@ -105,8 +111,18 @@ export class DamageActionDispatcher {
     });
   };
 
+  changeDamageStatus = (dispatch, damageId) => status => {
+    this.damageService
+      .changeDamageStatus(damageId, status)
+      .then(response => {
+        dispatch(DamageActions.changeStatus(status));
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error("Failed to change the status label"));
+      });
+  };
+
   expand = dispatch => () => {
-    console.log("expand");
     dispatch(DamageActions.expand());
   };
 

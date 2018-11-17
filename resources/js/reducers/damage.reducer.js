@@ -54,6 +54,17 @@ export default function DamageReducer(
           return damage;
         })
       };
+    case DamageActionTypes.CHANGE_DAMAGE_STATUS:
+      return {
+        ...state,
+        damages: state.damages.map(damage => {
+          // Update the damage where the id matches the highest confidence report id
+          if (action.id == damage.id) {
+            return { ...damage, status: action.status };
+          }
+          return damage;
+        })
+      };
     default:
       return state;
   }
