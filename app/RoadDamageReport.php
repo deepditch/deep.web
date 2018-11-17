@@ -75,7 +75,7 @@ class RoadDamageReport extends Model
      * @return array
      */
     public function getAssociatedReportIds() {
-        return RoadDamageReport::where('image_id', '=', $this->image_id)->pluck('id')->toArray();
+        return RoadDamageReport::select('id')->where('image_id', '=', $this->image_id)->get()->toArray();
     }
 
     /**
@@ -84,7 +84,7 @@ class RoadDamageReport extends Model
      * @return array
      */
     public function getAssociatedDamageIds() {
-        return RoadDamageReport::where('image_id', '=', $this->image_id)->pluck('roaddamage_id')->toArray();
+        return RoadDamageReport::select('roaddamage_id')->where('image_id', '=', $this->image_id)->get()->toArray();
     }
 
     /**
