@@ -96,6 +96,17 @@ class RoadDamage extends Model
     }
 
     /**
+     * Get verified reports (and not false-positive reports).
+     *
+     * @return collection
+     */
+    public function getVerifiedReports()
+    {
+        return RoadDamageReport::where('roaddamage_id', $this->id)
+            ->where('verified', 'verified')->get();
+    }
+
+    /**
      * Do we have a false-positive report.
      *
      * @return bool
