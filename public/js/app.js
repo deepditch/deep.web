@@ -60207,11 +60207,12 @@ const damage = store => store.damage;
 const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelector"])([damage], damage => {
   var filters = damage.filters;
   var filteredArray = damage.damages.filter(el => {
+    var isActive = el.id == damage.activeDamageId;
     var containsKeyword = filters.streetname ? el.position.streetname.toLowerCase().includes(filters.streetname.toLowerCase()) : true;
     var isType = filters.type ? el.type == filters.type : true;
-    var isStatus = filters.status ? el.label == filters.status : true;
+    var isStatus = filters.status ? el.label == filters.status : el.label != "wont-do" && el.label != "done";
     var isVerified = filters.verified ? filters.verified == "true" ? el.verified : !el.verified : true;
-    return containsKeyword && isType && isStatus && isVerified;
+    return isActive || containsKeyword && isType && isStatus && isVerified;
   });
   return filteredArray.map(damage => damage.id);
 });

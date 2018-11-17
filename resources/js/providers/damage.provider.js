@@ -8,30 +8,47 @@ import DamageMap, {
   DamageMarker,
   DamageMarkers,
   HeatMap,
-  ExpandedDamageWindow,
+  ExpandedDamageWindow
 } from "../components/damage-map";
 import { connect } from "react-redux";
 import { DamageActionDispatcher } from "../actions";
 import { DamageService } from "../services";
 import { createSelector } from "reselect";
 
-const damage = store => (store.damage);
+const damage = store => store.damage;
 
-const getDamageIds = createSelector([damage], damage => {
-  var filters = damage.filters;
+const getDamageIds = createSelector(
+  [damage],
+  damage => {
+    var filters = damage.filters;
 
-  var filteredArray = damage.damages.filter(el => {
+    var filteredArray = damage.damages.filter(el => {
+      var isActive = el.id == damage.activeDamageId;
 
-    var containsKeyword = filters.streetname ? el.position.streetname.toLowerCase().includes(filters.streetname.toLowerCase()) : true
-    var isType = filters.type ? el.type == filters.type : true
-    var isStatus = filters.status ? el.label == filters.status : true
-    var isVerified = filters.verified ? (filters.verified == "true" ? el.verified : !el.verified) : true
+      var containsKeyword = filters.streetname
+        ? el.position.streetname
+            .toLowerCase()
+            .includes(filters.streetname.toLowerCase())
+        : true;
 
-    return containsKeyword && isType && isStatus && isVerified
-  });
+      var isType = filters.type ? el.type == filters.type : true;
 
-  return filteredArray.map(damage => damage.id);
-});
+      var isStatus = filters.status
+        ? el.label == filters.status
+        : el.label != "wont-do" && el.label != "done";
+
+      var isVerified = filters.verified
+        ? filters.verified == "true"
+          ? el.verified
+          : !el.verified
+        : true;
+
+      return isActive || (containsKeyword && isType && isStatus && isVerified);
+    });
+
+    return filteredArray.map(damage => damage.id);
+  }
+);
 
 const getActiveDamage = store =>
   store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
@@ -130,7 +147,14 @@ export const DamageProvider = c => {
           deactivateDamage: c.DamageActions.deactivateDamage(dispatch)
         };
       }
-    )(DamageMap(c.DamageMarkers, c.HeatMap, c.ActiveDamageWindow, c.ExpandedDamageWindow))
+    )(
+      DamageMap(
+        c.DamageMarkers,
+        c.HeatMap,
+        c.ActiveDamageWindow,
+        c.ExpandedDamageWindow
+      )
+    )
   );
 
   c.register("DamageListItem", c =>
