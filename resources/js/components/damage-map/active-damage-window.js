@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { mapTypeToDescription } from "../../helpers/damage-types";
+import { mapTypeToDescription } from "../../helpers/damage.helpers";
 import Checkbox from "../Form/checkbox";
 
 export class ActiveDamageWindow extends Component {

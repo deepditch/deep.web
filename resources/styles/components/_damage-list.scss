@@ -42,26 +42,27 @@
     }
 
     > .streetname {
-      width: 43%;
+      width: 44%;
       padding-right: pxtoem(20);
     }
 
     > .type {
-      width: 12%;
+      width: 11%;
       padding-right: pxtoem(20);
       @include uppercase-headline;
       font-size: 0.8em;
       font-weight: 800;
       padding-top: pxtoem(11);
+      text-align: center;
     }
 
     > .status {
-      width: 30%;
+      width: 33%;
       padding-right: pxtoem(20);
     }
 
     > .verified {
-      width: 15%;
+      width: 12%;
       text-align: center;
     }
   }

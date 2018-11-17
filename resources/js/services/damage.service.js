@@ -43,14 +43,16 @@ export class DamageService {
   }
 
   async changeDamageStatus(id, status) {
+    console.log(id, status)
     return this.axios
       .post(`/road-damage/${id}/edit`, {
-        label: status
+        status: status
       })
       .then(response => {
         return response.data;
       })
       .catch(error => {
+        console.log(error)
         throw parseErrors(error.response);
       });
   }

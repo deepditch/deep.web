@@ -16,7 +16,6 @@ export default class ScrollSection extends Component {
   doScrolling(element, target) {
     target = Math.round(target);
     var diff = Math.abs(element.scrollTop - target)
-    console.log(diff)
     var duration = .5 * diff
 
     if (duration < 0) {

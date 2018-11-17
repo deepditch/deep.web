@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import Checkbox from "../Form/checkbox";
 import {
   RadioGroup,
   RadioGroupOption,
   CheckboxGroupOption
 } from "../Form/radio-group";
-import { mapTypeToDescription } from "../../helpers/damage-types";
+import { mapTypeToDescription, mapStatusToString } from "../../helpers/damage.helpers";
 
 export class ExpandedDamageWindow extends Component {
   constructor(props) {
@@ -22,6 +21,7 @@ export class ExpandedDamageWindow extends Component {
   }
 
   _close(e) {
+    this._closeEdit()
     this.props.close();
   }
 
@@ -35,7 +35,7 @@ export class ExpandedDamageWindow extends Component {
 
   _handleStatusRadioChange(e) {
     console.log(e.currentTarget.value);
-    this.props.changeStatus(e.currentTarget.value);
+    this.props.changeStatus(this.props.damage.id, e.currentTarget.value);
   }
 
   render() {
@@ -67,28 +67,28 @@ export class ExpandedDamageWindow extends Component {
                   checked={this.props.damage.label == "wont-do"}
                   onChange={this._handleStatusRadioChange.bind(this)}
                 >
-                  Won't Repair
+                  {mapStatusToString("wont-do")}
                 </RadioGroupOption>
                 <RadioGroupOption
                   value="pending-repair"
                   checked={this.props.damage.label == "pending-repair"}
                   onChange={this._handleStatusRadioChange.bind(this)}
                 >
-                  Needs Repair
+                  {mapStatusToString("pending-repair")}
                 </RadioGroupOption>
                 <RadioGroupOption
                   value="repairing"
                   checked={this.props.damage.label == "repairing"}
                   onChange={this._handleStatusRadioChange.bind(this)}
                 >
-                  Repair In Progress
+                  {mapStatusToString("repairing")}
                 </RadioGroupOption>
                 <RadioGroupOption
                   value="done"
                   checked={this.props.damage.label == "done"}
                   onChange={this._handleStatusRadioChange.bind(this)}
                 >
-                  Repaired
+                  {mapStatusToString("done")}
                 </RadioGroupOption>
               </RadioGroup>
             </div>

@@ -40,7 +40,7 @@ export default (DamageListItem, DamageFilters) =>
     }
 
     scrollToListItem(el) {
-      if (!visibleY(el)) {
+      if (!this.visibleY(el)) {
         this.setState({ scrollTop: el.offsetTop });
       }
     }

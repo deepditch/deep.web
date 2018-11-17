@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Checkbox from "../Form/checkbox";
+import { mapStatusToString } from "../../helpers/damage.helpers";
 
 export class DamageListItem extends Component {
   constructor(props) {
@@ -19,11 +20,13 @@ export class DamageListItem extends Component {
         ref={this.myself}
       >
         <td class="streetname">
-          {this.props.damage.position.streetname} (
-          {this.props.damage.position.direction})
+          {this.props.damage.position.streetname
+            ? this.props.damage.position.streetname
+            : "Street Unknown"}{" "}
+          ({this.props.damage.position.direction})
         </td>
         <td class="type">{this.props.damage.type}</td>
-        <td class="status">{this.props.damage.label}</td>
+        <td class="status">{mapStatusToString(this.props.damage.label)}</td>
         <td class="verified">
           <Checkbox
             checked={this.props.damage.verified ? true : false}

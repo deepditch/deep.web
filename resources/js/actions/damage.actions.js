@@ -60,9 +60,10 @@ export const DamageActions = {
       type: DamageActionTypes.CLOSE_ACTIVE_DAMAGE
     };
   },
-  changeStatus: status => {
+  changeStatus: (damageId, status) => {
     return {
       type: DamageActionTypes.CHANGE_DAMAGE_STATUS,
+      id: damageId,
       status: status
     };
   }
@@ -111,11 +112,11 @@ export class DamageActionDispatcher {
     });
   };
 
-  changeDamageStatus = (dispatch, damageId) => status => {
+  changeDamageStatus = dispatch => (damageId, status) => {
     this.damageService
       .changeDamageStatus(damageId, status)
       .then(response => {
-        dispatch(DamageActions.changeStatus(status));
+        dispatch(DamageActions.changeStatus(damageId, status));
       })
       .catch(error => {
         dispatch(NotifyActions.error("Failed to change the status label"));

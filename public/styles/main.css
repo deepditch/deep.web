@@ -1500,10 +1500,10 @@ button {
       border: 3px solid #000;
       box-shadow: 0 0 5px rgba(44, 52, 67, 0.6); }
     .damage-list tr > .streetname {
-      width: 43%;
+      width: 44%;
       padding-right: 1.11111em; }
     .damage-list tr > .type {
-      width: 12%;
+      width: 11%;
       padding-right: 1.11111em;
       font-weight: 700;
       text-transform: uppercase;
@@ -1511,12 +1511,13 @@ button {
       letter-spacing: 0.02778em;
       font-size: 0.8em;
       font-weight: 800;
-      padding-top: 0.61111em; }
+      padding-top: 0.61111em;
+      text-align: center; }
     .damage-list tr > .status {
-      width: 30%;
+      width: 33%;
       padding-right: 1.11111em; }
     .damage-list tr > .verified {
-      width: 15%;
+      width: 12%;
       text-align: center; }
   .damage-list .checkbox {
     line-height: 0; }

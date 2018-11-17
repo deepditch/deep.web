@@ -1,5 +1,3 @@
-
-
 export function mapTypeToDescription(type) {
   switch (type) {
     case "D00":
@@ -20,5 +18,18 @@ export function mapTypeToDescription(type) {
       return "Crosswalk Blur";
     default:
       return type;
+  }
+}
+
+export function mapStatusToString(status) {
+  switch (status) {
+    case "wont-do":
+      return "Won't Repair";
+    case "pending-repair":
+      return "Needs Repair";
+    case "repairing":
+      return "Repair in Progress";
+    case "done":
+      return "Repaired";
   }
 }

@@ -114,7 +114,7 @@ export const DamageProvider = c => {
         return {
           verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
           unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
-          changeStatus: c.DamageActions.changeDamageStatus(dispatch, ownProps.damageId),
+          changeStatus: c.DamageActions.changeDamageStatus(dispatch),
           close: c.DamageActions.close(dispatch)
         };
       }

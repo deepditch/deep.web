@@ -57498,9 +57498,10 @@ const DamageActions = {
       type: DamageActionTypes.CLOSE_ACTIVE_DAMAGE
     };
   },
-  changeStatus: status => {
+  changeStatus: (damageId, status) => {
     return {
       type: DamageActionTypes.CHANGE_DAMAGE_STATUS,
+      id: damageId,
       status: status
     };
   }
@@ -57541,9 +57542,9 @@ class DamageActionDispatcher {
       });
     };
 
-    this.changeDamageStatus = (dispatch, damageId) => status => {
+    this.changeDamageStatus = dispatch => (damageId, status) => {
       this.damageService.changeDamageStatus(damageId, status).then(response => {
-        dispatch(DamageActions.changeStatus(status));
+        dispatch(DamageActions.changeStatus(damageId, status));
       }).catch(error => {
         dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error("Failed to change the status label"));
       });
@@ -58968,6 +58969,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
+/* harmony import */ var _helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/damage.helpers */ "./js/helpers/damage.helpers.js");
+
 
 
 class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
@@ -58987,11 +58990,11 @@ class DamageListItem extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       ref: this.myself
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "streetname"
-    }, this.props.damage.position.streetname, " (", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    }, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", " ", "(", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "type"
     }, this.props.damage.type), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "status"
-    }, this.props.damage.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapStatusToString"])(this.props.damage.label)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
       className: "verified"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_checkbox__WEBPACK_IMPORTED_MODULE_1__["default"], {
       checked: this.props.damage.verified ? true : false,
@@ -59061,7 +59064,7 @@ __webpack_require__.r(__webpack_exports__);
   }
 
   scrollToListItem(el) {
-    if (!visibleY(el)) {
+    if (!this.visibleY(el)) {
       this.setState({
         scrollTop: el.offsetTop
       });
@@ -59118,7 +59121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "../node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
+/* harmony import */ var _helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/damage.helpers */ "./js/helpers/damage.helpers.js");
 /* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
 
 
@@ -59154,7 +59157,7 @@ class ActiveDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component"]
       className: "content"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
       className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", "(", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", "(", this.props.damage.position.direction, ")"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("footer", {
       className: "row align-items-center"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-9"
@@ -59409,10 +59412,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpandedDamageWindow", function() { return ExpandedDamageWindow; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Form_checkbox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Form/checkbox */ "./js/components/Form/checkbox.js");
-/* harmony import */ var _Form_radio_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Form/radio-group */ "./js/components/Form/radio-group.js");
-/* harmony import */ var _helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../helpers/damage-types */ "./js/helpers/damage-types.js");
-
+/* harmony import */ var _Form_radio_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Form/radio-group */ "./js/components/Form/radio-group.js");
+/* harmony import */ var _helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/damage.helpers */ "./js/helpers/damage.helpers.js");
 
 
 
@@ -59429,6 +59430,8 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
   }
 
   _close(e) {
+    this._closeEdit();
+
     this.props.close();
   }
 
@@ -59446,7 +59449,7 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
 
   _handleStatusRadioChange(e) {
     console.log(e.currentTarget.value);
-    this.props.changeStatus(e.currentTarget.value);
+    this.props.changeStatus(this.props.damage.id, e.currentTarget.value);
   }
 
   render() {
@@ -59468,53 +59471,53 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
       className: "col-md-5"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", {
       className: "mb-1"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", " ", "(", this.props.damage.position.direction, ")")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])(this.props.damage.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.props.damage.position.streetname ? this.props.damage.position.streetname : "Street Unknown", " ", "(", this.props.damage.position.direction, ")")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-md-7"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["RadioGroup"], {
       name: "StatusLabel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["RadioGroupOption"], {
       value: "wont-do",
       checked: this.props.damage.label == "wont-do",
       onChange: this._handleStatusRadioChange.bind(this)
-    }, "Won't Repair"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapStatusToString"])("wont-do")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["RadioGroupOption"], {
       value: "pending-repair",
       checked: this.props.damage.label == "pending-repair",
       onChange: this._handleStatusRadioChange.bind(this)
-    }, "Needs Repair"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapStatusToString"])("pending-repair")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["RadioGroupOption"], {
       value: "repairing",
       checked: this.props.damage.label == "repairing",
       onChange: this._handleStatusRadioChange.bind(this)
-    }, "Repair In Progress"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapStatusToString"])("repairing")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["RadioGroupOption"], {
       value: "done",
       checked: this.props.damage.label == "done",
       onChange: this._handleStatusRadioChange.bind(this)
-    }, "Repaired")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapStatusToString"])("done"))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("hr", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "divide-15"
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
       className: "label"
     }, "Damage Visible In This Image", this.state.editOpen && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, " - ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "small light-gray-text"
-    }, "Select all that apply"))), this.state.editOpen ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["RadioGroup"], {
+    }, "Select all that apply"))), this.state.editOpen ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["RadioGroup"], {
       name: "StatusLabel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D00"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D00")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D00")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D01"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D01")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D01")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D10"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D10")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D10")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D11"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D11")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D11")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D20"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D20")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D20")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D40"
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D40")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D40")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D43",
       checked: true
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D43")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_2__["CheckboxGroupOption"], {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D43")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Form_radio_group__WEBPACK_IMPORTED_MODULE_1__["CheckboxGroupOption"], {
       value: "D44",
       checked: true
-    }, Object(_helpers_damage_types__WEBPACK_IMPORTED_MODULE_3__["mapTypeToDescription"])("D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, Object(_helpers_damage_helpers__WEBPACK_IMPORTED_MODULE_2__["mapTypeToDescription"])("D44"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       className: "btn btn-small bg-green link verify"
     }, "Verify"))) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row narrow-gutters"
@@ -59743,7 +59746,6 @@ class ScrollSection extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   doScrolling(element, target) {
     target = Math.round(target);
     var diff = Math.abs(element.scrollTop - target);
-    console.log(diff);
     var duration = .5 * diff;
 
     if (duration < 0) {
@@ -59946,16 +59948,17 @@ function createContainer() {
 
 /***/ }),
 
-/***/ "./js/helpers/damage-types.js":
-/*!************************************!*\
-  !*** ./js/helpers/damage-types.js ***!
-  \************************************/
-/*! exports provided: mapTypeToDescription */
+/***/ "./js/helpers/damage.helpers.js":
+/*!**************************************!*\
+  !*** ./js/helpers/damage.helpers.js ***!
+  \**************************************/
+/*! exports provided: mapTypeToDescription, mapStatusToString */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapTypeToDescription", function() { return mapTypeToDescription; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapStatusToString", function() { return mapStatusToString; });
 function mapTypeToDescription(type) {
   switch (type) {
     case "D00":
@@ -59984,6 +59987,21 @@ function mapTypeToDescription(type) {
 
     default:
       return type;
+  }
+}
+function mapStatusToString(status) {
+  switch (status) {
+    case "wont-do":
+      return "Won't Repair";
+
+    case "pending-repair":
+      return "Needs Repair";
+
+    case "repairing":
+      return "Repair in Progress";
+
+    case "done":
+      return "Repaired";
   }
 }
 
@@ -60256,7 +60274,7 @@ const DamageProvider = c => {
     return {
       verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
       unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
-      changeStatus: c.DamageActions.changeDamageStatus(dispatch, ownProps.damageId),
+      changeStatus: c.DamageActions.changeDamageStatus(dispatch),
       close: c.DamageActions.close(dispatch)
     };
   })(_components_damage_map__WEBPACK_IMPORTED_MODULE_2__["ExpandedDamageWindow"]));
@@ -60597,7 +60615,7 @@ function DamageReducer(state = {
           // Update the damage where the id matches the highest confidence report id
           if (action.id == damage.id) {
             return _objectSpread({}, damage, {
-              status: action.status
+              label: action.status
             });
           }
 
@@ -61087,11 +61105,13 @@ class DamageService {
   }
 
   async changeDamageStatus(id, status) {
+    console.log(id, status);
     return this.axios.post(`/road-damage/${id}/edit`, {
-      label: status
+      status: status
     }).then(response => {
       return response.data;
     }).catch(error => {
+      console.log(error);
       throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
     });
   }
