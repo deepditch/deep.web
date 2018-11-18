@@ -33,7 +33,7 @@ export const DamageActions = {
   deactivate: id => {
     return { type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE };
   },
-  verify: (id, verified, falsePositive) => {
+  verify: (reports, damagesInImage) => {
     return {
       type: DamageActionTypes.VERIFY_DAMAGE_REPORT,
       id: id,
@@ -102,11 +102,11 @@ export class DamageActionDispatcher {
     dispatch(DamageActions.deactivate());
   };
 
-  verifyDamageReport = dispatch => (id, verified, falsePositive = false) => {
+  verifyDamageReport = dispatch => (reports, damagesInImage) => {
     this.damageService
-      .verifyDamageReport(id, verified, falsePositive)
+      .verifyDamageReport(reports, damagesInImage)
       .then(response => {
-        dispatch(DamageActions.verify(id, verified, falsePositive));
+        dispatch(DamageActions.verify(reports, damagesInImage));
       }).catch(error => {
         dispatch(NotifyActions.error("Failed to verify"))
       });

@@ -92,13 +92,15 @@ export class ExpandedDamageWindow extends Component {
   }
 
   _verify() {
-    this.props.damage.image.reports.forEach(report => {
-      if (this.state.damagesInImage[report.type]) {
-        this.props.verifyDamageReport(report.id, true);
-      } else {
-        this.props.verifyDamageReport(report.id, false, true);
-      }
-    });
+    this.props.verifyDamageReport(this.props.damage.image.reports, this.state.damagesInImage);
+
+    // this.props.damage.image.reports.forEach(report => {
+    //   if (this.state.damagesInImage[report.type]) {
+    //     this.props.verifyDamageReport(report.id, true);
+    //   } else {
+    //     this.props.verifyDamageReport(report.id, false, true);
+    //   }
+    // });
 
     this._closeEdit()
   }

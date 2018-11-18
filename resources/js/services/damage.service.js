@@ -16,10 +16,13 @@ export class DamageService {
       });
   }
 
-  async verifyDamageReport(id, verified, falsePositive=false) {
+  async verifyDamageReport(reports, damagesInImage) {
+    console.log(reports);
+    console.log(damagesInImage);
     return this.axios
       .post(`/road-damage/report/${id}/edit`, {
-        verified: verified ? "verified" : (falsePositive ? "false-positive" : "unverified")
+        reports: reports,
+        damagesInImage: damagesInImage
       })
       .then(response => {
         return response.data;
