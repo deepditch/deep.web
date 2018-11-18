@@ -1351,7 +1351,8 @@ button {
   color: #2c3443;
   line-height: 1.5; }
   .tag.active {
-    color: #ffffff; }
+    color: #ffffff;
+    cursor: auto; }
 
 .tag-D00 {
   border-color: #2c3443; }

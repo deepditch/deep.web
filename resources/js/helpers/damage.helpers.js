@@ -13,9 +13,9 @@ export function mapTypeToDescription(type) {
     case "D40":
       return "Rutting, Bump, Pothole, or Separation";
     case "D43":
-      return "White Line Blur";
-    case "D44":
       return "Crosswalk Blur";
+    case "D44":
+      return "White Line Blur";
     default:
       return type;
   }

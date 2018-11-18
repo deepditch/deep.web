@@ -4,24 +4,69 @@ import {
   RadioGroupOption,
   CheckboxGroupOption
 } from "../Form/radio-group";
-import { mapTypeToDescription, mapStatusToString } from "../../helpers/damage.helpers";
+import {
+  mapTypeToDescription,
+  mapStatusToString
+} from "../../helpers/damage.helpers";
 
 export class ExpandedDamageWindow extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      editOpen: false
+      editOpen: false,
+      damagesInImage: {
+        D00: false,
+        D01: false,
+        D10: false,
+        D11: false,
+        D20: false,
+        D40: false,
+        D43: false,
+        D44: false
+      }
     };
+
+    this._handleTypeCheckboxChange = this._handleTypeCheckboxChange.bind(this);
+    this._verify = this._verify.bind(this);
   }
 
-  _verifyDamageReport(e, reportId) {
-    if (e.target.checked) this.props.verifyDamageReport(reportId);
-    else this.props.unverifyDamageReport(reportId);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.damage) {
+      this.setState({
+        editOpen: false,
+        damagesInImage: {
+          D00: nextProps.damage.image.reports.some(
+            report => report.type == "D00" && !report.false_positive
+          ),
+          D01: nextProps.damage.image.reports.some(
+            report => report.type == "D01" && !report.false_positive
+          ),
+          D10: nextProps.damage.image.reports.some(
+            report => report.type == "D10" && !report.false_positive
+          ),
+          D11: nextProps.damage.image.reports.some(
+            report => report.type == "D11" && !report.false_positive
+          ),
+          D20: nextProps.damage.image.reports.some(
+            report => report.type == "D20" && !report.false_positive
+          ),
+          D40: nextProps.damage.image.reports.some(
+            report => report.type == "D40" && !report.false_positive
+          ),
+          D43: nextProps.damage.image.reports.some(
+            report => report.type == "D43" && !report.false_positive
+          ),
+          D44: nextProps.damage.image.reports.some(
+            report => report.type == "D44" && !report.false_positive
+          )
+        }
+      });
+    }
   }
 
   _close(e) {
-    this._closeEdit()
+    this._closeEdit();
     this.props.close();
   }
 
@@ -34,8 +79,28 @@ export class ExpandedDamageWindow extends Component {
   }
 
   _handleStatusRadioChange(e) {
-    console.log(e.currentTarget.value);
     this.props.changeStatus(this.props.damage.id, e.currentTarget.value);
+  }
+
+  _handleTypeCheckboxChange(e) {
+    this.setState({
+      damagesInImage: {
+        ...this.state.damagesInImage,
+        [e.currentTarget.value]: e.currentTarget.checked
+      }
+    });
+  }
+
+  _verify() {
+    this.props.damage.image.reports.forEach(report => {
+      if (this.state.damagesInImage[report.type]) {
+        this.props.verifyDamageReport(report.id, true);
+      } else {
+        this.props.verifyDamageReport(report.id, false, true);
+      }
+    });
+
+    this._closeEdit()
   }
 
   render() {
@@ -45,7 +110,7 @@ export class ExpandedDamageWindow extends Component {
       <div class="expanded-damage-window">
         <button onClick={this._close.bind(this)} class="close" />
         <div class="image">
-          <img src={this.props.damage.image} />
+          <img src={this.props.damage.image.url} />
         </div>
         <div class="content block-medium">
           <div class="row align-items-center">
@@ -107,45 +172,97 @@ export class ExpandedDamageWindow extends Component {
           {this.state.editOpen ? (
             <>
               <RadioGroup name="StatusLabel">
-                <CheckboxGroupOption value="D00">
+                <CheckboxGroupOption
+                  value="D00"
+                  checked={this.state.damagesInImage.D00}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D00")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D01">
+                <CheckboxGroupOption
+                  value="D01"
+                  checked={this.state.damagesInImage.D01}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D01")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D10">
+                <CheckboxGroupOption
+                  value="D10"
+                  checked={this.state.damagesInImage.D10}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D10")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D11">
+                <CheckboxGroupOption
+                  value="D11"
+                  checked={this.state.damagesInImage.D11}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D11")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D20">
+                <CheckboxGroupOption
+                  value="D20"
+                  checked={this.state.damagesInImage.D20}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D20")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D40">
+                <CheckboxGroupOption
+                  value="D40"
+                  checked={this.state.damagesInImage.D40}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D40")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D43" checked>
+                <CheckboxGroupOption
+                  value="D43"
+                  checked={this.state.damagesInImage.D43}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D43")}
                 </CheckboxGroupOption>
-                <CheckboxGroupOption value="D44" checked>
+                <CheckboxGroupOption
+                  value="D44"
+                  checked={this.state.damagesInImage.D44}
+                  onChange={this._handleTypeCheckboxChange}
+                >
                   {mapTypeToDescription("D44")}
                 </CheckboxGroupOption>
               </RadioGroup>
               <div>
-                <button class="btn btn-small bg-green link verify">
+                <button
+                  class="btn btn-small bg-green link verify"
+                  onClick={this._verify}
+                >
                   Verify
                 </button>
               </div>
             </>
           ) : (
             <div class="row narrow-gutters">
-              <div class="col-auto">
-                <span class="tag tag-D44 active">White Line Blur</span>
-              </div>
-              <div class="col-auto">
-                <span class="tag tag-D43 link">Crosswalk Blur</span>
-              </div>
+              {this.props.damage.image.reports.map(report => {
+                if (report.false_positive) return null;
+                else
+                  return (
+                    <div class="col-auto">
+                      <button
+                        className={
+                          "tag tag-" +
+                          report.type +
+                          (report.type == this.props.damage.type
+                            ? " active"
+                            : " link")
+                        }
+                        onClick={e =>
+                          this.props.activateDamage(report.roaddamage_id)
+                        }
+                      >
+                        {mapTypeToDescription(report.type)}
+                      </button>
+                    </div>
+                  );
+              })}
+
               <div class="col-auto">
                 <span class="pipe" />
               </div>
@@ -158,7 +275,10 @@ export class ExpandedDamageWindow extends Component {
                 </button>
               </div>
               <div class="col-auto">
-                <button class="btn btn-small bg-green link verify">
+                <button
+                  class="btn btn-small bg-green link verify"
+                  onClick={this._verify}
+                >
                   Verify
                 </button>
               </div>

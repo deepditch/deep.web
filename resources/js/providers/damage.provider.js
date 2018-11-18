@@ -24,6 +24,7 @@ const getDamageIds = createSelector(
 
     var filteredArray = damage.damages.filter(el => {
       var isActive = el.id == damage.activeDamageId;
+      var isNotFalsePositive = !el.false_positive;
 
       var containsKeyword = filters.streetname
         ? el.position.streetname
@@ -43,15 +44,43 @@ const getDamageIds = createSelector(
           : !el.verified
         : true;
 
-      return isActive || (containsKeyword && isType && isStatus && isVerified);
+      return (
+        isActive ||
+        (containsKeyword &&
+          isType &&
+          isStatus &&
+          isVerified &&
+          isNotFalsePositive)
+      );
     });
 
     return filteredArray.map(damage => damage.id);
   }
 );
 
-const getActiveDamage = store =>
-  store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
+const getActiveDamage = store => {
+  const theDamage = store.damage.damages.find(
+    damage => damage.id == store.damage.activeDamageId
+  );
+  if (!theDamage) return theDamage;
+  return {
+    ...theDamage,
+    image: {
+      url: theDamage.image.url,
+      reports: theDamage.image.reports.map(report => {
+        const subDamage = store.damage.damages.find(
+          damage => damage.id == report.roaddamage_id
+        );
+        return {
+          ...report,
+          type: subDamage.type,
+          false_positive: subDamage.false_positive,
+          verified: subDamage.verified
+        };
+      })
+    }
+  };
+};
 
 const getDamage = (store, ownProps) =>
   store.damage.damages.find(damage => damage.id == ownProps.damageId);
@@ -110,8 +139,6 @@ export const DamageProvider = c => {
       },
       dispatch => {
         return {
-          verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
           expand: c.DamageActions.expand(dispatch)
         };
       }
@@ -130,9 +157,9 @@ export const DamageProvider = c => {
       (dispatch, ownProps) => {
         return {
           verifyDamageReport: c.DamageActions.verifyDamageReport(dispatch),
-          unverifyDamageReport: c.DamageActions.unverifyDamageReport(dispatch),
           changeStatus: c.DamageActions.changeDamageStatus(dispatch),
-          close: c.DamageActions.close(dispatch)
+          close: c.DamageActions.close(dispatch),
+          activateDamage: c.DamageActions.activateDamage(dispatch)
         };
       }
     )(ExpandedDamageWindow)

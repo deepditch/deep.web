@@ -37,7 +37,7 @@ export class ActiveDamageWindow extends Component {
             <button class="expand" onClick={this.props.expand}>
               <span />
             </button>
-            <img width="300px" src={this.props.damage.image} />
+            <img width="300px" src={this.props.damage.image.url} />
             <div class="content">
               <h6 class="mb-1">
                 {mapTypeToDescription(this.props.damage.type)}

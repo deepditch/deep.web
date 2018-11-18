@@ -38,7 +38,7 @@ export default function DamageReducer(
         damages: state.damages.map(damage => {
           // Update the damage where the id matches the highest confidence report id
           if (action.id == damage.reportId) {
-            return { ...damage, verified: true, false_positive: false };
+            return { ...damage, verified: action.verified, false_positive: action.falsePositive };
           }
           return damage;
         })
