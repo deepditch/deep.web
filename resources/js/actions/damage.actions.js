@@ -1,5 +1,4 @@
 import { NotifyActions } from "./notify.actions";
-import { isNullOrUndefined } from "util";
 
 export const DamageActionTypes = {
   LOAD_DAMAGE_ATTEMPT: "load_damage_attempt",
@@ -9,7 +8,10 @@ export const DamageActionTypes = {
   DEACTIVATE_DAMAGE_INSTANCE: "deactivate_damage_instance",
   VERIFY_DAMAGE_REPORT: "verify_damage_report",
   UNVERIFY_DAMAGE_REPORT: "unverify_damage_report",
-  FILTER_DAMAGE: "filter_damage"
+  FILTER_DAMAGE: "filter_damage",
+  EXPAND_ACTIVE_DAMAGE: "expand_active_damage",
+  CLOSE_ACTIVE_DAMAGE: "close_active_damage",
+  CHANGE_DAMAGE_STATUS: "change_damage_status"
 };
 
 export const DamageActions = {
@@ -31,11 +33,13 @@ export const DamageActions = {
   deactivate: id => {
     return { type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE };
   },
-  verify: id => {
-    return { type: DamageActionTypes.VERIFY_DAMAGE_REPORT, id: id };
-  },
-  unverify: id => {
-    return { type: DamageActionTypes.UNVERIFY_DAMAGE_REPORT, id: id };
+  verify: (id, verified, falsePositive) => {
+    return {
+      type: DamageActionTypes.VERIFY_DAMAGE_REPORT,
+      id: id,
+      verified: verified,
+      falsePositive: falsePositive
+    };
   },
   filter: (streetname, type, status, verified) => {
     return {
@@ -46,6 +50,23 @@ export const DamageActions = {
         status: status,
         verified: verified
       }
+    };
+  },
+  expand: () => {
+    return {
+      type: DamageActionTypes.EXPAND_ACTIVE_DAMAGE
+    };
+  },
+  close: () => {
+    return {
+      type: DamageActionTypes.CLOSE_ACTIVE_DAMAGE
+    };
+  },
+  changeStatus: (damageId, status) => {
+    return {
+      type: DamageActionTypes.CHANGE_DAMAGE_STATUS,
+      id: damageId,
+      status: status
     };
   }
 };
@@ -81,15 +102,32 @@ export class DamageActionDispatcher {
     dispatch(DamageActions.deactivate());
   };
 
-  verifyDamageReport = dispatch => id => {
-    this.damageService.verifyDamageReport(id).then(response => {
-      dispatch(DamageActions.verify(id));
-    });
+  verifyDamageReport = dispatch => (id, verified, falsePositive = false) => {
+    this.damageService
+      .verifyDamageReport(id, verified, falsePositive)
+      .then(response => {
+        dispatch(DamageActions.verify(id, verified, falsePositive));
+      }).catch(error => {
+        dispatch(NotifyActions.error("Failed to verify"))
+      });
   };
 
-  unverifyDamageReport = dispatch => id => {
-    this.damageService.unverifyDamageReport(id).then(response => {
-      dispatch(DamageActions.unverify(id));
-    });
+  changeDamageStatus = dispatch => (damageId, status) => {
+    this.damageService
+      .changeDamageStatus(damageId, status)
+      .then(response => {
+        dispatch(DamageActions.changeStatus(damageId, status));
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error("Failed to change the status label"));
+      });
+  };
+
+  expand = dispatch => () => {
+    dispatch(DamageActions.expand());
+  };
+
+  close = dispatch => () => {
+    dispatch(DamageActions.close());
   };
 }

@@ -1,5 +1,6 @@
 @import "../color/lib";
 @import "../type/lib";
+@import "../util/lib";
 
 .damage-info-window {
   font-size: 0.9rem;
@@ -9,6 +10,28 @@
   border-radius: 15px;
   text-align: left;
   width: pxtoem(320);
+
+  .expand {
+    color: #757575;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: $white;
+    border: 0;
+    outline: 0;
+    z-index: 50;
+    padding: 0;
+
+    span {
+      display: block;
+      color: $white;
+      border: 2px solid #757575;
+      margin: 5px;
+      @include psuedo-plus(14px, 4px);
+    }
+  }
 
   .content {
     padding: pxtoem(15);
@@ -61,4 +84,140 @@
   top: 0;
   left: 0;
   transform: translate(-50%, -100%);
+}
+
+.expanded-damage-window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background: $white;
+  color: $gray;
+  border-left: 2px solid rgba($gray, 0.5);
+
+  .image {
+    width: calc(100% + 2px);
+    margin-left: -2px;
+    padding-bottom: 45%;
+    max-height: 75vh;
+    position: relative;
+    background: $dark-gray;
+
+    img {
+      @include absolute-center();
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0 auto;
+    }
+  }
+
+  .pill-radio {
+    font-size: 16px;
+  }
+
+  .damage-type-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+  }
+
+  .close {
+    @include psuedo-x(13px, 2px);
+    color: #757575;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: $white;
+    border: 0;
+    outline: 0;
+    z-index: 50;
+  }
+}
+
+.tag {
+  @include font-size(-1);
+  display: inline-block;
+  padding: pxtoem(4, 16) pxtoem(10, 16) pxtoem(5, 16);
+  color: rgba(44, 52, 67, 0.4);
+  border-radius: 5px;
+  font-weight: 500;
+  border: 3px solid #bababa;
+  color: $gray;
+  line-height: 1.5;
+
+  &.active {
+    color: $white;
+    cursor: auto;
+  }
+}
+
+.tag-D00 {
+  border-color: $color-D00;
+
+  &.active {
+    background: $color-D00-alt;
+  }
+}
+
+.tag-D01 {
+  border-color: $color-D01;
+  &.active {
+    background: $color-D01-alt;
+  }
+}
+
+.tag-D10 {
+  border-color: $color-D10;
+  &.active {
+    background: $color-D10-alt;
+  }
+}
+
+.tag-D11 {
+  border-color: $color-D11;
+  &.active {
+    background: $color-D11-alt;
+  }
+}
+
+.tag-D20 {
+  border-color: $color-D20;
+  &.active {
+    background: $color-D20-alt;
+  }
+}
+
+.tag-D40 {
+  border-color: $color-D40;
+  &.active {
+    background: $color-D40-alt;
+  }
+}
+
+.tag-D43 {
+  border-color: $color-D43;
+  &.active {
+    background: $color-D43-alt;
+  }
+}
+
+.tag-D44 {
+  border-color: $color-D44;
+  &.active {
+    background: $color-D44-alt;
+  }
+}
+
+.add {
+  @include psuedo-plus(10px, 2px);
+  border-radius: 100%;
+  width: 28px;
+  height: 28px;
+  border: 3px solid $gray;
 }

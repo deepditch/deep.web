@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import InputGroup from "../Form/input-group"
+import InputGroup from "../Form/input-group";
+import { mapStatusToString } from "../../helpers/damage.helpers";
 
 export class DamageFilters extends Component {
   filterChange(e) {
@@ -30,10 +31,7 @@ export class DamageFilters extends Component {
               <td>
                 <label class="input-group">
                   Type
-                  <select
-                    name="Type"
-                    onChange={this.filterChange.bind(this)}
-                  >
+                  <select name="Type" onChange={this.filterChange.bind(this)}>
                     <option />
                     <option value="D00">D00</option>
                     <option value="D01">D01</option>
@@ -49,15 +47,18 @@ export class DamageFilters extends Component {
               <td>
                 <label class="input-group">
                   Status
-                  <select
-                    name="Status"
-                    onChange={this.filterChange.bind(this)}
-                  >
+                  <select name="Status" onChange={this.filterChange.bind(this)}>
                     <option />
-                    <option value="pending-repair">pending-repair</option>
-                    <option value="repairing">repairing</option>
-                    <option value="done">done</option>
-                    <option value="wont-do">wont-do</option>
+                    <option value="pending-repair">
+                      {mapStatusToString("pending-repair")}
+                    </option>
+                    <option value="repairing">
+                      {mapStatusToString("repairing")}
+                    </option>
+                    <option value="done">{mapStatusToString("done")}</option>
+                    <option value="wont-do">
+                      {mapStatusToString("wont-do")}
+                    </option>
                   </select>
                 </label>
               </td>

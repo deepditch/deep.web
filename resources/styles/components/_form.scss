@@ -12,6 +12,20 @@ textarea {
   border: 1px solid $light-gray;
   padding: pxtoem(3) pxtoem(10);
   background: transparent;
+
+  &:disabled {
+    cursor: auto;
+  }
+}
+
+label,
+.label {
+  display: inline-block;
+  margin-bottom: 0.5em;
+
+  &.disabled {
+    cursor: "auto";
+  }
 }
 
 button {
@@ -47,7 +61,7 @@ button {
     transition: border 0.15s 0.15s ease-in;
     height: 1em;
     width: 1em;
-    border: .125em solid;
+    border: 0.125em solid;
     text-align: center;
     vertical-align: middle;
 
@@ -64,7 +78,7 @@ button {
       left: 45%;
       transition: opacity 0.2s ease-in, transform 0.2s ease-in;
       color: #00ff00;
-      transform: rotate(45deg) scale(.8);
+      transform: rotate(45deg) scale(0.8);
     }
   }
 }

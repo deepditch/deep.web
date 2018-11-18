@@ -1,31 +1,62 @@
 $black: #000;
+$dark-gray: #121212;
 $gray: #2c3443;
 $medium-gray: #8aa59b;
 $light-gray: #bababa;
 $off-white: #eeeeee;
 $white: #ffffff;
 $accent: #89B6A5;
+$green:  #5fb104;
+
+
+$color-D00: #2c3443;
+$color-D00-alt: #374154;
+
+$color-D10: #d44f14;
+$color-D10-alt: #df6319;
+
+$color-D01: #4c9703;
+$color-D01-alt: #5fb104;
+
+$color-D11: #7014b1;
+$color-D11-alt: #8c19c5;
+
+$color-D20: #3844e0;
+$color-D20-alt: #4655e8;
+
+$color-D40: #ed2454;
+$color-D40-alt: #f34d80;
+
+$color-D43: #dd3cd4;
+$color-D43-alt: #e64bdf;
+
+$color-D44: #1ab6ad;
+$color-D44-alt: #3ecdc7;
 
 $all-colors: () !default;
 $all-colors: map-merge((
   "black": $black,
   "gray": $gray,
+  "dark-gray": $dark-gray,
   "medium-gray": $medium-gray,
   "light-gray": $light-gray,
   "off-white": $off-white,
   "white": $white,
-  "accent": $accent
+  "accent": $accent,
+  "green": $green
 ), $all-colors);
 
 $primary-colors: () !default;
 $primary-colors: map-merge((
   "black": $black,
   "gray": $gray,
+  "dark-gray": $dark-gray,
   "medium-gray": $medium-gray,
   "light-gray": $light-gray,
   "off-white": $off-white,
   "white": $white,
-  "accent": $accent
+  "accent": $accent,
+  "green": $green
 ), $primary-colors);
 
 $color: "Placeholder Variable: For use in 'colors' mixin." !global;
@@ -72,7 +103,7 @@ $color: "Placeholder Variable: For use in 'colors' mixin." !global;
  * Determine whether to use dark or light text on top of given color.
  * Returns black for dark text and white for light text.
  */
-@function choose-contrast-color($color, $light: #fff, $dark: #000) {
+@function choose-contrast-color($color, $light: #fff, $dark: $gray) {
   $lightContrast: contrast($color, $light);
   $darkContrast: contrast($color, $dark);
 

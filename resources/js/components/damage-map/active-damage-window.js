@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { mapTypeToDescription } from "../../helpers/damage-types";
+import { mapTypeToDescription } from "../../helpers/damage.helpers";
 import Checkbox from "../Form/checkbox";
 
 export class ActiveDamageWindow extends Component {
@@ -28,15 +28,25 @@ export class ActiveDamageWindow extends Component {
         map={this.props.map}
       >
         {this.props.damage && (
-          <div class="damage-info-window">
-            <img width="300px" src={this.props.damage.image} />
+          <div
+            class="damage-info-window"
+            ref={ref =>
+              ref && this.props.google.maps.OverlayView.preventMapHitsFrom(ref)
+            }
+          >
+            <button class="expand" onClick={this.props.expand}>
+              <span />
+            </button>
+            <img width="300px" src={this.props.damage.image.url} />
             <div class="content">
               <h6 class="mb-1">
                 {mapTypeToDescription(this.props.damage.type)}
               </h6>
               <p>
-                {this.props.damage.position.streetname} (
-                {this.props.damage.position.direction})
+                {this.props.damage.position.streetname
+                  ? this.props.damage.position.streetname
+                  : "Street Unknown"}
+                ({this.props.damage.position.direction})
               </p>
               <footer class="row align-items-center">
                 <div class="col-9">
@@ -73,7 +83,7 @@ export class MapPopup extends Component {
       this.renderPopup();
     }
 
-    if(!this.popup) return
+    if (!this.popup) return;
 
     if (this.props.position !== prevProps.position) {
       this.popup.setPosition(
@@ -114,11 +124,13 @@ export class MapPopup extends Component {
       this.anchor.classList.add("popup-tip-anchor");
       this.anchor.appendChild(pixelOffset);
 
+      this.anchor.style.cursor = "auto";
+
       this.visible = false;
       this.inbounds = false;
 
       // Optionally stop clicks, etc., from bubbling up to the map.
-      this.stopEventPropagation();
+      // this.stopEventPropagation();
     };
 
     // NOTE: google.maps.OverlayView is only defined once the Maps API has
@@ -192,7 +204,6 @@ export class MapPopup extends Component {
     /** Stops clicks/drags from bubbling up to the map. */
     Popup.prototype.stopEventPropagation = function() {
       var anchor = this.anchor;
-      anchor.style.cursor = "auto";
 
       [
         "click",
@@ -213,7 +224,7 @@ export class MapPopup extends Component {
   }
 
   renderPopup() {
-    if(!this.props.map) return
+    if (!this.props.map) return;
 
     var Popup = this.definePopupClass(this.props.google);
 
@@ -231,7 +242,6 @@ export class MapPopup extends Component {
       this.props.map,
       "bounds_changed",
       function() {
-        console.log("load")
         this.mapHasLoaded = true;
       }.bind(this)
     );

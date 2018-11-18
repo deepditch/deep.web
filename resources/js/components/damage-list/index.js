@@ -12,20 +12,50 @@ export default (DamageListItem, DamageFilters) =>
         filterStreetname: "",
         filterType: "",
         filterStatus: "",
-        filterVerified: ""
+        filterVerified: "",
+        scrollTop: 0
       };
+
+      this.scrollSection = React.createRef();
+      this.scrollToListItem = this.scrollToListItem.bind(this);
+    }
+
+    visibleY(el) {
+      var rect = el.getBoundingClientRect(),
+        top = rect.top,
+        height = rect.height,
+        el = el.parentNode;
+      // Check if bottom of the element is off the page
+      if (rect.bottom < 0) return false;
+      // Check its within the document viewport
+      if (top > document.documentElement.clientHeight) return false;
+      do {
+        rect = el.getBoundingClientRect();
+        if (top <= rect.bottom === false) return false;
+        // Check if the element is out of view due to a container scrolling
+        if (top + height <= rect.top) return false;
+        el = el.parentNode;
+      } while (el != document.body);
+      return true;
+    }
+
+    scrollToListItem(el) {
+      if (!this.visibleY(el)) {
+        this.setState({ scrollTop: el.offsetTop });
+      }
     }
 
     render() {
       return (
         <div class="h-100 d-flex flex-column">
           <div class="block-medium-top block-medium-left block-medium-right">
-            <h1 class="h2">Damages</h1>
-            <div class="divide-30" />
             <DamageFilters />
           </div>
           <div class="flex-1 overflow-hidden">
-            <ScrollSection>
+            <ScrollSection
+              ref={this.scrollSection}
+              scrollTop={this.state.scrollTop}
+            >
               <div class="block-medium-left block-medium-right block-medium-bottom">
                 <div class="divide-30" />
                 <table class="damage-list">
@@ -33,14 +63,18 @@ export default (DamageListItem, DamageFilters) =>
                     <tr>
                       <th class="streetname">Street</th>
                       <th class="type">Type</th>
-                      <th class="label">Status</th>
+                      <th class="status">Status</th>
                       <th class="verified">Verified</th>
                     </tr>
                   </thead>
                   <tbody>
                     {this.props.damages &&
                       this.props.damages.map(damageId => (
-                        <DamageListItem key={damageId} damageId={damageId} />
+                        <DamageListItem
+                          key={damageId}
+                          damageId={damageId}
+                          scrollToMyself={this.scrollToListItem}
+                        />
                       ))}
                   </tbody>
                 </table>

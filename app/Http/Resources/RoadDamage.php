@@ -39,7 +39,10 @@ class RoadDamage extends JsonResource
         'verified' => $this->hasVerifiedReport(),
         'label' => $this->status,
         'false_positive' => $this->hasFalsePositiveReport(),
-        'image' => $highestConfidenceReport->getImageUrl(),
+        'image' => [
+            'url' => $highestConfidenceReport->getImageUrl(),
+            'reports' => $highestConfidenceReport->getAssociatedIds()
+        ],
         'reportId' => $highestConfidenceReport->id,
         'reports' => $list,
         'created_at' => $this->created_at,

@@ -16,10 +16,10 @@ export class DamageService {
       });
   }
 
-  async verifyDamageReport(id) {
+  async verifyDamageReport(id, verified, falsePositive=false) {
     return this.axios
       .post(`/road-damage/report/${id}/edit`, {
-        verified: "verified"
+        verified: verified ? "verified" : (falsePositive ? "false-positive" : "unverified")
       })
       .then(response => {
         return response.data;
@@ -29,15 +29,16 @@ export class DamageService {
       });
   }
 
-  async unverifyDamageReport(id) {
+  async changeDamageStatus(id, status) {
     return this.axios
-      .post(`/road-damage/report/${id}/edit`, {
-        verified: "unverified"
+      .post(`/road-damage/${id}/edit`, {
+        status: status
       })
       .then(response => {
         return response.data;
       })
       .catch(error => {
+        console.log(error)
         throw parseErrors(error.response);
       });
   }
