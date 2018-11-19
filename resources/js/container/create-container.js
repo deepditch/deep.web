@@ -5,7 +5,8 @@ import {
   LoginProvider,
   RegisterProvider,
   NotifyProvider,
-  DamageProvider
+  DamageProvider,
+  TokensProvider
 } from "../providers";
 import { UsersProvider } from "../providers/users.provider";
 import AuthorizedRoute from "../components/authorized-route";
@@ -64,6 +65,7 @@ export default function createContainer() {
   NotifyProvider(c);
   DamageProvider(c);
   UsersProvider(c);
+  TokensProvider(c);
 
   return c;
 }

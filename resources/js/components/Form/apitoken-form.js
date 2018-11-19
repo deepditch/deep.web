@@ -33,16 +33,16 @@ export default class ApiTokenForm extends Component {
       <form onSubmit={this.handleSubmit}>
         <div class="input-group">
           <input
-            type="email"
+            type="name"
             class="form-control"
-            name="Email"
-            placeholder="Users Email"
+            name="name"
+            placeholder="API Token Name"
             onChange={this.handleInputChange} />
           <div class="input-group-append">
             <input
               class="btn btn-outline-secondary"
               type="submit"
-              value="Invite"
+              value="Create"
               required={true}
             />
           </div>

@@ -15,6 +15,8 @@ class CreateApiTokensTable extends Migration
     {
         Schema::create('api_tokens', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

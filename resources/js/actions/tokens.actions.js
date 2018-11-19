@@ -15,31 +15,31 @@ export const ApiTokensActionTypes = {
 
 export const ApiTokensActions = {
   getTokensAttempt: () => {
-    return { type: InviteUserActionTypes.LOAD_TOKENS_ATTEMPT };
+    return { type: ApiTokensActionTypes.LOAD_TOKENS_ATTEMPT };
   },
-  getTokensSuccess: invites => {
-    return { type: InviteUserActionTypes.LOAD_TOKENS_SUCCESS, invites: invites };
+  getTokensSuccess: tokens => {
+    return { type: ApiTokensActionTypes.LOAD_TOKENS_SUCCESS, tokens: tokens };
   },
   getTokensFailure: () => {
-    return { type: InviteUserActionTypes.LOAD_TOKENS_FAILURE };
+    return { type: ApiTokensActionTypes.LOAD_TOKENS_FAILURE };
   },
   deleteTokenAttempt: () => {
-    return { type: InviteUserActionTypes.DELETE_TOKEN_ATTEMPT };
+    return { type: ApiTokensActionTypes.DELETE_TOKEN_ATTEMPT };
   },
-  deleteTokenSuccess: invites => {
-    return { type: InviteUserActionTypes.DELETE_TOKEN_SUCCESS, invites: invites };
+  deleteTokenSuccess: tokens => {
+    return { type: ApiTokensActionTypes.DELETE_TOKEN_SUCCESS, tokens: tokens };
   },
   deleteTokenFailure: () => {
-    return { type: InviteUserActionTypes.DELETE_TOKEN_FAILURE };
+    return { type: ApiTokensActionTypes.DELETE_TOKEN_FAILURE };
   },
   addTokenAttempt: () => {
-    return { type: InviteUserActionTypes.ADD_TOKEN_ATTEMPT };
+    return { type: ApiTokensActionTypes.ADD_TOKEN_ATTEMPT };
   },
-  addTokenSuccess: invites => {
-    return { type: InviteUserActionTypes.ADD_TOKEN_SUCCESS, invites: invites };
+  addTokenSuccess: token => {
+    return { type: ApiTokensActionTypes.ADD_TOKEN_SUCCESS, token: token };
   },
   addTokenFailure: () => {
-    return { type: InviteUserActionTypes.ADD_TOKEN_FAILURE };
+    return { type: ApiTokensActionTypes.ADD_TOKEN_FAILURE };
   },
 }
 
@@ -74,10 +74,10 @@ export const CreateAddTokenActionDispatcher = (TokensService, dispatch) => {
   return (name) => {
     dispatch(ApiTokensActions.addTokenAttempt());
 
-    UsersService.addToken(name)
+    TokensService.addToken(name)
       .then(token => {
-        dispatch(NotifyActions.success("Please copy this token! This will be the only time you will be able to view it. If its lost, you will need to generate a new token." + token.jwt));
-        dispatch(ApiTokensActions.addTokenSuccess(invites));
+        dispatch(NotifyActions.success("Token has been added!"));
+        dispatch(ApiTokensActions.addTokenSuccess(token));
       })
       .catch(error => {
         dispatch(NotifyActions.error(error));
@@ -94,7 +94,7 @@ export const CreateAddTokenActionDispatcher = (TokensService, dispatch) => {
  */
 export const CreateDeleteTokenActionDispatcher = (TokensService, dispatch) => {
   return (delete_token_id) => {
-    dispatch(ApiTokensActions.revokeInviteAttempt());
+    dispatch(ApiTokensActions.deleteTokenAttempt());
 
     TokensService.deleteToken(delete_token_id)
       .then(tokens => {

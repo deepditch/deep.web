@@ -7,7 +7,7 @@ import {
   CreateTokensActionDispatcher,
   CreateAddTokenActionDispatcher,
   CreateDeleteTokenActionDispatcher
-} from "../actions/users.actions";
+} from "../actions/tokens.actions";
 
 import { TokensService } from "../services/tokens.service";
 
@@ -21,7 +21,9 @@ export const TokensProvider = c => {
   c.register("ApiTokenForm", c =>
     connect(
       store => {
-        return {};
+        return {
+          token: store.token
+        };
        },
       dispatch => {
         return {
@@ -35,7 +37,7 @@ export const TokensProvider = c => {
     connect(
       store => {
         return {
-          tokens: store.tokens
+          tokens: store.tokens,
         };
       },
       dispatch => {

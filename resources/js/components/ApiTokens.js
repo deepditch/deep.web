@@ -26,6 +26,7 @@ export default ApiTokenForm =>
     }
 
     render() {
+      console.log(this.props);
       return (
         <div class="container container-md">
           <div class="divide-30" />
@@ -34,8 +35,15 @@ export default ApiTokenForm =>
               <h1 class="h3">API Tokens</h1>
             </div>
             <div class="col-6">
-              <UserInviteForm />
+              <ApiTokenForm />
             </div>
+          </div>
+          <div class="row">
+          {
+            (this.props.tokens.token) &&
+              <div>Please copy this token! This will be the only time you will be able to view it. If its lost, you will need to generate a new token
+              <textarea readonly cols="100">{this.props.tokens.token.jwt}</textarea></div>
+          }
           </div>
           <ReactTable
             columns={[
@@ -71,10 +79,9 @@ export default ApiTokenForm =>
               }
             ]}
             defaultPageSize="5"
-            data={this.props.tokens.tokens}
+            data={this.props.tokens.tokens.data}
             className="-striped -highlight"
           />
-
         </div>
       );
     }

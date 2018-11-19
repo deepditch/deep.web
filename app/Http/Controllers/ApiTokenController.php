@@ -28,13 +28,14 @@ class ApiTokenController extends Controller
             'name' => 'required',
         ]);
 
-        $token = auth()->login($user)
-            ->setTTL(3600 * 24 * 30 * 48);
-
         $new = ApiToken::create([
             'name' => $request->input('name'),
             'user_id' => auth('api')->user()->id
         ]);
+
+        $token = auth()->claims(['token_id' => $new->id])
+            ->setTTL(3600 * 24 * 30 * 48)
+            ->login(auth('api')->user());
 
         return array_merge(
             ['jwt' => $token],
@@ -55,7 +56,7 @@ class ApiTokenController extends Controller
         $token->delete();
 
         return ApiTokenResource::collection(
-            ApiToken::where('user_id', auth('api')->user()->user_id)->get()
+            ApiToken::where('user_id', auth('api')->user()->id)->get()
         );
     }
 
@@ -68,7 +69,7 @@ class ApiTokenController extends Controller
     public function getAllJson(Request $request)
     {
         return ApiTokenResource::collection(
-            ApiToken::where('user_id', auth('api')->user()->user_id)->get()
+            ApiToken::where('user_id', auth('api')->user()->id)->get()
         );
     }
 }

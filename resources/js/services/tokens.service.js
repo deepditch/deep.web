@@ -5,22 +5,12 @@ export class TokensService {
     this.axios = axios;
   }
 
-  async getUsers() {
+   getTokens() {
     return this.axios
-      .get("/user")
+      .get("/api-token")
       .then(response => {
-        return Promise.resolve(response.data.data);
-      })
-      .catch(error => {
-        throw parseErrors(error.response);
-      });
-  }
-
-  async getInvites() {
-    return this.axios
-      .get("/user/invite")
-      .then(response => {
-        return Promise.resolve(response.data.data);
+        console.log(response.data);
+        return response.data;
       })
       .catch(error => {
         throw parseErrors(error.response);
@@ -28,16 +18,16 @@ export class TokensService {
   }
 
   /**
-   * Invite a user
-   * @param {string} email The users email we are inviting
+   * add a token
+   * @param {name} name identifier for token
    */
-  inviteUser(email) {
+  addToken(name) {
     return this.axios
-      .post("/user/invite/new", {
-        email: email,
+      .post("/api-token/new", {
+         name: name,
       })
       .then(response => {
-        return response.data.data;
+        return response.data;
       })
       .catch(error => {
         throw parseErrors(error.response);
@@ -45,14 +35,12 @@ export class TokensService {
   }
 
   /**
-   * Revoke an invite
-   * @param {integer} id The invite id we are revoking
+   * delete token
+   * @param {integer} delete_token_id
    */
-  revokeInvite(invite_id) {
+  deleteToken(delete_token_id) {
     return this.axios
-      .post("/user/invite/revoke", {
-        invite_id: invite_id,
-      })
+      .get("/api-token/" + delete_token_id + "/delete")
       .then(response => {
         return response.data.data;
       })
