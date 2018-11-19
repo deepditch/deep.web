@@ -33,26 +33,18 @@ export default function DamageReducer(
     case DamageActionTypes.CLOSE_ACTIVE_DAMAGE:
       return { ...state, expanded: false };
     case DamageActionTypes.VERIFY_DAMAGE_REPORT:
+      var new_damages = action.damages.filter(dam => !state.damages.find(x => x.id == dam.id))
       return {
         ...state,
         damages: state.damages.map(damage => {
-          // Update the damage where the id matches the highest confidence report id
-          if (action.id == damage.reportId) {
-            return { ...damage, verified: action.verified, false_positive: action.falsePositive };
+          var updated_damage = action.damages.find(
+            new_damage => new_damage.id == damage.id
+          );
+          if (updated_damage) {
+            return updated_damage;
           }
           return damage;
-        })
-      };
-    case DamageActionTypes.UNVERIFY_DAMAGE_REPORT:
-      return {
-        ...state,
-        damages: state.damages.map(damage => {
-          // Update the damage where the id matches the highest confidence report id
-          if (action.id == damage.reportId) {
-            return { ...damage, verified: false };
-          }
-          return damage;
-        })
+        }).concat(new_damages)
       };
     case DamageActionTypes.CHANGE_DAMAGE_STATUS:
       return {

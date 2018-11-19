@@ -92,14 +92,7 @@ export class ExpandedDamageWindow extends Component {
   }
 
   _verify() {
-    this.props.damage.image.reports.forEach(report => {
-      if (this.state.damagesInImage[report.type]) {
-        this.props.verifyDamageReport(report.id, true);
-      } else {
-        this.props.verifyDamageReport(report.id, false, true);
-      }
-    });
-
+    this.props.verifyDamageReport(this.props.damage.image.reports, this.state.damagesInImage);
     this._closeEdit()
   }
 
@@ -275,12 +268,16 @@ export class ExpandedDamageWindow extends Component {
                 </button>
               </div>
               <div class="col-auto">
+              {(
+                this.props.damage.image.reports.filter(report => (report.verified == true || report.false_positive == true)).length !=
+                this.props.damage.image.reports.length
+                )  &&
                 <button
-                  class="btn btn-small bg-green link verify"
-                  onClick={this._verify}
-                >
+                class="btn btn-small bg-green link verify"
+                onClick={this._verify}>
                   Verify
                 </button>
+              }
               </div>
             </div>
           )}

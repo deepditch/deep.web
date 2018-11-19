@@ -16,15 +16,17 @@ export class DamageService {
       });
   }
 
-  async verifyDamageReport(id, verified, falsePositive=false) {
+  async verifyDamageReport(reports, damagesInImage) {
     return this.axios
-      .post(`/road-damage/report/${id}/edit`, {
-        verified: verified ? "verified" : (falsePositive ? "false-positive" : "unverified")
+      .post(`/road-damage/report/${reports[0].id}/edit`, {
+        reports: reports,
+        damagesInImage: damagesInImage
       })
       .then(response => {
-        return response.data;
+        return Promise.resolve(response.data);
       })
       .catch(error => {
+        console.log(error.response);
         throw parseErrors(error.response);
       });
   }
