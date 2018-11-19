@@ -36,6 +36,11 @@ export default class Header extends Component {
                 Users
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/api-tokens">
+                API Tokens
+              </a>
+            </li>
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"

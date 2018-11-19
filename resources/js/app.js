@@ -15,6 +15,7 @@ const store = createStore(rootReducer, applyMiddleware(AuthMiddleware, RedirectM
 
 class App extends Component {
   render() {
+    console.log(c.ApiTokens);
     return (
       <main>
         <div class="app-container h-100">
@@ -31,6 +32,7 @@ class App extends Component {
                   <Switch>
                     <c.AuthorizedRoute path="/damage" component={c.Map} />
                     <c.AuthorizedRoute path="/users" component={c.Users} />
+                    <c.AuthorizedRoute path="/api-tokens" component={c.ApiTokens} />
                     <c.AuthorizedRoute path="/" component={c.Map} />
                   </Switch>
                 </>
