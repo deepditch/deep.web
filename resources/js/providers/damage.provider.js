@@ -64,7 +64,6 @@ const getActiveDamage = store => {
   );
   if (!theDamage) return theDamage;
 
-  console.log(theDamage);
   return {
     ...theDamage,
     image: {

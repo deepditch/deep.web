@@ -101,7 +101,6 @@ export class DamageActionDispatcher {
   };
 
   verifyDamageReport = dispatch => (reports, damagesInImage) => {
-    console.log(reports, damagesInImage)
     this.damageService
       .verifyDamageReport(reports, damagesInImage)
       .then(response => {
