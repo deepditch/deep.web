@@ -38,6 +38,13 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('machine-learning/upload-model', 'MachineLearningController@insert')
         ->middleware('role:machine');
     Route::get('machine-learning/get-latest', 'MachineLearningController@getLatestJson');
+    Route::get('api-token', 'ApiTokenController@getAllJson')
+        ->middleware('role:admin');
+    Route::post('api-token/new', 'ApiTokenController@insert')
+        ->middleware('role:admin');
+    Route::get('api-token/{id}/delete', 'ApiTokenController@delete')
+        ->middleware('role:admin');
+
     Route::any('/{path?}', function () {
         return request()->json(['Non-existent endpoint'], 404);
     })->where('path', '.*');
