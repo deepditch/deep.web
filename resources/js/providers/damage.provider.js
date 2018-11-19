@@ -63,6 +63,8 @@ const getActiveDamage = store => {
     damage => damage.id == store.damage.activeDamageId
   );
   if (!theDamage) return theDamage;
+
+  console.log(theDamage);
   return {
     ...theDamage,
     image: {
@@ -71,6 +73,7 @@ const getActiveDamage = store => {
         const subDamage = store.damage.damages.find(
           damage => damage.id == report.roaddamage_id
         );
+        if (!subDamage) { return report }
         return {
           ...report,
           type: subDamage.type,

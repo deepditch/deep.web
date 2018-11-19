@@ -17,19 +17,16 @@ export class DamageService {
   }
 
   async verifyDamageReport(reports, damagesInImage) {
-    console.log(reports);
-    console.log(damagesInImage);
     return this.axios
       .post(`/road-damage/report/${reports[0].id}/edit`, {
         reports: reports,
         damagesInImage: damagesInImage
       })
       .then(response => {
-        console.log('success');
         return Promise.resolve(response.data);
       })
       .catch(error => {
-        console.log('error');
+        console.log(error.response);
         throw parseErrors(error.response);
       });
   }

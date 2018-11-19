@@ -101,11 +101,14 @@ export class DamageActionDispatcher {
   };
 
   verifyDamageReport = dispatch => (reports, damagesInImage) => {
+    console.log(reports, damagesInImage)
     this.damageService
       .verifyDamageReport(reports, damagesInImage)
       .then(response => {
+        console.log(response);
         dispatch(DamageActions.verify(response.data));
       }).catch(error => {
+        console.log(error);
         dispatch(NotifyActions.error("Failed to verify"))
       });
   };

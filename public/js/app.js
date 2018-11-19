@@ -57465,12 +57465,10 @@ const DamageActions = {
       type: DamageActionTypes.DEACTIVATE_DAMAGE_INSTANCE
     };
   },
-  verify: (id, verified, falsePositive) => {
+  verify: damages => {
     return {
       type: DamageActionTypes.VERIFY_DAMAGE_REPORT,
-      id: id,
-      verified: verified,
-      falsePositive: falsePositive
+      damages: damages
     };
   },
   filter: (streetname, type, status, verified) => {
@@ -57526,10 +57524,13 @@ class DamageActionDispatcher {
       dispatch(DamageActions.deactivate());
     };
 
-    this.verifyDamageReport = dispatch => (id, verified, falsePositive = false) => {
-      this.damageService.verifyDamageReport(id, verified, falsePositive).then(response => {
-        dispatch(DamageActions.verify(id, verified, falsePositive));
+    this.verifyDamageReport = dispatch => (reports, damagesInImage) => {
+      console.log(reports, damagesInImage);
+      this.damageService.verifyDamageReport(reports, damagesInImage).then(response => {
+        console.log(response);
+        dispatch(DamageActions.verify(response.data));
       }).catch(error => {
+        console.log(error);
         dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error("Failed to verify"));
       });
     };
@@ -59484,13 +59485,13 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
   }
 
   _verify() {
-    this.props.damage.image.reports.forEach(report => {
-      if (this.state.damagesInImage[report.type]) {
-        this.props.verifyDamageReport(report.id, true);
-      } else {
-        this.props.verifyDamageReport(report.id, false, true);
-      }
-    });
+    this.props.verifyDamageReport(this.props.damage.image.reports, this.state.damagesInImage); // this.props.damage.image.reports.forEach(report => {
+    //   if (this.state.damagesInImage[report.type]) {
+    //     this.props.verifyDamageReport(report.id, true);
+    //   } else {
+    //     this.props.verifyDamageReport(report.id, false, true);
+    //   }
+    // });
 
     this._closeEdit();
   }
@@ -60283,11 +60284,17 @@ const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelecto
 const getActiveDamage = store => {
   const theDamage = store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
   if (!theDamage) return theDamage;
+  console.log(theDamage);
   return _objectSpread({}, theDamage, {
     image: {
       url: theDamage.image.url,
       reports: theDamage.image.reports.map(report => {
         const subDamage = store.damage.damages.find(damage => damage.id == report.roaddamage_id);
+
+        if (!subDamage) {
+          return report;
+        }
+
         return _objectSpread({}, report, {
           type: subDamage.type,
           false_positive: subDamage.false_positive,
@@ -60659,32 +60666,17 @@ function DamageReducer(state = {
       });
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].VERIFY_DAMAGE_REPORT:
+      var new_damages = action.damages.filter(dam => !state.damages.find(x => x.id == dam.id));
       return _objectSpread({}, state, {
         damages: state.damages.map(damage => {
-          // Update the damage where the id matches the highest confidence report id
-          if (action.id == damage.reportId) {
-            return _objectSpread({}, damage, {
-              verified: action.verified,
-              false_positive: action.falsePositive
-            });
+          var updated_damage = action.damages.find(new_damage => new_damage.id == damage.id);
+
+          if (updated_damage) {
+            return updated_damage;
           }
 
           return damage;
-        })
-      });
-
-    case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].UNVERIFY_DAMAGE_REPORT:
-      return _objectSpread({}, state, {
-        damages: state.damages.map(damage => {
-          // Update the damage where the id matches the highest confidence report id
-          if (action.id == damage.reportId) {
-            return _objectSpread({}, damage, {
-              verified: false
-            });
-          }
-
-          return damage;
-        })
+        }).concat(new_damages)
       });
 
     case _actions__WEBPACK_IMPORTED_MODULE_0__["DamageActionTypes"].CHANGE_DAMAGE_STATUS:
@@ -61162,12 +61154,14 @@ class DamageService {
     });
   }
 
-  async verifyDamageReport(id, verified, falsePositive = false) {
-    return this.axios.post(`/road-damage/report/${id}/edit`, {
-      verified: verified ? "verified" : falsePositive ? "false-positive" : "unverified"
+  async verifyDamageReport(reports, damagesInImage) {
+    return this.axios.post(`/road-damage/report/${reports[0].id}/edit`, {
+      reports: reports,
+      damagesInImage: damagesInImage
     }).then(response => {
-      return response.data;
+      return Promise.resolve(response.data);
     }).catch(error => {
+      console.log(error.response);
       throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
     });
   }
