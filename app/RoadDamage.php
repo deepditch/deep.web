@@ -23,6 +23,17 @@ class RoadDamage extends Model
         'organization_id',
     ];
 
+    const DAMAGE_TYPES = [
+        'D00',
+        'D01',
+        'D10',
+        'D11',
+        'D20',
+        'D40',
+        'D43',
+        'D44'
+    ];
+
     /**
      * Get the right road damage based on provided longitude and latitude
      * values.

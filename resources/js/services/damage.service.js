@@ -20,14 +20,16 @@ export class DamageService {
     console.log(reports);
     console.log(damagesInImage);
     return this.axios
-      .post(`/road-damage/report/${id}/edit`, {
+      .post(`/road-damage/report/${reports[0].id}/edit`, {
         reports: reports,
         damagesInImage: damagesInImage
       })
       .then(response => {
-        return response.data;
+        console.log('success');
+        return Promise.resolve(response.data);
       })
       .catch(error => {
+        console.log('error');
         throw parseErrors(error.response);
       });
   }

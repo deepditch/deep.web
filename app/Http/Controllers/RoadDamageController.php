@@ -9,6 +9,7 @@ use App\RoadDamage;
 use App\RoadDamageReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RoadDamageController extends Controller
 {
@@ -189,22 +190,81 @@ class RoadDamageController extends Controller
      */
     public function editReport(int $id, Request $request)
     {
-        $request->validate([
-            'verified' => ['required', 'in:verified,unverified,false-positive'],
-        ]);
+        if ($request->input('damagesInImage')) {
+            $origin_report = RoadDamageReport::find($id);
 
-        try {
-            $report = RoadDamageReport::findOrFail($id);
-        } catch (\Throwable $e) {
-            return request()->json(['Report could not be found.']);
+            $damages_in_image = $request->input('damagesInImage');
+            $damages = RoadDamage::find(RoadDamageReport::find($id)->getAssociatedDamageIds());
+            $marked_types = [];
+            $modified_damages = [];
+            foreach (array_keys($damages_in_image) as $type) {
+                foreach ($damages->where('type', $type) as $damage) {
+                    $report = RoadDamageReport::where('roaddamage_id', $damage->id)->first();
+                    if ($report->exists()) {
+                        if ($damages_in_image[$type] === true) {
+                            $report->verified = 'verified';
+                            $report->save();
+                            $marked_types[] = $type;
+                            $modified_damages[] = $damage;
+                        } elseif ($damages_in_image[$type] === false) {
+                            $report->verified = 'false-positive';
+                            $report->save();
+                            $marked_types[] = $type;
+                            $modified_damages[] = $damage;
+                        }
+                    }
+                }
+            }
+            foreach (array_diff(RoadDamage::DAMAGE_TYPES, $marked_types) as $type) {
+                $damages = RoadDamage::find(RoadDamageReport::find($id)->getAssociatedDamageIds());
+                if ($damages_in_image[$type] === true) {
+                    $road_damage = RoadDamage::findRelativeRoadDamage(
+                        $origin_report->latitude,
+                        $origin_report->longitude,
+                        $origin_report->getRoadDamage()->direction,
+                        $type
+                    );
+                    if ($road_damage->isEmpty()) {
+                        $road_damage = RoadDamage::create([
+                            'user_id' => auth('api')->user()->id,
+                            'direction' => $origin_report->getRoadDamage()->direction,
+                            'type' => $type,
+                            'latitude' => $origin_report->latitude,
+                            'longitude' => $origin_report->longitude,
+                            'organization_id' => auth('api')->user()->organization_id,
+                        ]);
+                    } else {
+                        $road_damage = $road_damage->first();
+                    }
+
+                    $modified_damages[] = $road_damage;
+                    RoadDamageReport::create([
+                        'roaddamage_id' => $road_damage->id,
+                        'user_id' => auth('api')->user()->id,
+                        'image_id' => $origin_report->image_id,
+                        'confidence' => 1,
+                        'verified' =>  'verified',
+                        'latitude' => $origin_report->latitude,
+                        'longitude' => $origin_report->longitude
+                    ]);
+                }
+            }
+
+            return RoadDamageResource::collection(collect($modified_damages));
+        } else {
+            try {
+                $report = RoadDamageReport::findOrFail($id);
+            } catch (\Throwable $e) {
+                return request()->json(['Report could not be found.']);
+            }
+
+            if ($request->input('verified')) {
+                $report->verified = $request->input('verified');
+                $report->save();
+            }
+
+            return new RoadDamageReportResource($report);
         }
-
-        if ($request->input('verified')) {
-            $report->verified = $request->input('verified');
-            $report->save();
-        }
-
-        return new RoadDamageReportResource($report);
     }
 
     /**
