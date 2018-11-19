@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupOption } from "./radio-group";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-export default class UserInviteForm extends Component {
+export default class ApiTokenForm extends Component {
   constructor(props) {
     super(props);
 
@@ -25,7 +25,7 @@ export default class UserInviteForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    this.props.inviteUser(this.state.Email);
+    this.props.addToken(this.state.name);
   }
 
   render() {
