@@ -34,6 +34,11 @@ export default function createContainer() {
         const token = localStorage.getItem("token");
         config.headers.Authorization = token ? `Bearer ${token}` : "";
         return config;
+      }, function (error) {
+        instance.post("/refresh")
+        .then(response => {
+          return response.data;
+        });
       });
 
       return instance;
