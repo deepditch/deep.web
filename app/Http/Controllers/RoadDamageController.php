@@ -47,7 +47,7 @@ class RoadDamageController extends Controller
         ]);
 
         $reports = RoadDamageReport::where('verified', '=', 'verified')
-            ->where('created_at', '>=', $request->input('after'))
+            ->where('updated_at', '>=', $request->input('after'))
             ->get();
 
         $reports_array = [];
