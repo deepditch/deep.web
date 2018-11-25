@@ -37,6 +37,7 @@ export default function createContainer() {
       }, function (error) {
         instance.post("/refresh")
         .then(response => {
+          console.log(response.data);
           return response.data;
         });
       });

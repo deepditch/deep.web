@@ -25,6 +25,24 @@ export class AuthService {
   }
 
   /**
+   * Logs a user in
+   * @param {string} email the user's email
+   * @param {string} password the user's password
+   */
+  refresh(token) {
+    return this.axios
+      .post("/refresh", {
+        token: token
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  /**
    * Logs a user out
    */
   logout() {
