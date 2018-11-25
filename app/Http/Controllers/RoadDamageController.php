@@ -115,7 +115,7 @@ class RoadDamageController extends Controller
 
         if ($request->has('filters.roadname')) {
             foreach ($collection as $key => $val) {
-                if (strpos($val->getRoadName(), $request->input('filters.roadname')) !== false) {
+                if (strpos($val->getRoadName(), $request->input('filters.roadname')) === false) {
                     $collection->forget($key);
                 }
             }
