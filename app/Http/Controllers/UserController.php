@@ -28,6 +28,17 @@ class UserController extends Controller
     /**
      * Get the base Json data of all the models for the authenticated user.
      *
+     * @param int $id
+     * @return App\Http\Resources\Invite
+     */
+    public function getInviteJson($id)
+    {
+        return new UserInviteResource(UserInvite::findOrFail($id));
+    }
+
+    /**
+     * Get the base Json data of all the models for the authenticated user.
+     *
      * @return App\Http\Resources\Invite
      */
     public function getInvitesJson()
