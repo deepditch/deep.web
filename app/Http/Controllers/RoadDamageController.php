@@ -84,6 +84,7 @@ class RoadDamageController extends Controller
     {
         $request->validate([
             'filters.status' => ['string', 'in:pending-repair,repairing,done,wont-do'],
+            'filters.type' => ['string', 'in:D00,D01,D10,D11,D20,D40,D43,D44'],
             'filters.verified' => 'boolean',
             'filters.falsePositive' => 'boolean',
             'filters.roadname' => 'string',
@@ -95,6 +96,14 @@ class RoadDamageController extends Controller
 
         if ($request->input('filters.status')) {
             $collection = $collection->where('status', $request->input('filters.status'));
+        }
+
+        if ($request->input('filters.type')) {
+            foreach ($collection as $key => $val) {
+                if ($val->type !== $request->input('filters.type')) {
+                    $collection->forget($key);
+                }
+            }
         }
 
         if ($request->has('filters.verified')) {
@@ -115,7 +124,7 @@ class RoadDamageController extends Controller
 
         if ($request->has('filters.roadname')) {
             foreach ($collection as $key => $val) {
-                if ($val->getRoadName() !== $request->input('filters.roadname')) {
+                if (strpos($val->getRoadName(), $request->input('filters.roadname')) === false) {
                     $collection->forget($key);
                 }
             }

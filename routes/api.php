@@ -23,6 +23,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('me', 'AuthController@me');
     Route::get('user', 'UserController@getUsersJson')
         ->middleware('role:admin');
+    Route::delete('user/{id}', 'UserController@deleteUser')
+        ->middleware('role:admin');
     Route::get('user/invite', 'UserController@getInvitesJson')
         ->middleware('role:admin');
     Route::post('user/invite/new', 'UserController@inviteUser')
