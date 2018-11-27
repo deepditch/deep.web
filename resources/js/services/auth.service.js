@@ -45,13 +45,15 @@ export class AuthService {
    * @param {string} password the user's password
    * @param {string} organizationName the organization's name, null if an organization is not being registered
    */
-  register(userName, email, password, organizationName = null) {
+  register(userName, email, password, organizationName = null, invite_token=null) {
+    console.log(invite_token)
     return this.axios
       .post("/register", {
         name: userName,
         email: email,
         password: password,
-        organization: organizationName
+        organization: organizationName,
+        invite_token: invite_token
       })
       .then(response => {
         return response.data;

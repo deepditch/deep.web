@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\User as UserResource;
 use App\Organization;
 use App\User;
+use App\UserInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -16,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh']]);
     }
 
     /**
@@ -31,7 +33,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
             'name' => 'required|max:255',
-            'password' => 'required|min:8',
+            'password' => 'required|min:8'
         ]);
 
         $role = User::USER_ROLE;
@@ -48,13 +50,29 @@ class AuthController extends Controller
             $role = User::ADMIN_ROLE;
         }
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'organization_id' => isset($organization) ? $organization->id : config('organization.default_id'),
-            'role' => $role,
-        ]);
+        if ($request->input('invite_token')) {
+            $invite = UserInvite::where('token', $request->input('invite_token'))->first();
+            if ($invite->exists()) {
+                $user = User::create([
+                    'name' => $request->input('name'),
+                    'email' => $invite->email,
+                    'password' => Hash::make($request->input('password')),
+                    'organization_id' => $invite->organization_id,
+                    'role' => $role,
+                ]);
+                $invite->delete();
+            } else {
+                return response()->json(['Invite invalid'], 403);
+            }
+        } else {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'organization_id' => isset($organization) ? $organization->id : config('organization.default_id'),
+                'role' => $role,
+            ]);
+        }
 
         return response()->json(['user' => new UserResource(User::find($user->id))], 200);
     }

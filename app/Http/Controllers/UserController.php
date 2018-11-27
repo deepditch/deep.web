@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
     /**
+     * Create a new AuthController instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['getInviteJson']]);
+    }
+
+    /**
      * Get the base Json data of all the models for the authenticated user.
      *
      * @return App\Http\Resources\User
@@ -23,6 +31,17 @@ class UserController extends Controller
         return UserResource::collection(
             User::where('organization_id', auth('api')->user()->organization_id)->get()
         );
+    }
+
+    /**
+     * Get the base Json data of the specified user invite by token
+     *
+     * @param string $token
+     * @return App\Http\Resources\Invite
+     */
+    public function getInviteJson($token)
+    {
+        return new UserInviteResource(UserInvite::where('token', $token)->first());
     }
 
     /**
@@ -92,6 +111,31 @@ class UserController extends Controller
                 'organization_id',
                 auth('api')->user()->organization_id
             )->get()
+        );
+    }
+
+    /**
+     * Delete a user
+     *
+     * @param int $id
+     * @return App\Http\Resources\User
+     */
+    public function deleteUser(int $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            if ($user->organization_id === auth('api')->user()->organization_id) {
+                $user->delete();
+            } else {
+                return response()->json(['You do not have permission to delete this user'], 403);
+            }
+
+        } catch (\Throwable $e) {
+            return response()->json(['Deletion failed'], 404);
+        }
+
+        return UserResource::collection(
+            User::where('organization_id', auth('api')->user()->organization_id)->get()
         );
     }
 }
