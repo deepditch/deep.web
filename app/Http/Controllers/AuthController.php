@@ -52,7 +52,6 @@ class AuthController extends Controller
 
         if ($request->input('invite_token')) {
             $invite = UserInvite::where('token', $request->input('invite_token'))->first();
-
             if ($invite->exists()) {
                 $user = User::create([
                     'name' => $request->input('name'),
@@ -61,6 +60,7 @@ class AuthController extends Controller
                     'organization_id' => $invite->organization_id,
                     'role' => $role,
                 ]);
+                $invite->delete();
             } else {
                 return response()->json(['Invite invalid'], 403);
             }
