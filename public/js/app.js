@@ -57815,7 +57815,7 @@ const RegisterActions = {
 const CreateRegisterActionDispatcher = (authService, dispatch) => {
   return (userName, email, password, organizationName = null, invite_token = null) => {
     dispatch(RegisterActions.attempt());
-    authService.register(userName, email, password, organizationName, invite_token = null).then(response => {
+    authService.register(userName, email, password, organizationName, invite_token).then(response => {
       dispatch(RegisterActions.success(response.user));
       dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].success(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, response.user.name), ", you have been registered and may login.")));
     }).catch(error => {
@@ -58182,7 +58182,6 @@ const store = Object(redux__WEBPACK_IMPORTED_MODULE_3__["createStore"])(reducers
 
 class App extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
-    console.log(c.ApiTokens);
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "app-container h-100"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(c.Notify, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Switch"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Route"], {
@@ -58435,11 +58434,7 @@ class InputGroup extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "input-group"
     }, this.props.name, !this.props.required && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "small text-medium-gray"
-    }, " - Optional"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      name: this.props.name,
-      type: this.props.type,
-      onChange: this.props.onChange
-    }));
+    }, " - Optional"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", this.props));
   }
 
 }
@@ -58640,7 +58635,8 @@ __webpack_require__.r(__webpack_exports__);
       Password: "",
       "Confirm Password": "",
       msg: "",
-      isTokenRegistration: false
+      isTokenRegistration: false,
+      EmailEditable: true
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -58649,12 +58645,14 @@ __webpack_require__.r(__webpack_exports__);
   componentDidMount() {
     if (this.props.token) {
       UsersService.getInviteData(this.props.token).then(response => {
+        console.log(response.email);
         this.setState({
           Email: response.email,
-          msg: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, "You have been invited to join", " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-            className: "bold"
+          msg: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, response.email), ", you have been invited to join", " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "strong"
           }, response.organization.name)),
-          isTokenRegistration: true
+          isTokenRegistration: true,
+          EmailEditable: false
         });
       }).catch(error => {
         this.setState({
@@ -58676,7 +58674,7 @@ __webpack_require__.r(__webpack_exports__);
   handleSubmit(event) {
     event.preventDefault();
     this.props.register(this.state["User Name"], this.state.Email, this.state.Password, this.state.AccountType == "Organization" // If the user is also registering an organization, pass along the organization name
-    ? this.state["Organization Name"] : null, this.props.token ? this.props.token : null);
+    ? this.state["Organization Name"] : null, this.props.token);
   }
 
   render() {
@@ -58709,9 +58707,8 @@ __webpack_require__.r(__webpack_exports__);
       name: "User Name",
       type: "text",
       required: true,
-      onChange: this.handleInputChange,
-      disabled: !this.state.EmailEditable
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_input_group__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      onChange: this.handleInputChange
+    }), this.state.EmailEditable && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_input_group__WEBPACK_IMPORTED_MODULE_1__["default"], {
       name: "Email",
       type: "email",
       required: true,
@@ -61331,8 +61328,6 @@ function TokensReducer(state = {
   tokens: [],
   token: []
 }, action) {
-  console.log(action);
-
   switch (action.type) {
     case _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_0__["ApiTokensActionTypes"].LOAD_TOKENS_ATTEMPT:
       return {
@@ -61540,6 +61535,7 @@ class AuthService {
 
 
   register(userName, email, password, organizationName = null, invite_token = null) {
+    console.log(invite_token);
     return this.axios.post("/register", {
       name: userName,
       email: email,

@@ -6,7 +6,6 @@ import { ApiTokensActionTypes } from "../actions/tokens.actions";
  * @param {JSON} action A redux action
  */
 export default function TokensReducer(state = { tokens: [], token: []}, action) {
-  console.log(action);
   switch (action.type) {
     case ApiTokensActionTypes.LOAD_TOKENS_ATTEMPT:
       return { tokens: [], pending: true };

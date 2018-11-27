@@ -15,7 +15,8 @@ export default UsersService =>
         Password: "",
         "Confirm Password": "",
         msg: "",
-        isTokenRegistration: false
+        isTokenRegistration: false,
+        EmailEditable: true
       };
 
       this.handleInputChange = this.handleInputChange.bind(this);
@@ -26,15 +27,17 @@ export default UsersService =>
       if (this.props.token) {
         UsersService.getInviteData(this.props.token)
           .then(response => {
+            console.log(response.email);
             this.setState({
               Email: response.email,
               msg: (
                 <>
-                  You have been invited to join{" "}
-                  <i class="bold">{response.organization.name}</i>
+                  <strong>{response.email}</strong>, you have been invited to join{" "}
+                  <i class="strong">{response.organization.name}</i>
                 </>
               ),
-              isTokenRegistration: true
+              isTokenRegistration: true,
+              EmailEditable: false
             });
           })
           .catch(error => {
@@ -64,7 +67,7 @@ export default UsersService =>
         this.state.AccountType == "Organization" // If the user is also registering an organization, pass along the organization name
           ? this.state["Organization Name"]
           : null,
-        this.props.token ? this.props.token : null
+        this.props.token
       );
     }
 
@@ -111,15 +114,16 @@ export default UsersService =>
             type="text"
             required={true}
             onChange={this.handleInputChange}
-            disabled={!this.state.EmailEditable}
           />
 
-          <InputGroup
-            name="Email"
-            type="email"
-            required={true}
-            onChange={this.handleInputChange}
-          />
+          {this.state.EmailEditable && (
+            <InputGroup
+              name="Email"
+              type="email"
+              required={true}
+              onChange={this.handleInputChange}
+            />
+          )}
 
           <InputGroup
             name="Password"

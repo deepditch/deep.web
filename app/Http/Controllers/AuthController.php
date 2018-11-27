@@ -9,6 +9,7 @@ use App\UserInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -49,8 +50,9 @@ class AuthController extends Controller
             $role = User::ADMIN_ROLE;
         }
 
-        if ($request->has('invite_token')) {
-            $invite = UserInvite::where('token', $request->input('invite_token'));
+        if ($request->input('invite_token')) {
+            $invite = UserInvite::where('token', $request->input('invite_token'))->first();
+
             if ($invite->exists()) {
                 $user = User::create([
                     'name' => $request->input('name'),

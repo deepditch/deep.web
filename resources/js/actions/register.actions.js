@@ -30,7 +30,7 @@ export const CreateRegisterActionDispatcher = (authService, dispatch) => {
     dispatch(RegisterActions.attempt());
 
     authService
-      .register(userName, email, password, organizationName, invite_token=null)
+      .register(userName, email, password, organizationName, invite_token)
       .then(response => {
         dispatch(RegisterActions.success(response.user));
         dispatch(
