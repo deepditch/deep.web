@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Mail;
 class UserController extends Controller
 {
     /**
+     * Create a new AuthController instance.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['getInviteJson']]);
+    }
+
+    /**
      * Get the base Json data of all the models for the authenticated user.
      *
      * @return App\Http\Resources\User
@@ -28,12 +36,12 @@ class UserController extends Controller
     /**
      * Get the base Json data of all the models for the authenticated user.
      *
-     * @param int $id
+     * @param string $token
      * @return App\Http\Resources\Invite
      */
-    public function getInviteJson($id)
+    public function getInviteJson($token)
     {
-        return new UserInviteResource(UserInvite::findOrFail($id));
+        return new UserInviteResource(UserInvite::where('token', $token)->first());
     }
 
     /**
