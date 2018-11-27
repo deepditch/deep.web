@@ -22,11 +22,14 @@ export default class RegistrationForm extends Component {
 
   componentDidMount() {
     if (this.props.token) {
-      //TODO:
-      // get email and org ID from the invite record
-      // input type=readonly or disabled on email
-      // verify this was not modified upon register
-      this.props.fetchInviteData();
+      this.props
+        .fetchInviteData(this.props.token)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 

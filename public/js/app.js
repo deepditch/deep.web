@@ -57525,7 +57525,6 @@ class DamageActionDispatcher {
     };
 
     this.verifyDamageReport = dispatch => (reports, damagesInImage) => {
-      console.log(reports, damagesInImage);
       this.damageService.verifyDamageReport(reports, damagesInImage).then(response => {
         console.log(response);
         dispatch(DamageActions.verify(response.data));
@@ -57562,7 +57561,7 @@ class DamageActionDispatcher {
 /*!*****************************!*\
   !*** ./js/actions/index.js ***!
   \*****************************/
-/*! exports provided: UsersActionTypes, InviteUserActionTypes, UsersActions, InvitesActions, CreateUsersActionDispatcher, CreateInvitesActionDispatcher, CreateInviteUserActionDispatcher, CreateRevokeInviteActionDispatcher, LoginActionTypes, LoginActions, CreateLoginActionDispatcher, CreateLogoutActionDispatcher, RegisterActionTypes, RegisterActions, CreateRegisterActionDispatcher, NotifyActionTypes, NotifyActions, DamageActionTypes, DamageActions, DamageActionDispatcher */
+/*! exports provided: UsersActionTypes, InviteUserActionTypes, UsersActions, InvitesActions, CreateUsersActionDispatcher, CreateInvitesActionDispatcher, CreateInviteUserActionDispatcher, CreateRevokeInviteActionDispatcher, LoginActionTypes, LoginActions, CreateLoginActionDispatcher, CreateLogoutActionDispatcher, RegisterActionTypes, RegisterActions, CreateRegisterActionDispatcher, NotifyActionTypes, NotifyActions, DamageActionTypes, DamageActions, DamageActionDispatcher, ApiTokensActionTypes, ApiTokensActions, CreateTokensActionDispatcher, CreateAddTokenActionDispatcher, CreateDeleteTokenActionDispatcher */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57611,6 +57610,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CreateInviteUserActionDispatcher", function() { return _users_actions__WEBPACK_IMPORTED_MODULE_4__["CreateInviteUserActionDispatcher"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CreateRevokeInviteActionDispatcher", function() { return _users_actions__WEBPACK_IMPORTED_MODULE_4__["CreateRevokeInviteActionDispatcher"]; });
+
+/* harmony import */ var _tokens_actions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tokens.actions */ "./js/actions/tokens.actions.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ApiTokensActionTypes", function() { return _tokens_actions__WEBPACK_IMPORTED_MODULE_5__["ApiTokensActionTypes"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ApiTokensActions", function() { return _tokens_actions__WEBPACK_IMPORTED_MODULE_5__["ApiTokensActions"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CreateTokensActionDispatcher", function() { return _tokens_actions__WEBPACK_IMPORTED_MODULE_5__["CreateTokensActionDispatcher"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CreateAddTokenActionDispatcher", function() { return _tokens_actions__WEBPACK_IMPORTED_MODULE_5__["CreateAddTokenActionDispatcher"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CreateDeleteTokenActionDispatcher", function() { return _tokens_actions__WEBPACK_IMPORTED_MODULE_5__["CreateDeleteTokenActionDispatcher"]; });
+
 
 
 
@@ -57816,6 +57827,142 @@ const CreateRegisterActionDispatcher = (authService, dispatch) => {
 
 /***/ }),
 
+/***/ "./js/actions/tokens.actions.js":
+/*!**************************************!*\
+  !*** ./js/actions/tokens.actions.js ***!
+  \**************************************/
+/*! exports provided: ApiTokensActionTypes, ApiTokensActions, CreateTokensActionDispatcher, CreateAddTokenActionDispatcher, CreateDeleteTokenActionDispatcher */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiTokensActionTypes", function() { return ApiTokensActionTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ApiTokensActions", function() { return ApiTokensActions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateTokensActionDispatcher", function() { return CreateTokensActionDispatcher; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateAddTokenActionDispatcher", function() { return CreateAddTokenActionDispatcher; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateDeleteTokenActionDispatcher", function() { return CreateDeleteTokenActionDispatcher; });
+/* harmony import */ var _notify_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./notify.actions */ "./js/actions/notify.actions.js");
+
+const ApiTokensActionTypes = {
+  ADD_TOKEN_ATTEMPT: "add_token_attempt",
+  ADD_TOKEN_SUCCESS: "add_token_success",
+  ADD_TOKEN_FAILURE: "add_token_failure",
+  DELETE_TOKEN_ATTEMPT: "delete_token_attempt",
+  DELETE_TOKEN_SUCCESS: "delete_token_success",
+  DELETE_TOKEN_FAILURE: "delete_token_failure",
+  LOAD_TOKENS_ATTEMPT: "load_tokens_attempt",
+  LOAD_TOKENS_SUCCESS: "load_tokens_success",
+  LOAD_TOKENS_FAILURE: "load_tokens_failure"
+};
+const ApiTokensActions = {
+  getTokensAttempt: () => {
+    return {
+      type: ApiTokensActionTypes.LOAD_TOKENS_ATTEMPT
+    };
+  },
+  getTokensSuccess: tokens => {
+    return {
+      type: ApiTokensActionTypes.LOAD_TOKENS_SUCCESS,
+      tokens: tokens
+    };
+  },
+  getTokensFailure: () => {
+    return {
+      type: ApiTokensActionTypes.LOAD_TOKENS_FAILURE
+    };
+  },
+  deleteTokenAttempt: () => {
+    return {
+      type: ApiTokensActionTypes.DELETE_TOKEN_ATTEMPT
+    };
+  },
+  deleteTokenSuccess: tokens => {
+    return {
+      type: ApiTokensActionTypes.DELETE_TOKEN_SUCCESS,
+      tokens: tokens
+    };
+  },
+  deleteTokenFailure: () => {
+    return {
+      type: ApiTokensActionTypes.DELETE_TOKEN_FAILURE
+    };
+  },
+  addTokenAttempt: () => {
+    return {
+      type: ApiTokensActionTypes.ADD_TOKEN_ATTEMPT
+    };
+  },
+  addTokenSuccess: token => {
+    return {
+      type: ApiTokensActionTypes.ADD_TOKEN_SUCCESS,
+      token: token
+    };
+  },
+  addTokenFailure: () => {
+    return {
+      type: ApiTokensActionTypes.ADD_TOKEN_FAILURE
+    };
+  }
+  /**
+   * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+   * @param {UsersService} UsersService must have a getUsersInstances() method that returns a Promise
+   * @param {function} dispatch the redux dispatch method
+   * @return a getUsersInstances method that dispatches redux actions
+   */
+
+};
+const CreateTokensActionDispatcher = (TokensService, dispatch) => {
+  return () => {
+    dispatch(ApiTokensActions.getTokensAttempt());
+    TokensService.getTokens().then(tokens => {
+      dispatch(ApiTokensActions.getTokensSuccess(tokens));
+    }).catch(error => {
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error("Failed to load tokens."));
+      dispatch(ApiTokensActions.getTokensFailure());
+    });
+  };
+};
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {TokensService} TokensService must have a getUsersInstances() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+
+const CreateAddTokenActionDispatcher = (TokensService, dispatch) => {
+  return name => {
+    dispatch(ApiTokensActions.addTokenAttempt());
+    TokensService.addToken(name).then(token => {
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].success("Token has been added!"));
+      dispatch(ApiTokensActions.addTokenSuccess(token));
+    }).catch(error => {
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
+      dispatch(ApiTokensActions.addTokenFailure());
+    });
+  };
+};
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {TokensService} TokensService must have a getUsersInstances() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+
+const CreateDeleteTokenActionDispatcher = (TokensService, dispatch) => {
+  return delete_token_id => {
+    dispatch(ApiTokensActions.deleteTokenAttempt());
+    TokensService.deleteToken(delete_token_id).then(tokens => {
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].success("Token has been deleted."));
+      dispatch(ApiTokensActions.deleteTokenSuccess(tokens));
+    }).catch(error => {
+      dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_0__["NotifyActions"].error(error));
+      dispatch(ApiTokensActions.deleteTokenFailure());
+    });
+  };
+};
+
+/***/ }),
+
 /***/ "./js/actions/users.actions.js":
 /*!*************************************!*\
   !*** ./js/actions/users.actions.js ***!
@@ -57846,7 +57993,7 @@ const InviteUserActionTypes = {
   INVITE_USER_FAILURE: "invite_user_failure",
   REVOKE_INVITE_ATTEMPT: "revoke_invite_attempt",
   REVOKE_INVITE_SUCCESS: "revoke_invite_success",
-  REVOKE_INVITE_FAILURE: "revoke_invice_failure",
+  REVOKE_INVITE_FAILURE: "revoke_invite_failure",
   LOAD_INVITES_ATTEMPT: "load_invites_attempt",
   LOAD_INVITES_SUCCESS: "load_invites_success",
   LOAD_INVITES_FAILURE: "load_invites_failure"
@@ -58035,6 +58182,7 @@ const store = Object(redux__WEBPACK_IMPORTED_MODULE_3__["createStore"])(reducers
 
 class App extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   render() {
+    console.log(c.ApiTokens);
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("main", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "app-container h-100"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(c.Notify, null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Switch"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Route"], {
@@ -58055,6 +58203,9 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
         path: "/users",
         component: c.Users
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(c.AuthorizedRoute, {
+        path: "/api-tokens",
+        component: c.ApiTokens
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(c.AuthorizedRoute, {
         path: "/",
         component: c.Map
       })))
@@ -58070,6 +58221,162 @@ Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])(react__WEBPACK_IMPORTED
 }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_6__["Router"], {
   history: _history__WEBPACK_IMPORTED_MODULE_5__["history"]
 }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(App, null))), document.getElementById("react-container"));
+
+/***/ }),
+
+/***/ "./js/components/ApiTokens.js":
+/*!************************************!*\
+  !*** ./js/components/ApiTokens.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _react_table__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./react-table */ "./js/components/react-table.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (ApiTokenForm => class ApiTokens extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+    this.submitRevoke = this.submitRevoke.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.getTokens();
+  }
+
+  handleClick(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  submitRevoke(event) {
+    event.preventDefault();
+    this.props.deleteToken(this.state.delete_token_id);
+  }
+
+  render() {
+    console.log(this.props);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "container container-md"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "divide-30"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-6"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+      className: "h3"
+    }, "API Tokens")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "col-6"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(ApiTokenForm, null))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "row"
+    }, this.props.tokens.token && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Please copy this token! This will be the only time you will be able to view it. If its lost, you will need to generate a new token", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+      readonly: true,
+      cols: "100"
+    }, this.props.tokens.token.jwt))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_react_table__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      columns: [{
+        Header: "ID",
+        accessor: "id"
+      }, {
+        Header: "Name",
+        accessor: "name"
+      }, {
+        Header: "",
+        columns: [{
+          Header: "",
+          accessor: "id",
+          Cell: row => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+            onSubmit: this.submitRevoke
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+            className: "btn",
+            type: "submit",
+            name: "delete_token_id",
+            value: row.value,
+            onClick: this.handleClick
+          }, "DELETE"))
+        }]
+      }],
+      defaultPageSize: "5",
+      data: this.props.tokens.tokens.data,
+      className: "-striped -highlight"
+    }));
+  }
+
+});
+
+/***/ }),
+
+/***/ "./js/components/Form/apitoken-form.js":
+/*!*********************************************!*\
+  !*** ./js/components/Form/apitoken-form.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ApiTokenForm; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _input_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input-group */ "./js/components/Form/input-group.js");
+/* harmony import */ var _radio_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./radio-group */ "./js/components/Form/radio-group.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "../node_modules/react-router-dom/es/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+class ApiTokenForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+  constructor(props) {
+    super(props);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.addToken(this.state.name);
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      onSubmit: this.handleSubmit
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "input-group"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "name",
+      className: "form-control",
+      name: "name",
+      placeholder: "API Token Name",
+      onChange: this.handleInputChange
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "input-group-append"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      className: "btn btn-outline-secondary",
+      type: "submit",
+      value: "Create",
+      required: true
+    }))));
+  }
+
+}
 
 /***/ }),
 
@@ -58343,11 +58650,11 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
   componentDidMount() {
     if (this.props.token) {
-      //TODO:
-      // get email and org ID from the invite record
-      // input type=readonly or disabled on email
-      // verify this was not modified upon register
-      this.props.fetchInviteData();
+      this.props.fetchInviteData(this.props.token).then(response => {
+        console.log(response);
+      }).catch(error => {
+        console.log(error);
+      });
     }
   }
 
@@ -58556,6 +58863,11 @@ class Header extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       className: "nav-link",
       href: "/users"
     }, "Users")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      className: "nav-item"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      className: "nav-link",
+      href: "/api-tokens"
+    }, "API Tokens")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
       className: "nav-item dropdown"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       className: "nav-link dropdown-toggle",
@@ -59485,13 +59797,7 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
   }
 
   _verify() {
-    this.props.verifyDamageReport(this.props.damage.image.reports, this.state.damagesInImage); // this.props.damage.image.reports.forEach(report => {
-    //   if (this.state.damagesInImage[report.type]) {
-    //     this.props.verifyDamageReport(report.id, true);
-    //   } else {
-    //     this.props.verifyDamageReport(report.id, false, true);
-    //   }
-    // });
+    this.props.verifyDamageReport(this.props.damage.image.reports, this.state.damagesInImage);
 
     this._closeEdit();
   }
@@ -59598,7 +59904,7 @@ class ExpandedDamageWindow extends react__WEBPACK_IMPORTED_MODULE_0__["Component
       onClick: this._openEdit.bind(this)
     }, "Edit")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-auto"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    }, this.props.damage.image.reports.filter(report => report.verified == true || report.false_positive == true).length != this.props.damage.image.reports.length && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
       className: "btn btn-small bg-green link verify",
       onClick: this._verify
     }, "Verify")))));
@@ -60002,6 +60308,7 @@ function createContainer() {
   Object(_providers__WEBPACK_IMPORTED_MODULE_3__["NotifyProvider"])(c);
   Object(_providers__WEBPACK_IMPORTED_MODULE_3__["DamageProvider"])(c);
   Object(_providers_users_provider__WEBPACK_IMPORTED_MODULE_4__["UsersProvider"])(c);
+  Object(_providers__WEBPACK_IMPORTED_MODULE_3__["TokensProvider"])(c);
   return c;
 }
 
@@ -60284,7 +60591,6 @@ const getDamageIds = Object(reselect__WEBPACK_IMPORTED_MODULE_6__["createSelecto
 const getActiveDamage = store => {
   const theDamage = store.damage.damages.find(damage => damage.id == store.damage.activeDamageId);
   if (!theDamage) return theDamage;
-  console.log(theDamage);
   return _objectSpread({}, theDamage, {
     image: {
       url: theDamage.image.url,
@@ -60400,7 +60706,7 @@ const DamageProvider = c => {
 /*!*******************************!*\
   !*** ./js/providers/index.js ***!
   \*******************************/
-/*! exports provided: UsersProvider, LoginProvider, RegisterProvider, NotifyProvider, DamageProvider */
+/*! exports provided: UsersProvider, LoginProvider, RegisterProvider, NotifyProvider, DamageProvider, TokensProvider */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60419,6 +60725,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony import */ var _users_provider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./users.provider */ "./js/providers/users.provider.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UsersProvider", function() { return _users_provider__WEBPACK_IMPORTED_MODULE_4__["UsersProvider"]; });
+
+/* harmony import */ var _tokens_provider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tokens.provider */ "./js/providers/tokens.provider.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TokensProvider", function() { return _tokens_provider__WEBPACK_IMPORTED_MODULE_5__["TokensProvider"]; });
+
 
 
 
@@ -60532,10 +60842,61 @@ const RegisterProvider = c => {
     };
   }, dispatch => {
     return {
-      register: Object(_actions__WEBPACK_IMPORTED_MODULE_3__["CreateRegisterActionDispatcher"])(c.AuthService, dispatch)
+      register: Object(_actions__WEBPACK_IMPORTED_MODULE_3__["CreateRegisterActionDispatcher"])(c.AuthService, dispatch),
+      getInviteData: c.UserService.getInviteData
     };
   })(_components_Form_registration_form__WEBPACK_IMPORTED_MODULE_0__["default"]));
   c.register("Register", c => Object(_components_Register__WEBPACK_IMPORTED_MODULE_1__["default"])(c.RegistrationForm));
+};
+
+/***/ }),
+
+/***/ "./js/providers/tokens.provider.js":
+/*!*****************************************!*\
+  !*** ./js/providers/tokens.provider.js ***!
+  \*****************************************/
+/*! exports provided: TokensProvider */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TokensProvider", function() { return TokensProvider; });
+/* harmony import */ var _components_ApiTokens__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/ApiTokens */ "./js/components/ApiTokens.js");
+/* harmony import */ var _components_Form_apitoken_form__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Form/apitoken-form */ "./js/components/Form/apitoken-form.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "../node_modules/react-redux/es/index.js");
+/* harmony import */ var _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../actions/tokens.actions */ "./js/actions/tokens.actions.js");
+/* harmony import */ var _services_tokens_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/tokens.service */ "./js/services/tokens.service.js");
+
+
+
+
+
+/**
+ * Registers dependencies in the container and connects react components to the redux store
+ * @param {Container} c the IoC container
+ */
+
+const TokensProvider = c => {
+  c.register("TokensService", c => new _services_tokens_service__WEBPACK_IMPORTED_MODULE_4__["TokensService"](c.Axios));
+  c.register("ApiTokenForm", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(store => {
+    return {
+      token: store.token
+    };
+  }, dispatch => {
+    return {
+      addToken: Object(_actions_tokens_actions__WEBPACK_IMPORTED_MODULE_3__["CreateAddTokenActionDispatcher"])(c.TokensService, dispatch)
+    };
+  })(_components_Form_apitoken_form__WEBPACK_IMPORTED_MODULE_1__["default"]));
+  c.register("ApiTokens", c => Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(store => {
+    return {
+      tokens: store.tokens
+    };
+  }, dispatch => {
+    return {
+      getTokens: Object(_actions_tokens_actions__WEBPACK_IMPORTED_MODULE_3__["CreateTokensActionDispatcher"])(c.TokensService, dispatch),
+      deleteToken: Object(_actions_tokens_actions__WEBPACK_IMPORTED_MODULE_3__["CreateDeleteTokenActionDispatcher"])(c.TokensService, dispatch)
+    };
+  })(Object(_components_ApiTokens__WEBPACK_IMPORTED_MODULE_0__["default"])(c.ApiTokenForm)));
 };
 
 /***/ }),
@@ -60717,6 +61078,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _user_reducer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./user.reducer */ "./js/reducers/user.reducer.js");
 /* harmony import */ var _users_reducer__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./users.reducer */ "./js/reducers/users.reducer.js");
 /* harmony import */ var _invites_reducer__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./invites.reducer */ "./js/reducers/invites.reducer.js");
+/* harmony import */ var _tokens_reducer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./tokens.reducer */ "./js/reducers/tokens.reducer.js");
+
 
 
 
@@ -60736,7 +61099,8 @@ __webpack_require__.r(__webpack_exports__);
   users: _users_reducer__WEBPACK_IMPORTED_MODULE_6__["default"],
   invites: _invites_reducer__WEBPACK_IMPORTED_MODULE_7__["default"],
   notify: _notify_reducer__WEBPACK_IMPORTED_MODULE_3__["default"],
-  damage: _damage_reducer__WEBPACK_IMPORTED_MODULE_4__["default"]
+  damage: _damage_reducer__WEBPACK_IMPORTED_MODULE_4__["default"],
+  tokens: _tokens_reducer__WEBPACK_IMPORTED_MODULE_8__["default"]
 }));
 
 /***/ }),
@@ -60930,6 +61294,66 @@ function RegisterReducer(state = {}, action) {
       return {
         rejected: false
       };
+
+    default:
+      return state;
+  }
+}
+
+/***/ }),
+
+/***/ "./js/reducers/tokens.reducer.js":
+/*!***************************************!*\
+  !*** ./js/reducers/tokens.reducer.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TokensReducer; });
+/* harmony import */ var _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/tokens.actions */ "./js/actions/tokens.actions.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+/**
+ * Updates the users list state based on the provided action
+ * @param {JSON} state The previous login state
+ * @param {JSON} action A redux action
+ */
+
+function TokensReducer(state = {
+  tokens: [],
+  token: []
+}, action) {
+  console.log(action);
+
+  switch (action.type) {
+    case _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_0__["ApiTokensActionTypes"].LOAD_TOKENS_ATTEMPT:
+      return {
+        tokens: [],
+        pending: true
+      };
+
+    case _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_0__["ApiTokensActionTypes"].LOAD_TOKENS_SUCCESS:
+      return {
+        tokens: action.tokens,
+        success: true
+      };
+
+    case _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_0__["ApiTokensActionTypes"].LOAD_TOKENS_FAILURE:
+      return {
+        tokens: [],
+        rejected: true
+      };
+
+    case _actions_tokens_actions__WEBPACK_IMPORTED_MODULE_0__["ApiTokensActionTypes"].ADD_TOKEN_SUCCESS:
+      return _objectSpread({}, state, {
+        token: action.token,
+        success: true
+      });
 
     default:
       return state;
@@ -61185,7 +61609,7 @@ class DamageService {
 /*!******************************!*\
   !*** ./js/services/index.js ***!
   \******************************/
-/*! exports provided: AuthService, DamageService, UsersService */
+/*! exports provided: AuthService, DamageService, UsersService, TokensService */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -61199,9 +61623,71 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _users_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./users.service */ "./js/services/users.service.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "UsersService", function() { return _users_service__WEBPACK_IMPORTED_MODULE_2__["UsersService"]; });
 
+/* harmony import */ var _tokens_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tokens.service */ "./js/services/tokens.service.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TokensService", function() { return _tokens_service__WEBPACK_IMPORTED_MODULE_3__["TokensService"]; });
 
 
 
+
+
+
+/***/ }),
+
+/***/ "./js/services/tokens.service.js":
+/*!***************************************!*\
+  !*** ./js/services/tokens.service.js ***!
+  \***************************************/
+/*! exports provided: TokensService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TokensService", function() { return TokensService; });
+/* harmony import */ var _helpers_errors__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../helpers/errors */ "./js/helpers/errors.js");
+
+class TokensService {
+  constructor(axios) {
+    this.axios = axios;
+  }
+
+  getTokens() {
+    return this.axios.get("/api-token").then(response => {
+      console.log(response.data);
+      return response.data;
+    }).catch(error => {
+      throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
+    });
+  }
+  /**
+   * add a token
+   * @param {name} name identifier for token
+   */
+
+
+  addToken(name) {
+    return this.axios.post("/api-token/new", {
+      name: name
+    }).then(response => {
+      return response.data;
+    }).catch(error => {
+      throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
+    });
+  }
+  /**
+   * delete token
+   * @param {integer} delete_token_id
+   */
+
+
+  deleteToken(delete_token_id) {
+    return this.axios.get("/api-token/" + delete_token_id + "/delete").then(response => {
+      return response.data.data;
+    }).catch(error => {
+      throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
+    });
+  }
+
+}
 
 /***/ }),
 

@@ -17,7 +17,8 @@ export const RegisterProvider = (c) => {
       },
       dispatch => {
         return {
-          register: CreateRegisterActionDispatcher(c.AuthService, dispatch)
+          register: CreateRegisterActionDispatcher(c.AuthService, dispatch),
+          getInviteData: c.UserService.getInviteData
         };
       }
     )(RegistrationForm)
