@@ -29,8 +29,7 @@ Route::group(['middleware' => 'api'], function ($router) {
         ->middleware('role:admin');
     Route::post('user/invite/revoke', 'UserController@revokeInvite')
         ->middleware('role:admin');
-    Route::get('user/invite/{id}', 'UserController@getInviteJson')
-        ->middleware('role:admin');
+    Route::get('user/invite/{token}', ['as' => 'getInviteJson', 'uses' =>'UserController@getInviteJson']);
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
     Route::get('road-damage/verified-images', 'RoadDamageController@getVerifiedImages');
