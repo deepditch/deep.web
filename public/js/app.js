@@ -57813,9 +57813,9 @@ const RegisterActions = {
  */
 
 const CreateRegisterActionDispatcher = (authService, dispatch) => {
-  return (userName, email, password, organizationName = null) => {
+  return (userName, email, password, organizationName = null, invite_token = null) => {
     dispatch(RegisterActions.attempt());
-    authService.register(userName, email, password, organizationName).then(response => {
+    authService.register(userName, email, password, organizationName, invite_token = null).then(response => {
       dispatch(RegisterActions.success(response.user));
       dispatch(_notify_actions__WEBPACK_IMPORTED_MODULE_1__["NotifyActions"].success(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, response.user.name), ", you have been registered and may login.")));
     }).catch(error => {
@@ -58620,20 +58620,16 @@ class RadioGroup extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return RegistrationForm; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "../node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _input_group__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./input-group */ "./js/components/Form/input-group.js");
 /* harmony import */ var _radio_group__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./radio-group */ "./js/components/Form/radio-group.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "../node_modules/react-router-dom/es/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ "../node_modules/prop-types/index.js");
-/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
 
-
-class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
+/* harmony default export */ __webpack_exports__["default"] = (UsersService => class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   constructor(props) {
     super(props);
     this.state = {
@@ -58642,7 +58638,9 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       "User Name": "",
       Email: "",
       Password: "",
-      "Confirm Password": ""
+      "Confirm Password": "",
+      msg: "",
+      isTokenRegistration: false
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -58650,10 +58648,18 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
   componentDidMount() {
     if (this.props.token) {
-      this.props.fetchInviteData(this.props.token).then(response => {
-        console.log(response);
+      UsersService.getInviteData(this.props.token).then(response => {
+        this.setState({
+          Email: response.email,
+          msg: react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, "You have been invited to join", " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "bold"
+          }, response.organization.name)),
+          isTokenRegistration: true
+        });
       }).catch(error => {
-        console.log(error);
+        this.setState({
+          msg: `This invitation has been revoked.`
+        });
       });
     }
   }
@@ -58670,7 +58676,7 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
   handleSubmit(event) {
     event.preventDefault();
     this.props.register(this.state["User Name"], this.state.Email, this.state.Password, this.state.AccountType == "Organization" // If the user is also registering an organization, pass along the organization name
-    ? this.state["Organization Name"] : null);
+    ? this.state["Organization Name"] : null, this.props.token ? this.props.token : null);
   }
 
   render() {
@@ -58679,7 +58685,7 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       onSubmit: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("header", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
       className: "h4"
-    }, "Register")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "Register"), this.state.msg && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.msg)), !this.state.isTokenRegistration && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "col-auto"
@@ -58703,7 +58709,8 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       name: "User Name",
       type: "text",
       required: true,
-      onChange: this.handleInputChange
+      onChange: this.handleInputChange,
+      disabled: !this.state.EmailEditable
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_input_group__WEBPACK_IMPORTED_MODULE_1__["default"], {
       name: "Email",
       type: "email",
@@ -58738,10 +58745,7 @@ class RegistrationForm extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
     }, "Login")))));
   }
 
-}
-RegistrationForm.PropTypes = {
-  register: prop_types__WEBPACK_IMPORTED_MODULE_4___default.a.func.isRequired
-};
+});
 
 /***/ }),
 
@@ -60842,10 +60846,9 @@ const RegisterProvider = c => {
     };
   }, dispatch => {
     return {
-      register: Object(_actions__WEBPACK_IMPORTED_MODULE_3__["CreateRegisterActionDispatcher"])(c.AuthService, dispatch),
-      getInviteData: c.UserService.getInviteData
+      register: Object(_actions__WEBPACK_IMPORTED_MODULE_3__["CreateRegisterActionDispatcher"])(c.AuthService, dispatch)
     };
-  })(_components_Form_registration_form__WEBPACK_IMPORTED_MODULE_0__["default"]));
+  })(Object(_components_Form_registration_form__WEBPACK_IMPORTED_MODULE_0__["default"])(c.UsersService)));
   c.register("Register", c => Object(_components_Register__WEBPACK_IMPORTED_MODULE_1__["default"])(c.RegistrationForm));
 };
 
@@ -61536,12 +61539,13 @@ class AuthService {
    */
 
 
-  register(userName, email, password, organizationName = null) {
+  register(userName, email, password, organizationName = null, invite_token = null) {
     return this.axios.post("/register", {
       name: userName,
       email: email,
       password: password,
-      organization: organizationName
+      organization: organizationName,
+      invite_token: invite_token
     }).then(response => {
       return response.data;
     }).catch(error => {
@@ -61729,7 +61733,7 @@ class UsersService {
    */
 
 
-  inviteUser(email) {
+  async inviteUser(email) {
     return this.axios.post("/user/invite/new", {
       email: email
     }).then(response => {
@@ -61744,11 +61748,19 @@ class UsersService {
    */
 
 
-  revokeInvite(invite_id) {
+  async revokeInvite(invite_id) {
     return this.axios.post("/user/invite/revoke", {
       invite_id: invite_id
     }).then(response => {
-      return response.data.data;
+      return Promise.resolve(response.data.data);
+    }).catch(error => {
+      throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
+    });
+  }
+
+  async getInviteData(token) {
+    return this.axios.get(`/user/invite/${token}`).then(response => {
+      return Promise.resolve(response.data.data);
     }).catch(error => {
       throw Object(_helpers_errors__WEBPACK_IMPORTED_MODULE_0__["parseErrors"])(error.response);
     });

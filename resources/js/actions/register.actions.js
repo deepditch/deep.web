@@ -26,11 +26,11 @@ export const RegisterActions = {
  * @returns a register method that dispatches redux actions
  */
 export const CreateRegisterActionDispatcher = (authService, dispatch) => {
-  return (userName, email, password, organizationName = null) => {
+  return (userName, email, password, organizationName = null, invite_token=null) => {
     dispatch(RegisterActions.attempt());
 
     authService
-      .register(userName, email, password, organizationName)
+      .register(userName, email, password, organizationName, invite_token=null)
       .then(response => {
         dispatch(RegisterActions.success(response.user));
         dispatch(

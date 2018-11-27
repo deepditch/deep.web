@@ -17,11 +17,10 @@ export const RegisterProvider = (c) => {
       },
       dispatch => {
         return {
-          register: CreateRegisterActionDispatcher(c.AuthService, dispatch),
-          getInviteData: c.UserService.getInviteData
+          register: CreateRegisterActionDispatcher(c.AuthService, dispatch)
         };
       }
-    )(RegistrationForm)
+    )(RegistrationForm(c.UsersService))
   );
 
   c.register("Register", c => Register(c.RegistrationForm));
