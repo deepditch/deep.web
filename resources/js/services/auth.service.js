@@ -25,6 +25,24 @@ export class AuthService {
   }
 
   /**
+   * Logs a user in
+   * @param {string} email the user's email
+   * @param {string} password the user's password
+   */
+  refresh(token) {
+    return this.axios
+      .post("/refresh", {
+        token: token
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  /**
    * Logs a user out
    */
   logout() {
@@ -46,7 +64,6 @@ export class AuthService {
    * @param {string} organizationName the organization's name, null if an organization is not being registered
    */
   register(userName, email, password, organizationName = null, invite_token=null) {
-    console.log(invite_token)
     return this.axios
       .post("/register", {
         name: userName,

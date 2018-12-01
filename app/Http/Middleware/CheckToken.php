@@ -19,8 +19,11 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-        $payload = auth('api')->payload();
+        if (! $request->header('Authorization')) {
+            return $next($request);
+        }
 
+        $payload = auth('api')->payload();
         if (! $payload['token_id'] || ApiToken::find($payload['token_id']) !== null) {
             return $next($request);
         }

@@ -1,11 +1,11 @@
 import { LoginActionTypes, RegisterActionTypes } from "../actions";
 
+
 var initialState = {};
 
 try {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-
   initialState =
     token && user
       ? { loggedIn: true, token: token, user: user }

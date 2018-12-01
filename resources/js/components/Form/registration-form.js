@@ -27,7 +27,6 @@ export default UsersService =>
       if (this.props.token) {
         UsersService.getInviteData(this.props.token)
           .then(response => {
-            console.log(response.email);
             this.setState({
               Email: response.email,
               msg: (
