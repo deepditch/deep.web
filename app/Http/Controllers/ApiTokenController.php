@@ -39,7 +39,12 @@ class ApiTokenController extends Controller
 
         return array_merge(
             ['jwt' => $token],
-            ['token' => new ApiTokenResource($new)]
+            ['token' => new ApiTokenResource($new)],
+            [
+                'tokens' => ApiTokenResource::collection(
+                    ApiToken::where('user_id', auth('api')->user()->id)->get()
+                )
+            ]
         );
     }
 

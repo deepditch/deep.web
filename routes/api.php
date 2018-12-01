@@ -15,7 +15,7 @@ use App\Http\Controllers\RoadDamageController;
 |
 */
 
-Route::group(['middleware' => 'api'], function ($router) {
+Route::group(['middleware' => ['api', 'token']], function ($router) {
     Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
     Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
     Route::get('logout', 'AuthController@logout');
