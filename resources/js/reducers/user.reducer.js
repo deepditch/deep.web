@@ -1,22 +1,16 @@
 import { LoginActionTypes, RegisterActionTypes } from "../actions";
 
-var jwtDecode = require('jwt-decode');
 
 var initialState = {};
 
 try {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(jwtDecode.jwt_decode(token));
-  console.log('reducer');
-  console.log(token);
-  console.log(user);
   initialState =
     token && user
       ? { loggedIn: true, token: token, user: user }
       : { loggedIn: false };
 } catch (error) {
-
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   console.error(error);

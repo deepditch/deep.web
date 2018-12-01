@@ -32,6 +32,7 @@ class App extends Component {
                     <c.AuthorizedRoute path="/damage" component={c.Map} />
                     <c.AuthorizedRoute path="/users" component={c.Users} />
                     <c.AuthorizedRoute path="/api-tokens" component={c.ApiTokens} />
+                    <c.AuthorizedRoute path="/logout" component={c.Logout} />
                     <c.AuthorizedRoute path="/" component={c.Map} />
                   </Switch>
                 </>

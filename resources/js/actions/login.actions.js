@@ -53,8 +53,7 @@ export const CreateLoginActionDispatcher = (authService, dispatch) => {
  */
 export const CreateLogoutActionDispatcher = (authService, dispatch) => {
   return () => {
-    authService.logout();
-    dispatch(LoginActions.logout());
-    dispatch(NotifyActions.default("You have been logged out"));
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 };

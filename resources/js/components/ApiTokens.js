@@ -26,7 +26,6 @@ export default ApiTokenForm =>
     }
 
     render() {
-      console.log(this.props);
       return (
         <div class="container container-md">
           <div class="divide-30" />

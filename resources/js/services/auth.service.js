@@ -64,7 +64,6 @@ export class AuthService {
    * @param {string} organizationName the organization's name, null if an organization is not being registered
    */
   register(userName, email, password, organizationName = null, invite_token=null) {
-    console.log(invite_token)
     return this.axios
       .post("/register", {
         name: userName,
