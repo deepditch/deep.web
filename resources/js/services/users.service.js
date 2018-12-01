@@ -31,10 +31,10 @@ export class UsersService {
    * Invite a user
    * @param {string} email The users email we are inviting
    */
-  inviteUser(email) {
+  async inviteUser(email) {
     return this.axios
       .post("/user/invite/new", {
-        email: email,
+        email: email
       })
       .then(response => {
         return response.data.data;
@@ -48,13 +48,24 @@ export class UsersService {
    * Revoke an invite
    * @param {integer} id The invite id we are revoking
    */
-  revokeInvite(invite_id) {
+  async revokeInvite(invite_id) {
     return this.axios
       .post("/user/invite/revoke", {
-        invite_id: invite_id,
+        invite_id: invite_id
       })
       .then(response => {
-        return response.data.data;
+        return Promise.resolve(response.data.data);
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  async getInviteData(token) {
+    return this.axios
+      .get(`/user/invite/${token}`)
+      .then(response => {
+        return Promise.resolve(response.data.data);
       })
       .catch(error => {
         throw parseErrors(error.response);

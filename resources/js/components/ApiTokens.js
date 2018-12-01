@@ -79,7 +79,7 @@ export default ApiTokenForm =>
               }
             ]}
             defaultPageSize="5"
-            data={this.props.tokens.tokens.data}
+            data={this.props.tokens.tokens}
             className="-striped -highlight"
           />
         </div>

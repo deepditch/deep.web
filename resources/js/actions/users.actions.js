@@ -12,7 +12,7 @@ export const InviteUserActionTypes = {
   INVITE_USER_FAILURE: "invite_user_failure",
   REVOKE_INVITE_ATTEMPT: "revoke_invite_attempt",
   REVOKE_INVITE_SUCCESS: "revoke_invite_success",
-  REVOKE_INVITE_FAILURE: "revoke_invice_failure",
+  REVOKE_INVITE_FAILURE: "revoke_invite_failure",
   LOAD_INVITES_ATTEMPT: "load_invites_attempt",
   LOAD_INVITES_SUCCESS: "load_invites_success",
   LOAD_INVITES_FAILURE: "load_invites_failure"

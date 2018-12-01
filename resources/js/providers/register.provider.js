@@ -20,7 +20,7 @@ export const RegisterProvider = (c) => {
           register: CreateRegisterActionDispatcher(c.AuthService, dispatch)
         };
       }
-    )(RegistrationForm)
+    )(RegistrationForm(c.UsersService))
   );
 
   c.register("Register", c => Register(c.RegistrationForm));

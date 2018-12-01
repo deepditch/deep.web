@@ -15,7 +15,6 @@ const store = createStore(rootReducer, applyMiddleware(AuthMiddleware, RedirectM
 
 class App extends Component {
   render() {
-    console.log(c.ApiTokens);
     return (
       <main>
         <div class="app-container h-100">
