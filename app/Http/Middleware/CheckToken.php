@@ -6,8 +6,6 @@ use App\ApiToken;
 use Auth;
 use Closure;
 
-use Illuminate\Support\Facades\Log;
-
 class CheckToken
 {
     /**

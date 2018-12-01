@@ -129,7 +129,6 @@ class UserController extends Controller
             } else {
                 return response()->json(['You do not have permission to delete this user'], 403);
             }
-
         } catch (\Throwable $e) {
             return response()->json(['Deletion failed'], 404);
         }
