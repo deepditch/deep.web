@@ -31,7 +31,7 @@ export default class Header extends Component {
                 Road Damage
               </a>
             </li>
-            {(JSON.parse(localStorage.getItem("user")).role === 'admin') &&
+            {(localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role === 'admin') &&
             <>
             <li class="nav-item">
               <a class="nav-link" href="/users">
