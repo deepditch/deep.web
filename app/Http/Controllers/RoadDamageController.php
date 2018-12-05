@@ -175,7 +175,12 @@ class RoadDamageController extends Controller
                 ]);
             } else {
                 $road_damage = $road_damage->first();
+                if ($road_damage->getAverageConfidence() < 0.5) {
+                    $road_damage->verified = 'false-positive';
+                    $road_damage->save();
+                }
             }
+
             RoadDamageReport::create([
                 'roaddamage_id' => $road_damage->id,
                 'user_id' => $user->id,
