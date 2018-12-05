@@ -8,7 +8,6 @@ import { Router, Route, Switch, Redirect } from "react-router-dom";
 import createContainer from "container/create-container";
 import Header from "./components/Header";
 import { AuthMiddleware, RedirectMiddleware } from "./middleware";
-import "@fortawesome/fontawesome-free";
 
 var c = createContainer();
 const store = createStore(rootReducer, applyMiddleware(AuthMiddleware, RedirectMiddleware));
@@ -23,6 +22,8 @@ class App extends Component {
             <Route path="/login" component={c.Login} />
             <Route path="/register/:token" component={c.Register} />
             <Route path="/register" component={c.Register} />
+            <Route path="/forgot" component={c.Forgot} />
+            <Route path="/reset-password" component={c.ResetPassword} />
             <c.AuthorizedRoute
               path="/"
               component={() => (

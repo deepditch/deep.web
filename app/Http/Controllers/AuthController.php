@@ -154,7 +154,7 @@ class AuthController extends Controller
      *
      * @param string $token
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
     protected function getTokenArray($token)
     {

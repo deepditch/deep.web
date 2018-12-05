@@ -56,6 +56,33 @@ export class AuthService {
       });
   }
 
+  forgotPassword(email) {
+    return this.axios
+      .get(`/forgot-password?email=${email}`)
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  resetPassword(email, password, token) {
+    return this.axios
+      .post("/reset-password", {
+        email: email,
+        password: password,
+        password_confirmation: password,
+        token: token
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
   /**
    * Registers a user or a user and an organization simultaneously
    * @param {string} userName the user's username
