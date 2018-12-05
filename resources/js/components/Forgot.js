@@ -32,9 +32,7 @@ export default AuthService =>
       AuthService.forgotPassword(this.state.Email)
         .then(response => {
           this.setState({
-            msg: `An email has been sent to ${
-              this.state.email
-            } with instructions for resetting your password`
+            msg: response[0]
           });
         })
         .catch(error => {

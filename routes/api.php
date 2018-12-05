@@ -15,6 +15,9 @@ use App\Http\Controllers\RoadDamageController;
 |
 */
 
+Route::get('forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('reset-password', 'Auth\ResetPasswordController@reset');
+
 Route::group(['middleware' => ['api', 'token']], function ($router) {
     Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
     Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);

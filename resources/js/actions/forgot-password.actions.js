@@ -9,8 +9,8 @@ export class ForgotPasswordActionDispatcher {
     this.authService = authService;
   }
 
-  resetPassword = dispatch => (password, token) => {
-    this.authService.resetPassword(password, token).then(response => {
+  resetPassword = dispatch => (email, password, token) => {
+    this.authService.resetPassword(email, password, token).then(response => {
       dispatch({ type: ForgotPasswordActionTypes.RESET_PASSWORD });
       dispatch(NotifyActions.success("Your password has been reset. You may now login."));
     }).catch(error => {

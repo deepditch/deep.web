@@ -13,3 +13,6 @@
 
 Route::view('/{path?}', 'web')
   ->where('path', '.*');
+
+Route::view('forgot-password', 'web')->name('password.email');
+Route::view('reset-password/', 'web')->name('password.reset');

@@ -57,8 +57,8 @@ export class AuthService {
   }
 
   forgotPassword(email) {
-    this.axios
-      .get("/forgot-password", { email: email })
+    return this.axios
+      .get(`/forgot-password?email=${email}`)
       .then(response => {
         return response.data;
       })
@@ -67,9 +67,14 @@ export class AuthService {
       });
   }
 
-  resetPassword(password, token) {
-    this.axios
-      .post("/reset-password", { password: password, token: token })
+  resetPassword(email, password, token) {
+    return this.axios
+      .post("/reset-password", {
+        email: email,
+        password: password,
+        password_confirmation: password,
+        token: token
+      })
       .then(response => {
         return response.data;
       })

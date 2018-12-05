@@ -150,11 +150,72 @@ class AuthController extends Controller
     }
 
     /**
+     * send forgot password email
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendForgotPasswordEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $request->input('email'));
+        if ($user->exists()) {
+            return false;
+        }
+        if (!$token = auth('api')->attempt([
+            'email' => $request->input('email'),
+            'password' => $request->input('password'), ])
+        ) {
+            return response()->json(['error' => 'Invalid email or password!'], 401);
+        }
+
+        return response()->json(
+            array_merge(
+                ['user' => new UserResource(User::find(auth('api')->user()->id))],
+                $this->getTokenArray($token)
+            )
+        );
+    }
+
+        /**
+     * send forgot password email
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (!$token = auth('api')->attempt([
+            'email' => $request->input('email'),
+            'password' => $request->input('password'), ])
+        ) {
+            return response()->json(['error' => 'Invalid email or password!'], 401);
+        }
+
+        return response()->json(
+            array_merge(
+                ['user' => new UserResource(User::find(auth('api')->user()->id))],
+                $this->getTokenArray($token)
+            )
+        );
+    }
+
+    /**
      * Get the token array structure.
      *
      * @param string $token
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return array
      */
     protected function getTokenArray($token)
     {
