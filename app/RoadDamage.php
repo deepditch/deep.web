@@ -93,6 +93,16 @@ class RoadDamage extends Model
     }
 
     /**
+     * Get the latest report.
+     *
+     * @return \App\RoadDamageReport
+     */
+    public function getLatestReport()
+    {
+        return RoadDamageReport::where('roaddamage_id', $this->id)->latest()->first();
+    }
+
+    /**
      * Do we have a verified report (and not a false-positive report).
      *
      * @return bool
