@@ -175,7 +175,10 @@ class RoadDamageController extends Controller
                 ]);
             } else {
                 $road_damage = $road_damage->first();
-                if ($road_damage->getAverageConfidence() < 0.5) {
+                if (
+                    (($road_damage->getAverageConfidence() + $report['confidence']) / 2)
+                     < 0.5
+                ) {
                     $road_damage->verified = 'false-positive';
                     $road_damage->save();
                 }
