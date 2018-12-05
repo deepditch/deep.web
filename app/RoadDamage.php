@@ -107,6 +107,16 @@ class RoadDamage extends Model
     }
 
     /**
+     * Get this road damages reports
+     *
+     * @return collection
+     */
+    public function getReports()
+    {
+        return RoadDamageReport::where('roaddamage_id', $this->id)->get();
+    }
+
+    /**
      * Get verified reports (and not false-positive reports).
      *
      * @return collection
@@ -126,6 +136,16 @@ class RoadDamage extends Model
     {
         return RoadDamageReport::where('roaddamage_id', $this->id)
             ->where('verified', 'false-positive')->exists();
+    }
+
+    /**
+     * Get average confidence of reports
+     *
+     * @return collection
+     */
+    public function getAverageConfidence() : float {
+        return RoadDamageReport::where('roaddamage_id', $this->id)
+            ->avg('confidence');
     }
 
     /**
