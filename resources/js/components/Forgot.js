@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import InputGroup from "./Form/input-group";
 
 /**
  * Registration Page
@@ -46,13 +47,13 @@ export default AuthService =>
     render() {
       return (
         <div class="index-container">
-          <div class="container container-sm">
+          <div class="container container-xs">
             <form class="login-form block-medium" onSubmit={this.handleSubmit}>
               <header>
                 <h1 class="h4">Forgot Your Password?</h1>
                 <p>
                   Enter the email address for your account and we will send you
-                  an email to reset your password.
+                  instructions for resetting your password.
                 </p>
               </header>
 
@@ -62,6 +63,7 @@ export default AuthService =>
                 required={true}
                 onChange={this.handleInputChange}
                 placeholder="Enter Your Email Address"
+                hasLabel={false}
               />
 
               {this.state.msg ? (

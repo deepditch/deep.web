@@ -8,7 +8,8 @@ import {
   NotifyProvider,
   DamageProvider,
   TokensProvider,
-  UsersProvider
+  UsersProvider,
+  ForgotPasswordProvider
 } from "../providers";
 import AuthorizedRoute from "../components/authorized-route";
 import { connect } from "react-redux";
@@ -68,6 +69,7 @@ export default function createContainer() {
   DamageProvider(c);
   UsersProvider(c);
   TokensProvider(c);
+  ForgotPasswordProvider(c);
 
   return c;
 }
