@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 export default class Header extends Component {
   render() {
-    console.log(this.state);
     return (
       <nav class="navbar navbar-expand-lg navbar-dark bg-gray">
         <h1 class="h6 mb-0">
