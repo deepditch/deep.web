@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 export default class Header extends Component {
   render() {
+    console.log(this.state);
     return (
       <nav class="navbar navbar-expand-lg navbar-dark bg-gray">
         <h1 class="h6 mb-0">
@@ -31,6 +32,8 @@ export default class Header extends Component {
                 Road Damage
               </a>
             </li>
+            {(JSON.parse(localStorage.getItem("user")).role === 'admin') &&
+            <>
             <li class="nav-item">
               <a class="nav-link" href="/users">
                 Users
@@ -41,6 +44,8 @@ export default class Header extends Component {
                 API Tokens
               </a>
             </li>
+            </>
+            }
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"
