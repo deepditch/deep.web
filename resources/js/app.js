@@ -24,6 +24,8 @@ class App extends Component {
             <Route path="/login" component={c.Login} />
             <Route path="/register/:token" component={c.Register} />
             <Route path="/register" component={c.Register} />
+            <Route path="/forgot" component={c.Forgot} />
+            <Route path="/reset-password/:token" component={c.ResetPassword} />
             <c.AuthorizedRoute
               path="/"
               component={() => (

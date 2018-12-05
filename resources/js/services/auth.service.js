@@ -38,6 +38,28 @@ export class AuthService {
       });
   }
 
+  forgotPassword(email) {
+    this.axios
+      .get("/forgot-password", { email: email })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  resetPassword(password, token) {
+    this.axios
+      .post("/reset-password", { password: password, token: token })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
   /**
    * Registers a user or a user and an organization simultaneously
    * @param {string} userName the user's username
