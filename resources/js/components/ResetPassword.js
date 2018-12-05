@@ -47,7 +47,6 @@ export default class ResetPassword extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div class="index-container">
         <div class="container container-sm">
