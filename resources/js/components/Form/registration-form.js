@@ -14,6 +14,7 @@ export default UsersService =>
         Email: "",
         Password: "",
         "Confirm Password": "",
+        pw_msg: "",
         msg: "",
         isTokenRegistration: false,
         EmailEditable: true
@@ -51,6 +52,17 @@ export default UsersService =>
       const target = event.target;
       const value = target.type === "checkbox" ? target.checked : target.value;
       const name = target.name;
+      console.log(value);
+      console.log(this.state.Password);
+      if ((name == 'Confirm Password') && (value !== this.state.Password)) {
+        this.setState({
+          pw_msg: `Passwords must match.`
+        });
+      } else if ((name == 'Confirm Password') && (value == this.state.Password)) {
+        this.setState({
+          pw_msg: ``
+        });
+      }
 
       this.setState({
         [name]: value
@@ -131,12 +143,14 @@ export default UsersService =>
             onChange={this.handleInputChange}
           />
 
+
           <InputGroup
             name="Confirm Password"
             type="password"
             required={true}
             onChange={this.handleInputChange}
           />
+          {this.state.pw_msg && <p>{this.state.pw_msg}</p>}
 
           <div class="divide-15" />
 
