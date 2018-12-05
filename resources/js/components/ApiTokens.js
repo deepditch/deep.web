@@ -26,7 +26,6 @@ export default ApiTokenForm =>
     }
 
     render() {
-      console.log(this.props);
       return (
         <div class="container container-md">
           <div class="divide-30" />
@@ -79,7 +78,7 @@ export default ApiTokenForm =>
               }
             ]}
             defaultPageSize="5"
-            data={this.props.tokens.tokens.data}
+            data={this.props.tokens.tokens}
             className="-striped -highlight"
           />
         </div>

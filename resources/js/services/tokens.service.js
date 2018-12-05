@@ -9,7 +9,6 @@ export class TokensService {
     return this.axios
       .get("/api-token")
       .then(response => {
-        console.log(response.data);
         return response.data;
       })
       .catch(error => {

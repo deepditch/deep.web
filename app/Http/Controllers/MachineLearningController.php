@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class MachineLearningController extends Controller
 {
@@ -28,15 +29,20 @@ class MachineLearningController extends Controller
     public function insert(Request $request)
     {
         $request->validate([
-            'model' => 'file',
+            'model' => 'required|file',
         ]);
 
-        $name = Str::random(40).".mlmodel";
+        if (
+            $request->file('model')->getSize() !==
+            Storage::size(MachineLearning::latest()->first()->path)
+        ) {
+            return response()->json(['The size of this model does not match the size of a previously uploaded model.', 422]);
+        }
 
         try {
             $path = $request->file('model')->storeAs(
                 '/models',
-                $name
+                Str::random(40).".mlmodel"
             );
         } catch (\Exception $e) {
             return $e->getMessage();

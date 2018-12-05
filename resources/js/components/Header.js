@@ -31,6 +31,8 @@ export default class Header extends Component {
                 Road Damage
               </a>
             </li>
+            {(localStorage.getItem("user") && JSON.parse(localStorage.getItem("user")).role === 'admin') &&
+            <>
             <li class="nav-item">
               <a class="nav-link" href="/users">
                 Users
@@ -41,6 +43,8 @@ export default class Header extends Component {
                 API Tokens
               </a>
             </li>
+            </>
+            }
             <li class="nav-item dropdown">
               <a
                 class="nav-link dropdown-toggle"

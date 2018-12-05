@@ -15,7 +15,7 @@ use App\Http\Controllers\RoadDamageController;
 |
 */
 
-Route::group(['middleware' => 'api'], function ($router) {
+Route::group(['middleware' => ['api', 'token']], function ($router) {
     Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
     Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
     Route::get('logout', 'AuthController@logout');
@@ -23,12 +23,15 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('me', 'AuthController@me');
     Route::get('user', 'UserController@getUsersJson')
         ->middleware('role:admin');
+    Route::delete('user/{id}', 'UserController@deleteUser')
+        ->middleware('role:admin');
     Route::get('user/invite', 'UserController@getInvitesJson')
         ->middleware('role:admin');
     Route::post('user/invite/new', 'UserController@inviteUser')
         ->middleware('role:admin');
     Route::post('user/invite/revoke', 'UserController@revokeInvite')
         ->middleware('role:admin');
+    Route::get('user/invite/{token}', ['as' => 'getInviteJson', 'uses' =>'UserController@getInviteJson']);
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
     Route::get('road-damage/verified-images', 'RoadDamageController@getVerifiedImages');

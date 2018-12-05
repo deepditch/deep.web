@@ -2,13 +2,14 @@ import Container from "./container";
 import { AuthService } from "../services/";
 import Axios from "axios";
 import {
+  LogoutProvider,
   LoginProvider,
   RegisterProvider,
   NotifyProvider,
   DamageProvider,
-  TokensProvider
+  TokensProvider,
+  UsersProvider
 } from "../providers";
-import { UsersProvider } from "../providers/users.provider";
 import AuthorizedRoute from "../components/authorized-route";
 import { connect } from "react-redux";
 
@@ -60,6 +61,7 @@ export default function createContainer() {
     )(AuthorizedRoute)
   );
 
+  LogoutProvider(c);
   LoginProvider(c);
   RegisterProvider(c);
   NotifyProvider(c);
