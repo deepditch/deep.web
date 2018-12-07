@@ -45,7 +45,7 @@ class RoadDamageController extends Controller
             'after' => ['required', 'date'],
         ]);
 
-        $reports = RoadDamageReport::where('verified', '=', 'verified')
+        $reports = RoadDamageReport::where('verified', '!=', 'unverified')
             ->where('updated_at', '>=', $request->input('after'))
             ->get();
 
@@ -56,6 +56,7 @@ class RoadDamageController extends Controller
             }
             $data = [
                 'types' => $report->getRoadDamage()->type,
+                'verification-status' => $report->verified,
                 'url' => $report->getImageUrl()
             ];
             $reports_array[$report->getImage()->image_name] = array_merge_recursive(
