@@ -45,7 +45,7 @@ class RoadDamageController extends Controller
             'after' => ['required', 'date'],
         ]);
 
-        $reports = RoadDamageReport::where('verified', '=', 'verified')
+        $reports = RoadDamageReport::where('verified', '!=', 'unverified')
             ->where('updated_at', '>=', $request->input('after'))
             ->get();
 
