@@ -24,7 +24,7 @@ class RadioGroupOption extends Component {
 class CheckboxGroupOption extends Component {
   render() {
     return (
-      <label class="pill">
+      <label class="pill checkbox-pill">
         <input
           type="checkbox"
           name={this.props.name}

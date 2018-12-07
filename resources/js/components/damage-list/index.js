@@ -56,17 +56,9 @@ export default (DamageListItem, DamageFilters) =>
               ref={this.scrollSection}
               scrollTop={this.state.scrollTop}
             >
+            <div class="divide-5"></div>
               <div class="block-medium-left block-medium-right block-medium-bottom">
-                <div class="divide-30" />
                 <table class="damage-list">
-                  <thead>
-                    <tr>
-                      <th class="streetname">Street</th>
-                      <th class="type">Type</th>
-                      <th class="status">Status</th>
-                      <th class="verified">Verified</th>
-                    </tr>
-                  </thead>
                   <tbody>
                     {this.props.damages &&
                       this.props.damages.map(damageId => (

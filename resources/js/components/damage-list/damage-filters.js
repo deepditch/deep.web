@@ -17,66 +17,77 @@ export class DamageFilters extends Component {
   render() {
     return (
       <form>
-        <table class="filter">
-          <tbody>
+        <table class="filter damage-list">
+          <thead>
             <tr>
-              <td>
-                <InputGroup
-                  name="Street Name"
-                  type="text"
-                  onChange={this.filterChange.bind(this)}
-                  required={true}
-                />
-              </td>
-              <td>
+              <th class="streetname">
+                <label class="input-group">
+                  Street name
+                  <input
+                    name="Street Name"
+                    onChange={this.filterChange.bind(this)}
+                    type="text"
+                  />
+                </label>
+              </th>
+              <th class="type">
                 <label class="input-group">
                   Type
-                  <select name="Type" onChange={this.filterChange.bind(this)}>
-                    <option />
-                    <option value="D00">D00</option>
-                    <option value="D01">D01</option>
-                    <option value="D10">D10</option>
-                    <option value="D11">D11</option>
-                    <option value="D20">D20</option>
-                    <option value="D40">D40</option>
-                    <option value="D43">D43</option>
-                    <option value="D44">D44</option>
-                  </select>
+                  <div class="select">
+                    <select name="Type" onChange={this.filterChange.bind(this)}>
+                      <option />
+                      <option value="D00">D00</option>
+                      <option value="D01">D01</option>
+                      <option value="D10">D10</option>
+                      <option value="D11">D11</option>
+                      <option value="D20">D20</option>
+                      <option value="D40">D40</option>
+                      <option value="D43">D43</option>
+                      <option value="D44">D44</option>
+                    </select>
+                  </div>
                 </label>
-              </td>
-              <td>
+              </th>
+              <th class="status">
                 <label class="input-group">
                   Status
-                  <select name="Status" onChange={this.filterChange.bind(this)}>
-                    <option />
-                    <option value="pending-repair">
-                      {mapStatusToString("pending-repair")}
-                    </option>
-                    <option value="repairing">
-                      {mapStatusToString("repairing")}
-                    </option>
-                    <option value="done">{mapStatusToString("done")}</option>
-                    <option value="wont-do">
-                      {mapStatusToString("wont-do")}
-                    </option>
-                  </select>
+                  <div class="select">
+                    <select
+                      name="Status"
+                      onChange={this.filterChange.bind(this)}
+                    >
+                      <option />
+                      <option value="pending-repair">
+                        {mapStatusToString("pending-repair")}
+                      </option>
+                      <option value="repairing">
+                        {mapStatusToString("repairing")}
+                      </option>
+                      <option value="done">{mapStatusToString("done")}</option>
+                      <option value="wont-do">
+                        {mapStatusToString("wont-do")}
+                      </option>
+                    </select>
+                  </div>
                 </label>
-              </td>
-              <td>
+              </th>
+              <th class="verified">
                 <label class="input-group">
                   Verified
-                  <select
-                    name="Verified"
-                    onChange={this.filterChange.bind(this)}
-                  >
-                    <option />
-                    <option value="true">Verified</option>
-                    <option value="false">Unverified</option>
-                  </select>
+                  <div class="select">
+                    <select
+                      name="Verified"
+                      onChange={this.filterChange.bind(this)}
+                    >
+                      <option />
+                      <option value="true">Verified</option>
+                      <option value="false">Unverified</option>
+                    </select>
+                  </div>
                 </label>
-              </td>
+              </th>
             </tr>
-          </tbody>
+          </thead>
         </table>
       </form>
     );

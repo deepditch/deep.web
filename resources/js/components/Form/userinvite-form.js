@@ -31,16 +31,16 @@ export default class UserInviteForm extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <div class="input-group">
+        <div class="input-group row">
           <input
             type="email"
-            class="form-control"
+            class="form-control col"
             name="Email"
             placeholder="Users Email"
             onChange={this.handleInputChange} />
           <div class="input-group-append">
             <input
-              class="btn btn-outline-secondary"
+              class="btn btn-outline-secondary col-auto"
               type="submit"
               value="Invite"
               required={true}

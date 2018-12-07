@@ -26,7 +26,7 @@
   display: block;
   width: $width;
   height: $height;
-  border-top: ($height / 2) solid $color;
+  border-top: ($height / 2) solid;
   border-right: ($width / 2) solid transparent;
   border-bottom: none;
   border-left: ($width / 2) solid transparent;

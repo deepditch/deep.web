@@ -1,16 +1,23 @@
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 /*
  * Component for making an input with label
  */
 class InputGroup extends Component {
+  static defaultProps = {
+    hasLabel: true
+ };
+
   render() {
+    const { hasLabel, ...rest } = this.props
+
     return (
-      <label className="input-group">
-        {this.props.hasLabel && this.props.name}
+      <label class="input-group">
+        {hasLabel ? this.props.name : <></>}
         {!this.props.required && <i class="small text-medium-gray"> - Optional</i>}
-        <input {...this.props} />
+        <input {...rest} />
       </label>
     );
   }

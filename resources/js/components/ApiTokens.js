@@ -27,8 +27,7 @@ export default ApiTokenForm =>
 
     render() {
       return (
-        <div class="container container-md">
-          <div class="divide-30" />
+        <div class="container container-md block-top block-bottom">
           <div class="row">
             <div class="col-6">
               <h1 class="h3">API Tokens</h1>

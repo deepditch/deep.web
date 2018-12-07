@@ -7,10 +7,17 @@
   width: 100%;
   table-layout: fixed;
 
+  .input-group {
+    margin-bottom: pxtoem(5);
+  }
+
   th,
   td {
     vertical-align: middle;
     padding: 6px 0 4px;
+  }
+
+  td {
     border-bottom: 2px solid rgba($gray, 0.2);
   }
 
@@ -53,7 +60,6 @@
       font-size: 0.8em;
       font-weight: 800;
       padding-top: pxtoem(11);
-      text-align: center;
     }
 
     > .status {
@@ -63,7 +69,6 @@
 
     > .verified {
       width: 12%;
-      text-align: center;
     }
   }
 

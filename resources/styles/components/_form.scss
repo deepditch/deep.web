@@ -1,5 +1,6 @@
 @import "../type/lib";
 @import "../color/lib";
+@import "../util/lib";
 
 // Default form input styles
 
@@ -80,5 +81,26 @@ button {
       color: #00ff00;
       transform: rotate(45deg) scale(0.8);
     }
+  }
+}
+
+.select {
+  position: relative;
+
+
+  &:after {
+    pointer-events: none;
+    @include caret-down(6px, 1px);
+    position: absolute;
+    right: 5px;
+    top: 46%;
+    transform: translate(0, -50%) rotate(45deg);
+  }
+
+  select {
+    appearance: none;
+    padding: pxtoem(4) pxtoem(20) pxtoem(4) pxtoem(4);
+    outline: none;
+    box-shadow: none;
   }
 }

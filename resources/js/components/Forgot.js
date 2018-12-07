@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import InputGroup from "./Form/input-group";
+import { Link } from "react-router-dom";
 
 /**
  * Registration Page
@@ -51,7 +52,7 @@ export default AuthService =>
                 <h1 class="h4">Forgot Your Password?</h1>
                 <p>
                   Enter the email address for your account and we will send you
-                  instructions for resetting your password.
+                  instructions to reset your password.
                 </p>
               </header>
 
@@ -69,6 +70,10 @@ export default AuthService =>
               ) : (
                 <button class="btn link">Send Password Reset Email</button>
               )}
+              <span class="inline-spacer" />
+              <span class="small">
+                Remember? <Link to="/login">Login</Link>
+              </span>
             </form>
           </div>
         </div>

@@ -298,7 +298,8 @@ large, .large {
   bottom: 0;
   display: flex;
   flex-direction: column;
-  overflow: hidden; }
+  overflow: hidden;
+  height: 100vh; }
 
 .map-container {
   height: calc(100vh - 40px); }
@@ -905,6 +906,31 @@ button {
       -webkit-transform: rotate(45deg) scale(0.8);
               transform: rotate(45deg) scale(0.8); }
 
+.select {
+  position: relative; }
+  .select:after {
+    pointer-events: none;
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+    position: absolute;
+    right: 5px;
+    top: 46%;
+    -webkit-transform: translate(0, -50%) rotate(45deg);
+            transform: translate(0, -50%) rotate(45deg); }
+  .select select {
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    padding: 0.22222em 1.11111em 0.22222em 0.22222em;
+    outline: none;
+    box-shadow: none; }
+
 /**
  * Calculate the luminance for a color.
  * See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
@@ -1086,6 +1112,8 @@ button {
 .pill-radio > .pill {
   cursor: pointer;
   margin-right: -1px; }
+  .pill-radio > .pill.checkbox-pill {
+    margin-right: .5em; }
   .pill-radio > .pill input {
     height: 0;
     width: 0;
@@ -1099,17 +1127,17 @@ button {
     border: 1px solid #bababa;
     padding: 0.22222em 0.66667em;
     color: rgba(44, 52, 67, 0.4); }
-  .pill-radio > .pill:first-child span {
+  .pill-radio > .pill:first-child span, .pill-radio > .pill.checkbox-pill span {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px; }
-  .pill-radio > .pill:last-child span {
+  .pill-radio > .pill:last-child span, .pill-radio > .pill.checkbox-pill span {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px; }
   .pill-radio > .pill input:checked + span {
-    border-color: #89B6A5;
-    box-shadow: inset 0 0 0 3px #89B6A5;
-    z-index: 5;
-    color: #2c3443; }
+    border-color: #2c3443;
+    background-color: #2c3443;
+    color: #ffffff;
+    z-index: 5; }
   .pill-radio > .pill label {
     margin: 0; }
 
@@ -1285,7 +1313,9 @@ button {
   z-index: 10;
   background: #ffffff;
   color: #2c3443;
-  border-left: 2px solid rgba(44, 52, 67, 0.5); }
+  border-left: 2px solid rgba(44, 52, 67, 0.5);
+  display: flex;
+  flex-direction: column; }
   .expanded-damage-window .image {
     width: calc(100% + 2px);
     margin-left: -2px;
@@ -1339,6 +1369,10 @@ button {
     .expanded-damage-window .close:after {
       -webkit-transform: translate(-50%, -50%) rotate(45deg);
               transform: translate(-50%, -50%) rotate(45deg); }
+  .expanded-damage-window .content {
+    flex: 1;
+    overflow: hidden;
+    width: 100%; }
 
 .tag {
   font-size: 0.8em;
@@ -1420,7 +1454,8 @@ button {
 
 .navbar {
   font-size: 0.88889em;
-  padding: 0 0.66667em; }
+  padding: 0 0.66667em;
+  height: 40px; }
 
 #navbarNav .navbar-nav {
   margin-left: auto; }
@@ -1470,10 +1505,13 @@ button {
   font-weight: 400;
   width: 100%;
   table-layout: fixed; }
+  .damage-list .input-group {
+    margin-bottom: 0.27778em; }
   .damage-list th,
   .damage-list td {
     vertical-align: middle;
-    padding: 6px 0 4px;
+    padding: 6px 0 4px; }
+  .damage-list td {
     border-bottom: 2px solid rgba(44, 52, 67, 0.2); }
   .damage-list th {
     font-weight: 700;
@@ -1512,14 +1550,12 @@ button {
       letter-spacing: 0.02778em;
       font-size: 0.8em;
       font-weight: 800;
-      padding-top: 0.61111em;
-      text-align: center; }
+      padding-top: 0.61111em; }
     .damage-list tr > .status {
       width: 33%;
       padding-right: 1.11111em; }
     .damage-list tr > .verified {
-      width: 12%;
-      text-align: center; }
+      width: 12%; }
   .damage-list .checkbox {
     line-height: 0; }
 
