@@ -39,6 +39,7 @@ class RoadDamage extends Model
     /**
      * Override save to invalidate cache
      *
+     * @param  array  $options
      * @return bool
      */
     public function save(array $options = []) {
@@ -48,10 +49,27 @@ class RoadDamage extends Model
 
     /**
      * Override update to invalidate cache
+     *
+     * @param  array  $attributes
+     * @param  array  $options
+     * @return bool
      */
     public function update(array $attributes = [], array $options = []) {
         Cache::forget('roaddamage-resource:' . $this->id);
         return parent::update($attributes, $options);
+    }
+
+    /**
+     * Override delete to invalidate cache
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        Cache::forget('roaddamage-resource:' . $this->id);
+        return parent::delete();
     }
 
     /**
