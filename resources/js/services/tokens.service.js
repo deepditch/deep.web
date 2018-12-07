@@ -39,7 +39,7 @@ export class TokensService {
    */
   deleteToken(delete_token_id) {
     return this.axios
-      .get("/api-token/" + delete_token_id + "/delete")
+      .delete("/api-token/" + delete_token_id)
       .then(response => {
         return response.data.data;
       })

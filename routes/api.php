@@ -51,7 +51,7 @@ Route::group(['middleware' => ['api', 'token', 'jwt.refresh']], function ($route
         ->middleware('role:admin');
     Route::post('api-token/new', 'ApiTokenController@insert')
         ->middleware('role:admin');
-    Route::get('api-token/{id}/delete', 'ApiTokenController@delete')
+    Route::delete('api-token/{id}', 'ApiTokenController@delete')
         ->middleware('role:admin');
 
     Route::any('/{path?}', function () {

@@ -8,6 +8,7 @@ export default UserInviteForm =>
 
       this.handleClick = this.handleClick.bind(this);
       this.submitRevoke = this.submitRevoke.bind(this);
+      this.submitDelete = this.submitDelete.bind(this);
     }
 
     componentDidMount() {
@@ -24,6 +25,11 @@ export default UserInviteForm =>
     submitRevoke(event) {
       event.preventDefault();
       this.props.revokeInvite(this.state.revoke_invite_id);
+    }
+
+    submitDelete(event) {
+      event.preventDefault();
+      this.props.deleteUser(this.state.delete_user_id);
     }
 
     render() {
@@ -56,6 +62,28 @@ export default UserInviteForm =>
               {
                 Header: "Organization",
                 accessor: "organization.name"
+              },
+              {
+                Header: "",
+                columns: [
+                  {
+                    Header: "",
+                    accessor: "id",
+                    Cell: row => (
+                      <form onSubmit={this.submitDelete}>
+                        <button
+                          class="btn"
+                          type="submit"
+                          name="delete_user_id"
+                          value={row.value}
+                          onClick={this.handleClick}
+                        >
+                          DELETE
+                        </button>
+                      </form>
+                    )
+                  }
+                ]
               }
             ]}
             defaultPageSize="5"

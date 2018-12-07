@@ -45,6 +45,21 @@ export class UsersService {
   }
 
   /**
+   * Delete a user
+   * @param {int} id of the user we are deleting
+   */
+  async deleteUser(id) {
+    return this.axios
+      .delete("/user/" + id)
+      .then(response => {
+        return response.data.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  /**
    * Revoke an invite
    * @param {integer} id The invite id we are revoking
    */
