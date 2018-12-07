@@ -13,6 +13,8 @@ export default function UsersReducer(state = { users: [] }, action) {
       return { users: action.users, success: true };
     case UsersActionTypes.LOAD_USERS_FAILURE:
       return { users: [], rejected: true };
+    case UsersActionTypes.DEL_USERS_SUCCESS:
+      return { users: action.users, rejected: false };
     default:
       return state;
   }

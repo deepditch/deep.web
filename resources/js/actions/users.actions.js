@@ -4,6 +4,9 @@ export const UsersActionTypes = {
   LOAD_USERS_ATTEMPT: "load_user_attempt",
   LOAD_USERS_SUCCESS: "load_user_success",
   LOAD_USERS_FAILURE: "load_user_failure",
+  DEL_USERS_ATTEMPT: "delete_user_attempt",
+  DEL_USERS_SUCCESS: "delete_user_success",
+  DEL_USERS_FAILURE: "delete_user_failure",
 };
 
 export const InviteUserActionTypes = {
@@ -27,6 +30,15 @@ export const UsersActions = {
   },
   failure: () => {
     return { type: UsersActionTypes.LOAD_USERS_FAILURE };
+  },
+  deleteAttempt: () => {
+    return { type: UsersActionTypes.DEL_USERS_ATTEMPT };
+  },
+  deleteSuccess: users => {
+    return { type: UsersActionTypes.DEL_USERS_SUCCESS, users: users};
+  },
+  deleteFailure: () => {
+    return { type: UsersActionTypes.DEL_USERS_FAILURE};
   }
 };
 
@@ -142,6 +154,28 @@ export const CreateRevokeInviteActionDispatcher = (UsersService, dispatch) => {
       .catch(error => {
         dispatch(NotifyActions.error(error));
         dispatch(InvitesActions.revokeInviteFailure());
+      });
+  };
+};
+
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {UsersService} UsersService must have a getUsersInstances() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+export const DeleteUserDispatcher = (UsersService, dispatch) => {
+  return (delete_user_id) => {
+    dispatch(UsersActions.deleteAttempt());
+
+    UsersService.deleteUser(delete_user_id)
+      .then(users => {
+        dispatch(NotifyActions.success("User has been deleted."));
+        dispatch(UsersActions.deleteSuccess(users));
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error(error));
+        dispatch(UsersActions.deleteFailure());
       });
   };
 };
