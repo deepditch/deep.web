@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\RoadDamageReport;
+use Illuminate\Support\Facades\Cache;
 
 class RoadDamage extends Model
 {
@@ -34,6 +35,24 @@ class RoadDamage extends Model
         'D43',
         'D44'
     ];
+
+    /**
+     * Override save to invalidate cache
+     *
+     * @return bool
+     */
+    public function save(array $options = []) {
+        Cache::forget('roaddamage-resource:' . $this->id);
+        return parent::save($options);
+    }
+
+    /**
+     * Override update to invalidate cache
+     */
+    public function update(array $attributes = [], array $options = []) {
+        Cache::forget('roaddamage-resource:' . $this->id);
+        return parent::update($attributes, $options);
+    }
 
     /**
      * Get the right road damage based on provided longitude and latitude

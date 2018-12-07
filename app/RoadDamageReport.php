@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class RoadDamageReport extends Model
 {
@@ -35,6 +36,22 @@ class RoadDamageReport extends Model
     const VERIFIED = 'verified';
     const UNVERIFIED = 'unverified';
     const FALSEPOSITIVE = 'false-positive';
+
+    /**
+     * Override save to invalidate cache
+     */
+    public function save(array $options = []) {
+        Cache::forget('report-resource:' . $this->id);
+        return parent::save($options);
+    }
+
+    /**
+     * Override update to invalidate cache
+     */
+    public function update(array $attributes = [], array $options = []) {
+        Cache::forget('report-resource:' . $this->id);
+        return parent::update($attributes, $options);
+    }
 
     /**
      * Get the image object.
