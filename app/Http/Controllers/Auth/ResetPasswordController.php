@@ -32,7 +32,9 @@ class ResetPasswordController extends Controller
     /**
      * Create a new controller instance.
      */
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     /**
      * Reset the given user's password.
@@ -48,7 +50,8 @@ class ResetPasswordController extends Controller
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
         $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
+            $this->credentials($request),
+            function ($user, $password) {
                 $this->resetPassword($user, $password);
             }
         );

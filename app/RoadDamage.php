@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\RoadDamageReport;
 
 class RoadDamage extends Model
 {
@@ -111,9 +112,9 @@ class RoadDamage extends Model
     {
         return
         !RoadDamageReport::where('roaddamage_id', $this->id)
-            ->where('verified', 'false-positive')->exists() &&
+            ->where('verified', RoadDamageReport::FALSEPOSITIVE)->exists() &&
         RoadDamageReport::where('roaddamage_id', $this->id)
-            ->where('verified', 'verified')->exists();
+            ->where('verified', RoadDamageReport::VERIFIED)->exists();
     }
 
     /**
@@ -134,7 +135,7 @@ class RoadDamage extends Model
     public function getVerifiedReports()
     {
         return RoadDamageReport::where('roaddamage_id', $this->id)
-            ->where('verified', 'verified')->get();
+            ->where('verified', RoadDamageReport::VERIFIED)->get();
     }
 
     /**
@@ -145,7 +146,7 @@ class RoadDamage extends Model
     public function hasFalsePositiveReport(): bool
     {
         return RoadDamageReport::where('roaddamage_id', $this->id)
-            ->where('verified', 'false-positive')->exists();
+            ->where('verified', RoadDamageReport::FALSEPOSITIVE)->exists();
     }
 
     /**
@@ -153,7 +154,8 @@ class RoadDamage extends Model
      *
      * @return collection
      */
-    public function getAverageConfidence() : float {
+    public function getAverageConfidence() : float
+    {
         return RoadDamageReport::where('roaddamage_id', $this->id)
             ->avg('confidence');
     }

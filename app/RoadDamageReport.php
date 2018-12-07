@@ -30,6 +30,13 @@ class RoadDamageReport extends Model
     ];
 
     /**
+     * Constants for `verified` enums
+     */
+    const VERIFIED = 'verified';
+    const UNVERIFIED = 'unverified';
+    const FALSEPOSITIVE = 'false-positive';
+
+    /**
      * Get the image object.
      *
      * @return \App\Image
@@ -66,7 +73,7 @@ class RoadDamageReport extends Model
     */
     public function isVerified() : bool
     {
-        return $this->verified === 'verified';
+        return $this->verified === RoadDamageReport::VERIFIED;
     }
 
     /**
