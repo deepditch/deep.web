@@ -56,6 +56,7 @@ class RoadDamageController extends Controller
             }
             $data = [
                 'types' => $report->getRoadDamage()->type,
+                'verification-status' => $report->verified,
                 'url' => $report->getImageUrl()
             ];
             $reports_array[$report->getImage()->image_name] = array_merge_recursive(
