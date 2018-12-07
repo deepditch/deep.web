@@ -18,12 +18,15 @@ use App\Http\Controllers\RoadDamageController;
 Route::get('forgot-password', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 Route::post('reset-password', 'Auth\ResetPasswordController@reset');
 
+Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
+Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
+
 Route::group(['middleware' => ['api', 'token']], function ($router) {
-    Route::post('register', ['as' => 'register', 'uses' =>'AuthController@register']);
-    Route::post('login', ['as' => 'login', 'uses' =>'AuthController@login']);
     Route::get('logout', 'AuthController@logout');
     Route::get('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
+});
+Route::group(['middleware' => ['api', 'token', 'jwt.refresh']], function ($router) {
     Route::get('user', 'UserController@getUsersJson')
         ->middleware('role:admin');
     Route::delete('user/{id}', 'UserController@deleteUser')

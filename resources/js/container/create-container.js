@@ -33,9 +33,31 @@ export default function createContainer() {
       });
 
       instance.interceptors.request.use(function(config) {
-        const token = localStorage.getItem("token");
-        config.headers.Authorization = token ? `Bearer ${token}` : "";
+        var token = localStorage.getItem("token");
+        if (token) {
+          if (token.includes("Bearer")){
+            token = localStorage.getItem("token");
+          } else {
+            token = `Bearer ${token}`;
+          }
+        }
+        config.headers.Authorization = token;
+
         return config;
+      });
+
+      instance.interceptors.response.use(function (response) {
+        if (response.headers.authorization) {
+          localStorage.setItem("token", response.headers.authorization);
+        }
+        return response;
+      }, function (error) {
+        if (error.response.status === 401 && error.response.statusText === "Unauthorized") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          location.reload();
+        }
+        return error;
       });
 
       return instance;
