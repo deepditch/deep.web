@@ -61,7 +61,7 @@ class RoadDamageReport extends Model
      */
     public function update(array $attributes = [], array $options = [])
     {
-        Cache::forget('report-resource:'.$this->id);
+        $this->_clearCache();
 
         return parent::update($attributes, $options);
     }
@@ -75,7 +75,7 @@ class RoadDamageReport extends Model
      */
     public function delete()
     {
-        Cache::forget('report-resource:'.$this->id);
+        $this->_clearCache();
 
         return parent::delete();
     }
@@ -148,5 +148,20 @@ class RoadDamageReport extends Model
     public function getAssociatedIds()
     {
         return RoadDamageReport::select('id', 'roaddamage_id')->where('image_id', '=', $this->image_id)->get()->toArray();
+    }
+
+    /**
+     * Clear cache for this and associated reports
+     */
+    private function _clearCache()
+    {
+        Cache::forget("report-resource:{$this->id}");
+
+        foreach ($this->getAssociatedDamageIds() as $id) {
+            Cache::forget("roaddamage-resource:{$id}");
+        }
+        foreach ($this->getAssociatedReportIds() as $id) {
+            Cache::forget("report-resource:{$report->id}");
+        }
     }
 }

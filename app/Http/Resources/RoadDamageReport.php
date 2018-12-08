@@ -16,7 +16,7 @@ class RoadDamageReport extends JsonResource
      */
     public function toArray($request)
     {
-        return Cache::remember('report-resource:'.$this->id, 1800 * 30, function () {
+        return Cache::remember("report-resource:{$this->id}", 1800 * 30, function () {
             return [
                 'id' => $this->id,
                 'user_id' => $this->user_id,

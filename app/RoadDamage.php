@@ -44,7 +44,7 @@ class RoadDamage extends Model
      */
     public function save(array $options = [])
     {
-        Cache::forget('roaddamage-resource:'.$this->id);
+        Cache::forget("roaddamage-resource:{$this->id}");
 
         return parent::save($options);
     }
@@ -59,7 +59,7 @@ class RoadDamage extends Model
      */
     public function update(array $attributes = [], array $options = [])
     {
-        Cache::forget('roaddamage-resource:'.$this->id);
+        $this->_clearCache();
 
         return parent::update($attributes, $options);
     }
@@ -73,7 +73,7 @@ class RoadDamage extends Model
      */
     public function delete()
     {
-        Cache::forget('roaddamage-resource:'.$this->id);
+        $this->_clearCache();
 
         return parent::delete();
     }
@@ -213,5 +213,16 @@ class RoadDamage extends Model
         return app('geocoder')
             ->reverseQuery(\Geocoder\Query\ReverseQuery::fromCoordinates($this->latitude, $this->longitude))
             ->get()->first()->toArray()['streetName'] ?? '';
+    }
+
+    /**
+     * Clear cache for this and associated reports
+     */
+    private function _clearCache()
+    {
+        Cache::forget("roaddamage-resource:{$this->id}");
+        foreach ($this->getReports() as $report) {
+            Cache::forget("report-resource:{$report->id}");
+        }
     }
 }

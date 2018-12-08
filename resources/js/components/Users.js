@@ -68,7 +68,8 @@ export default UserInviteForm =>
                   {
                     Header: "",
                     accessor: "id",
-                    Cell: row => (
+                    Cell: row =>
+                      {row.value !== JSON.parse(localStorage.getItem("user")).id && (
                       <form onSubmit={this.submitDelete}>
                         <button
                           class="btn"
@@ -80,7 +81,7 @@ export default UserInviteForm =>
                           DELETE
                         </button>
                       </form>
-                    )
+                      )}
                   }
                 ]
               }
