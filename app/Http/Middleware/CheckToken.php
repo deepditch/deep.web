@@ -5,30 +5,29 @@ namespace App\Http\Middleware;
 use App\ApiToken;
 use Auth;
 use Closure;
-use Illuminate\Support\Facades\Log;
 
 class CheckToken
 {
     /**
-    * Handle an incoming request.
-    *
-    * @param \Illuminate\Http\Request $request
-    * @param \Closure                 $next
-    * @param string                   $role
-    *
-    * @return mixed
-    */
+     * Handle an incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string                   $role
+     *
+     * @return mixed
+     */
     public function handle($request, Closure $next)
     {
-        if (! $request->header('Authorization')) {
+        if (!$request->header('Authorization')) {
             return $next($request);
         }
 
         $payload = auth('api')->payload();
 
-        if (! isset($payload['token_id'])) {
+        if (!isset($payload['token_id'])) {
             return $next($request);
-        } elseif (ApiToken::find($payload['token_id']) !== null) {
+        } elseif (null !== ApiToken::find($payload['token_id'])) {
             return $next($request);
         }
 

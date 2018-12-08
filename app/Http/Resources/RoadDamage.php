@@ -41,7 +41,7 @@ class RoadDamage extends JsonResource
         'false_positive' => $this->hasFalsePositiveReport(),
         'image' => [
             'url' => $latest_report->getImageUrl(),
-            'reports' => $latest_report->getAssociatedIds()
+            'reports' => $latest_report->getAssociatedIds(),
         ],
         'reportId' => $latest_report->id,
         'reports' => $list,

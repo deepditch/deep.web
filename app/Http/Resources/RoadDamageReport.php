@@ -26,7 +26,7 @@ class RoadDamageReport extends JsonResource
         'longitude' => $this->longitude,
         'image' => [
             'url' => $this->getImageUrl(),
-            'reports' => $this->getAssociatedIds()
+            'reports' => $this->getAssociatedIds(),
         ],
         'created_at' => $this->created_at,
         'updated_at' => $this->updated_at,

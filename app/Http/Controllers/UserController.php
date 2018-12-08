@@ -34,9 +34,10 @@ class UserController extends Controller
     }
 
     /**
-     * Get the base Json data of the specified user invite by token
+     * Get the base Json data of the specified user invite by token.
      *
      * @param string $token
+     *
      * @return App\Http\Resources\Invite
      */
     public function getInviteJson($token)
@@ -115,9 +116,10 @@ class UserController extends Controller
     }
 
     /**
-     * Delete a user
+     * Delete a user.
      *
      * @param int $id
+     *
      * @return App\Http\Resources\User
      */
     public function deleteUser(int $id)
