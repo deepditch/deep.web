@@ -26,7 +26,8 @@ Route::group(['middleware' => ['api', 'token']], function ($router) {
     Route::get('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
 });
-Route::group(['middleware' => ['api', 'token', 'jwt.refresh']], function ($router) {
+
+Route::group(['middleware' => ['api', 'jwt.refresh', 'token']], function ($router) {
     Route::get('user', 'UserController@getUsersJson')
         ->middleware('role:admin');
     Route::delete('user/{id}', 'UserController@deleteUser')

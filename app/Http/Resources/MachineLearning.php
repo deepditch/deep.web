@@ -9,7 +9,8 @@ class MachineLearning extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
     public function toArray($request)
@@ -19,7 +20,7 @@ class MachineLearning extends JsonResource
             'path' => $this->path,
             'url' => $this->getMachineLearningModelUrl(),
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
         ];
     }
 }

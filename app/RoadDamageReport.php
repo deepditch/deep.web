@@ -30,7 +30,7 @@ class RoadDamageReport extends Model
     ];
 
     /**
-     * Constants for `verified` enums
+     * Constants for `verified` enums.
      */
     const VERIFIED = 'verified';
     const UNVERIFIED = 'unverified';
@@ -67,17 +67,17 @@ class RoadDamageReport extends Model
     }
 
     /**
-    * Is this report verified?
-    *
-    * @return bool
-    */
-    public function isVerified() : bool
+     * Is this report verified?
+     *
+     * @return bool
+     */
+    public function isVerified(): bool
     {
-        return $this->verified === RoadDamageReport::VERIFIED;
+        return RoadDamageReport::VERIFIED === $this->verified;
     }
 
     /**
-     * Get associated RoadDamageReport IDs with the same image
+     * Get associated RoadDamageReport IDs with the same image.
      *
      * @return array
      */
@@ -87,7 +87,7 @@ class RoadDamageReport extends Model
     }
 
     /**
-     * Get associated RoadDamage IDs with the same image
+     * Get associated RoadDamage IDs with the same image.
      *
      * @return array
      */
@@ -97,7 +97,7 @@ class RoadDamageReport extends Model
     }
 
     /**
-     * Get associated road damage and reports that share this reports image
+     * Get associated road damage and reports that share this reports image.
      *
      * @return array
      */

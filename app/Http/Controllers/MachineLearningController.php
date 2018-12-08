@@ -7,8 +7,6 @@ use App\Http\Resources\MachineLearning as MachineLearningResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 
 class MachineLearningController extends Controller
 {
@@ -23,7 +21,8 @@ class MachineLearningController extends Controller
     /**
      * Insert a machine learning model.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function insert(Request $request)
@@ -42,14 +41,14 @@ class MachineLearningController extends Controller
         try {
             $path = $request->file('model')->storeAs(
                 '/models',
-                Str::random(40).".mlmodel"
+                Str::random(40).'.mlmodel'
             );
         } catch (\Exception $e) {
             return $e->getMessage();
         }
 
         $mlmodel = MachineLearning::create([
-            'path' => $path
+            'path' => $path,
         ]);
 
         return new MachineLearningResource($mlmodel);
@@ -58,7 +57,8 @@ class MachineLearningController extends Controller
     /**
      * Get the latest machine learning model from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function getLatestJson(Request $request)

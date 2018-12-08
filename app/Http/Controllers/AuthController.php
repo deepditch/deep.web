@@ -32,7 +32,7 @@ class AuthController extends Controller
         $request->validate([
             'email' => 'required|email|unique:users,email|max:255',
             'name' => 'required|max:255',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8',
         ]);
 
         $role = User::USER_ROLE;

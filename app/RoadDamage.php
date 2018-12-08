@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\RoadDamageReport;
 
 class RoadDamage extends Model
 {
@@ -32,7 +31,7 @@ class RoadDamage extends Model
         'D20',
         'D40',
         'D43',
-        'D44'
+        'D44',
     ];
 
     /**
@@ -118,7 +117,7 @@ class RoadDamage extends Model
     }
 
     /**
-     * Get this road damages reports
+     * Get this road damages reports.
      *
      * @return collection
      */
@@ -150,11 +149,11 @@ class RoadDamage extends Model
     }
 
     /**
-     * Get average confidence of reports
+     * Get average confidence of reports.
      *
      * @return collection
      */
-    public function getAverageConfidence() : float
+    public function getAverageConfidence(): float
     {
         return RoadDamageReport::where('roaddamage_id', $this->id)
             ->avg('confidence');

@@ -19,7 +19,8 @@ class ApiTokenController extends Controller
     /**
      * Insert an API token.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function insert(Request $request)
@@ -30,7 +31,7 @@ class ApiTokenController extends Controller
 
         $new = ApiToken::create([
             'name' => $request->input('name'),
-            'user_id' => auth('api')->user()->id
+            'user_id' => auth('api')->user()->id,
         ]);
 
         $token = auth()->claims(['token_id' => $new->id])
@@ -43,7 +44,7 @@ class ApiTokenController extends Controller
             [
                 'tokens' => ApiTokenResource::collection(
                     ApiToken::where('user_id', auth('api')->user()->id)->get()
-                )
+                ),
             ]
         );
     }
@@ -52,7 +53,8 @@ class ApiTokenController extends Controller
      * Delete an API token.
      *
      * @param int id
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function delete(int $id, Request $request)
@@ -66,9 +68,10 @@ class ApiTokenController extends Controller
     }
 
     /**
-     * Get this users API tokens
+     * Get this users API tokens.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function getAllJson(Request $request)
