@@ -46,8 +46,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof AuthenticationException) {
-            return response()->json(['error' => $exception->getMessage()], 401);
+        switch (true) {
+            case $exception instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException:
+            case $exception instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException:
+            case $exception instanceof \Tymon\JWTAuth\Exceptions\JWTException:
+                return response()->json(['Unauthorized'], 401);
+                break;
         }
 
         return parent::render($request, $exception);
