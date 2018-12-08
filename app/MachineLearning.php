@@ -19,7 +19,7 @@ class MachineLearning extends Model
      * @var array
      */
     protected $fillable = [
-        'path'
+        'path',
         ];
 
     /**

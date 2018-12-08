@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\RoadDamageReport;
 use Illuminate\Support\Facades\Cache;
 
 class RoadDamage extends Model
@@ -33,34 +32,40 @@ class RoadDamage extends Model
         'D20',
         'D40',
         'D43',
-        'D44'
+        'D44',
     ];
 
     /**
-     * Override save to invalidate cache
+     * Override save to invalidate cache.
      *
-     * @param  array  $options
+     * @param array $options
+     *
      * @return bool
      */
-    public function save(array $options = []) {
-        Cache::forget('roaddamage-resource:' . $this->id);
+    public function save(array $options = [])
+    {
+        Cache::forget('roaddamage-resource:'.$this->id);
+
         return parent::save($options);
     }
 
     /**
-     * Override update to invalidate cache
+     * Override update to invalidate cache.
      *
-     * @param  array  $attributes
-     * @param  array  $options
+     * @param array $attributes
+     * @param array $options
+     *
      * @return bool
      */
-    public function update(array $attributes = [], array $options = []) {
-        Cache::forget('roaddamage-resource:' . $this->id);
+    public function update(array $attributes = [], array $options = [])
+    {
+        Cache::forget('roaddamage-resource:'.$this->id);
+
         return parent::update($attributes, $options);
     }
 
     /**
-     * Override delete to invalidate cache
+     * Override delete to invalidate cache.
      *
      * @return bool|null
      *
@@ -68,7 +73,8 @@ class RoadDamage extends Model
      */
     public function delete()
     {
-        Cache::forget('roaddamage-resource:' . $this->id);
+        Cache::forget('roaddamage-resource:'.$this->id);
+
         return parent::delete();
     }
 
@@ -155,7 +161,7 @@ class RoadDamage extends Model
     }
 
     /**
-     * Get this road damages reports
+     * Get this road damages reports.
      *
      * @return collection
      */
@@ -187,11 +193,11 @@ class RoadDamage extends Model
     }
 
     /**
-     * Get average confidence of reports
+     * Get average confidence of reports.
      *
      * @return collection
      */
-    public function getAverageConfidence() : float
+    public function getAverageConfidence(): float
     {
         return RoadDamageReport::where('roaddamage_id', $this->id)
             ->avg('confidence');

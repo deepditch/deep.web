@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\RoadDamage as RoadDamageResource;
-use App\Http\Resources\RoadDamageReport as RoadDamageReportResource;
 use App\Image;
 use App\RoadDamage;
 use App\RoadDamageReport;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RoadDamageController extends Controller
 {
@@ -34,7 +31,7 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Get verified instance images after a provided date
+     * Get verified instance images after a provided date.
      *
      * @param Illuminate\Http\Request $request
      *
@@ -52,13 +49,13 @@ class RoadDamageController extends Controller
 
         $reports_array = [];
         foreach ($reports as $report) {
-            if (! array_key_exists($report->getImage()->image_name, $reports_array)) {
+            if (!array_key_exists($report->getImage()->image_name, $reports_array)) {
                 $reports_array[$report->getImage()->image_name] = [];
             }
             $data = [
                 'types' => $report->getRoadDamage()->type,
                 'verification-status' => $report->verified,
-                'url' => $report->getImageUrl()
+                'url' => $report->getImageUrl(),
             ];
             $reports_array[$report->getImage()->image_name] = array_merge_recursive(
                 $reports_array[$report->getImage()->image_name],
@@ -125,7 +122,7 @@ class RoadDamageController extends Controller
 
         if ($request->has('filters.roadname')) {
             foreach ($collection as $key => $val) {
-                if (strpos($val->getRoadName(), $request->input('filters.roadname')) === false) {
+                if (false === strpos($val->getRoadName(), $request->input('filters.roadname'))) {
                     $collection->forget($key);
                 }
             }
@@ -202,7 +199,7 @@ class RoadDamageController extends Controller
     /**
      * Update road damage report verification status. This function needs to add
      * additional RoadDamageReports for new verification type(s) selected by a
-     * human user
+     * human user.
      *
      * @param Illuminate\Http\Request $request
      *
@@ -228,13 +225,13 @@ class RoadDamageController extends Controller
                 // For all associated damages with this type, get its reports
                 $report = RoadDamageReport::where('roaddamage_id', $damage->id)->first();
                 if ($report->exists()) {
-                    if ($damages_in_image[$type] === true) {
+                    if (true === $damages_in_image[$type]) {
                         // We have a report with this damage type verified by human, update it
                         $report->verified = RoadDamageReport::VERIFIED;
                         $report->save();
                         $marked_types[] = $type;
                         $modified_damages[] = $damage;
-                    } elseif ($damages_in_image[$type] === false) {
+                    } elseif (false === $damages_in_image[$type]) {
                         // We have a report with this damage type verified as false positive by human, update it
                         $report->verified = RoadDamageReport::FALSEPOSITIVE;
                         $report->save();
@@ -246,7 +243,7 @@ class RoadDamageController extends Controller
         }
         foreach (array_diff(RoadDamage::DAMAGE_TYPES, $marked_types) as $type) {
             // For all the types we could not find an associated damage for
-            if ($damages_in_image[$type] === true) {
+            if (true === $damages_in_image[$type]) {
                 // try to find a road damage that isn't associated with the given ID
                 $road_damage = RoadDamage::findRelativeRoadDamage(
                         $origin_report->latitude,
@@ -275,9 +272,9 @@ class RoadDamageController extends Controller
                         'user_id' => auth('api')->user()->id,
                         'image_id' => $origin_report->image_id,
                         'confidence' => 1,
-                        'verified' =>  RoadDamageReport::VERIFIED,
+                        'verified' => RoadDamageReport::VERIFIED,
                         'latitude' => $origin_report->latitude,
-                        'longitude' => $origin_report->longitude
+                        'longitude' => $origin_report->longitude,
                     ]);
             }
         }
@@ -313,14 +310,15 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * TODO: refactor this into a custom helper https://laravel-news.com/creating-helpers
+     * TODO: refactor this into a custom helper https://laravel-news.com/creating-helpers.
      *
      * @param array $array
+     *
      * @return array
      */
     private function super_unique($array)
     {
-        $result = array_map("unserialize", array_unique(array_map("serialize", $array)));
+        $result = array_map('unserialize', array_unique(array_map('serialize', $array)));
 
         foreach ($result as $key => $value) {
             if (is_array($value)) {

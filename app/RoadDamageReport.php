@@ -31,37 +31,43 @@ class RoadDamageReport extends Model
     ];
 
     /**
-     * Constants for `verified` enums
+     * Constants for `verified` enums.
      */
     const VERIFIED = 'verified';
     const UNVERIFIED = 'unverified';
     const FALSEPOSITIVE = 'false-positive';
 
     /**
-     * Override save to invalidate cache
+     * Override save to invalidate cache.
      *
-     * @param  array  $options
+     * @param array $options
+     *
      * @return bool
      */
-    public function save(array $options = []) {
-        Cache::forget('report-resource:' . $this->id);
+    public function save(array $options = [])
+    {
+        Cache::forget('report-resource:'.$this->id);
+
         return parent::save($options);
     }
 
     /**
-     * Override update to invalidate cache
+     * Override update to invalidate cache.
      *
-     * @param  array  $attributes
-     * @param  array  $options
+     * @param array $attributes
+     * @param array $options
+     *
      * @return bool
      */
-    public function update(array $attributes = [], array $options = []) {
-        Cache::forget('report-resource:' . $this->id);
+    public function update(array $attributes = [], array $options = [])
+    {
+        Cache::forget('report-resource:'.$this->id);
+
         return parent::update($attributes, $options);
     }
 
     /**
-     * Override delete to invalidate cache
+     * Override delete to invalidate cache.
      *
      * @return bool|null
      *
@@ -69,7 +75,8 @@ class RoadDamageReport extends Model
      */
     public function delete()
     {
-        Cache::forget('report-resource:' . $this->id);
+        Cache::forget('report-resource:'.$this->id);
+
         return parent::delete();
     }
 
@@ -104,17 +111,17 @@ class RoadDamageReport extends Model
     }
 
     /**
-    * Is this report verified?
-    *
-    * @return bool
-    */
-    public function isVerified() : bool
+     * Is this report verified?
+     *
+     * @return bool
+     */
+    public function isVerified(): bool
     {
-        return $this->verified === RoadDamageReport::VERIFIED;
+        return RoadDamageReport::VERIFIED === $this->verified;
     }
 
     /**
-     * Get associated RoadDamageReport IDs with the same image
+     * Get associated RoadDamageReport IDs with the same image.
      *
      * @return array
      */
@@ -124,7 +131,7 @@ class RoadDamageReport extends Model
     }
 
     /**
-     * Get associated RoadDamage IDs with the same image
+     * Get associated RoadDamage IDs with the same image.
      *
      * @return array
      */
@@ -134,7 +141,7 @@ class RoadDamageReport extends Model
     }
 
     /**
-     * Get associated road damage and reports that share this reports image
+     * Get associated road damage and reports that share this reports image.
      *
      * @return array
      */

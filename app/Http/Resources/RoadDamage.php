@@ -18,7 +18,7 @@ class RoadDamage extends JsonResource
      */
     public function toArray($request)
     {
-        return Cache::remember('roaddamage-resource:' . $this->id, 1800*30, function (){
+        return Cache::remember('roaddamage-resource:'.$this->id, 1800 * 30, function () {
             $reports = RoadDamageReport::where('roaddamage_id', $this->id)->get();
 
             $list = [];
@@ -43,7 +43,7 @@ class RoadDamage extends JsonResource
             'false_positive' => $this->hasFalsePositiveReport(),
             'image' => [
                 'url' => $latest_report->getImageUrl(),
-                'reports' => $latest_report->getAssociatedIds()
+                'reports' => $latest_report->getAssociatedIds(),
             ],
             'reportId' => $latest_report->id,
             'reports' => $list,
