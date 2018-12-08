@@ -174,19 +174,14 @@ class RoadDamageController extends Controller
                 ]);
             } else {
                 $road_damage = $road_damage->first();
-                if (
-                    (($road_damage->getAverageConfidence() + $report['confidence']) / 2)
-                     < 0.5
-                ) {
-                    $road_damage->verified = RoadDamageReport::FALSEPOSITIVE;
-                    $road_damage->save();
-                }
             }
 
+            $fp = (($road_damage->getAverageConfidence() + $report['confidence']) / 2) < 0.5;
             RoadDamageReport::create([
                 'roaddamage_id' => $road_damage->id,
                 'user_id' => $user->id,
                 'image_id' => $image->id,
+                'verified' => $fp ? RoadDamageReport::FALSEPOSITIVE : RoadDamageReport::UNVERIFIED,
                 'confidence' => $report['confidence'],
                 'latitude' => $location['latitude'],
                 'longitude' => $location['longitude'],
