@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\ApiToken;
+use Auth;
 use Closure;
-use Lcobucci\JWT\Parser;
+use \Lcobucci\JWT\Parser;
 
 class RefreshToken extends \Tymon\JWTAuth\Http\Middleware\RefreshToken
 {
@@ -18,13 +20,13 @@ class RefreshToken extends \Tymon\JWTAuth\Http\Middleware\RefreshToken
      */
     public function handle($request, Closure $next)
     {
-        if (!$request->header('Authorization')) {
+        if (! $request->header('Authorization')) {
             return $next($request);
         }
 
         $token = (new Parser())->parse((string) $request->header('Authorization'));
 
-        if (!$token->getClaim('token_id')) {
+        if (! $token->getClaim('token_id')) {
             return parent::handle($request, $next($request));
         }
 

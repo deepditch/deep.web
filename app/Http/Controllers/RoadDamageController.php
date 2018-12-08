@@ -31,47 +31,6 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * Get verified instance images after a provided date.
-     *
-     * @param Illuminate\Http\Request $request
-     *
-     * @return App\Http\Resources\RoadDamage
-     */
-    public function getVerifiedImages(Request $request)
-    {
-        $request->validate([
-            'after' => ['required', 'date'],
-        ]);
-
-        $reports = RoadDamageReport::where('verified', '!=', RoadDamageReport::UNVERIFIED)
-            ->where('updated_at', '>=', $request->input('after'))
-            ->get();
-
-        $reports_array = [];
-        foreach ($reports as $report) {
-            if (!array_key_exists($report->getImage()->image_name, $reports_array)) {
-                $reports_array[$report->getImage()->image_name] = [];
-            }
-            $data = [
-                'types' => $report->getRoadDamage()->type,
-                'verification-status' => $report->verified,
-                'url' => $report->getImageUrl(),
-            ];
-            $reports_array[$report->getImage()->image_name] = array_merge_recursive(
-                $reports_array[$report->getImage()->image_name],
-                $data
-            );
-            $reports_array[$report->getImage()->image_name] = $this->super_unique($reports_array[$report->getImage()->image_name]);
-            $url = $reports_array[$report->getImage()->image_name]['url'];
-            $reports_array[$report->getImage()->image_name]['url'] = is_array($url) ?
-                array_values($url)[0] :
-                $url;
-        }
-
-        return $reports_array;
-    }
-
-    /**
      * Get the base Json data of all the models for the authenticated user.
      *
      * @param Illuminate\Http\Request $request
@@ -129,6 +88,47 @@ class RoadDamageController extends Controller
         }
 
         return $collection;
+    }
+
+    /**
+     * Get verified instance images after a provided date.
+     *
+     * @param Illuminate\Http\Request $request
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function getVerifiedImages(Request $request)
+    {
+        $request->validate([
+            'after' => ['required', 'date'],
+        ]);
+
+        $reports = RoadDamageReport::where('verified', '!=', RoadDamageReport::UNVERIFIED)
+            ->where('updated_at', '>=', $request->input('after'))
+            ->get();
+
+        $reports_array = [];
+        foreach ($reports as $report) {
+            if (!array_key_exists($report->getImage()->image_name, $reports_array)) {
+                $reports_array[$report->getImage()->image_name] = [];
+            }
+            $data = [
+                'types' => $report->getRoadDamage()->type,
+                'verification-status' => $report->verified,
+                'url' => $report->getImageUrl(),
+            ];
+            $reports_array[$report->getImage()->image_name] = array_merge_recursive(
+                $reports_array[$report->getImage()->image_name],
+                $data
+            );
+            $reports_array[$report->getImage()->image_name] = $this->super_unique($reports_array[$report->getImage()->image_name]);
+            $url = $reports_array[$report->getImage()->image_name]['url'];
+            $reports_array[$report->getImage()->image_name]['url'] = is_array($url) ?
+                array_values($url)[0] :
+                $url;
+        }
+
+        return $reports_array;
     }
 
     /**
@@ -310,7 +310,7 @@ class RoadDamageController extends Controller
     }
 
     /**
-     * TODO: refactor this into a custom helper https://laravel-news.com/creating-helpers.
+     * Remove duplicates from a multidimensional array
      *
      * @param array $array
      *

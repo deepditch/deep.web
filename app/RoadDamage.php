@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class RoadDamage extends Model
 {
@@ -33,6 +34,49 @@ class RoadDamage extends Model
         'D43',
         'D44',
     ];
+
+    /**
+     * Override save to invalidate cache.
+     *
+     * @param array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        Cache::forget("roaddamage-resource:{$this->id}");
+
+        return parent::save($options);
+    }
+
+    /**
+     * Override update to invalidate cache.
+     *
+     * @param array $attributes
+     * @param array $options
+     *
+     * @return bool
+     */
+    public function update(array $attributes = [], array $options = [])
+    {
+        $this->_clearCache();
+
+        return parent::update($attributes, $options);
+    }
+
+    /**
+     * Override delete to invalidate cache.
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $this->_clearCache();
+
+        return parent::delete();
+    }
 
     /**
      * Get the right road damage based on provided longitude and latitude
@@ -169,5 +213,16 @@ class RoadDamage extends Model
         return app('geocoder')
             ->reverseQuery(\Geocoder\Query\ReverseQuery::fromCoordinates($this->latitude, $this->longitude))
             ->get()->first()->toArray()['streetName'] ?? '';
+    }
+
+    /**
+     * Clear cache for this and associated reports
+     */
+    private function _clearCache()
+    {
+        Cache::forget("roaddamage-resource:{$this->id}");
+        foreach ($this->getReports() as $report) {
+            Cache::forget("report-resource:{$report->id}");
+        }
     }
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class RoadDamageReport extends Model
 {
@@ -35,6 +36,49 @@ class RoadDamageReport extends Model
     const VERIFIED = 'verified';
     const UNVERIFIED = 'unverified';
     const FALSEPOSITIVE = 'false-positive';
+
+    /**
+     * Override save to invalidate cache.
+     *
+     * @param array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        Cache::forget('report-resource:'.$this->id);
+
+        return parent::save($options);
+    }
+
+    /**
+     * Override update to invalidate cache.
+     *
+     * @param array $attributes
+     * @param array $options
+     *
+     * @return bool
+     */
+    public function update(array $attributes = [], array $options = [])
+    {
+        $this->_clearCache();
+
+        return parent::update($attributes, $options);
+    }
+
+    /**
+     * Override delete to invalidate cache.
+     *
+     * @return bool|null
+     *
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        $this->_clearCache();
+
+        return parent::delete();
+    }
 
     /**
      * Get the image object.
@@ -104,5 +148,20 @@ class RoadDamageReport extends Model
     public function getAssociatedIds()
     {
         return RoadDamageReport::select('id', 'roaddamage_id')->where('image_id', '=', $this->image_id)->get()->toArray();
+    }
+
+    /**
+     * Clear cache for this and associated reports
+     */
+    private function _clearCache()
+    {
+        Cache::forget("report-resource:{$this->id}");
+
+        foreach ($this->getAssociatedDamageIds() as $id) {
+            Cache::forget("roaddamage-resource:{$id}");
+        }
+        foreach ($this->getAssociatedReportIds() as $id) {
+            Cache::forget("report-resource:{$report->id}");
+        }
     }
 }
