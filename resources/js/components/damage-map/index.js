@@ -21,8 +21,8 @@ const DamageMap = (
       this.state = {
         markersVisible: true,
         heatMapVisible: true,
-	latitude: 42.331429,
-	longitude: -83.045753
+        latitude: 42.331429,
+        longitude: -83.045753
       };
     }
 
