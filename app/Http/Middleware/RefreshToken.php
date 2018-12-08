@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\ApiToken;
-use Auth;
 use Closure;
+use Lcobucci\JWT\Parser;
 
-class CheckToken
+class RefreshToken extends \Tymon\JWTAuth\Http\Middleware\RefreshToken
 {
     /**
      * Handle an incoming request.
@@ -23,16 +22,12 @@ class CheckToken
             return $next($request);
         }
 
-        $payload = auth('api')->payload();
+        $token = (new Parser())->parse((string) $request->header('Authorization'));
 
-        if (!isset($payload['token_id'])) {
-            return $next($request);
-        } elseif (null !== ApiToken::find($payload['token_id'])) {
-            return $next($request);
+        if (!$token->getClaim('token_id')) {
+            return parent::handle($request, $next($request));
         }
 
-        return response()->json([
-            'error' => 'You are not authorized to perform this action.',
-        ], 401);
+        return $next($request);
     }
 }

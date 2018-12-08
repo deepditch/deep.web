@@ -28,6 +28,7 @@ class RoadDamage extends JsonResource
 
             $latest_report = $this->getLatestReport();
 
+<<<<<<< HEAD
             return [
             'id' => $this->id,
             'user_id' => $this->user_id,
@@ -51,5 +52,29 @@ class RoadDamage extends JsonResource
             'updated_at' => $this->updated_at,
           ];
         });
+=======
+        return [
+        'id' => $this->id,
+        'user_id' => $this->user_id,
+        'position' => [
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+            'direction' => $this->direction,
+            'streetname' => $this->getRoadName(),
+        ],
+        'type' => $this->type,
+        'verified' => $this->hasVerifiedReport(),
+        'label' => $this->status,
+        'false_positive' => $this->hasFalsePositiveReport(),
+        'image' => [
+            'url' => $latest_report->getImageUrl(),
+            'reports' => $latest_report->getAssociatedIds(),
+        ],
+        'reportId' => $latest_report->id,
+        'reports' => $list,
+        'created_at' => $this->created_at,
+        'updated_at' => $this->updated_at,
+      ];
+>>>>>>> f4ce936c09aa0f017dfd837059f763feb8ff1dbf
     }
 }
