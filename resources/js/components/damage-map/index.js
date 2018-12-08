@@ -21,21 +21,21 @@ const DamageMap = (
       this.state = {
         markersVisible: true,
         heatMapVisible: true,
-        latitude: 42.331429,
-        longitude: -83.045753
+	latitude: 42.331429,
+	longitude: -83.045753
       };
     }
 
     componentDidMount() {
       this.props.loadDamage();
 
-      // var geoSuccess = function(position) {
-      //   this.setState({
-      //     latitude: position.coords.latitude,
-      //     longitude: position.coords.longitude
-      //   });
-      // }.bind(this);
-      // navigator.geolocation.getCurrentPosition(geoSuccess);
+      var geoSuccess = function(position) {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+      }.bind(this);
+      navigator.geolocation.getCurrentPosition(geoSuccess);
     }
 
     onMapClicked(props) {
@@ -56,7 +56,7 @@ const DamageMap = (
             zoom={14}
             onClick={this.onMapClicked.bind(this)}
             onZoom_changed={this.onZoomChanged.bind(this)}
-            initialCenter={{
+            center={{
               lat: this.state.latitude,
               lng: this.state.longitude
             }}
