@@ -7,12 +7,18 @@ export const UsersActionTypes = {
   DEL_USERS_ATTEMPT: "delete_user_attempt",
   DEL_USERS_SUCCESS: "delete_user_success",
   DEL_USERS_FAILURE: "delete_user_failure",
+  CHANGEROLE_USERS_ATTEMPT: "changerole_user_attempt",
+  CHANGEROLE_USERS_SUCCESS: "changerole_user_success",
+  CHANGEROLE_USERS_FAILURE: "changerole_user_failure",
 };
 
 export const InviteUserActionTypes = {
   INVITE_USER_ATTEMPT: "invite_user_attempt",
   INVITE_USER_SUCCESS: "invite_user_success",
   INVITE_USER_FAILURE: "invite_user_failure",
+  RESEND_INVITE_ATTEMPT: "resend_invite_attempt",
+  RESEND_INVITE_SUCCESS: "resend_invite_success",
+  RESEND_INVITE_FAILURE: "resend_invite_failure",
   REVOKE_INVITE_ATTEMPT: "revoke_invite_attempt",
   REVOKE_INVITE_SUCCESS: "revoke_invite_success",
   REVOKE_INVITE_FAILURE: "revoke_invite_failure",
@@ -39,6 +45,15 @@ export const UsersActions = {
   },
   deleteFailure: () => {
     return { type: UsersActionTypes.DEL_USERS_FAILURE};
+  },
+  changeRoleAttempt: () => {
+    return { type: UsersActionTypes.CHANGEROLE_USERS_ATTEMPT };
+  },
+  changeRoleSuccess: users => {
+    return { type: UsersActionTypes.CHANGEROLE_USERS_SUCCESS, users: users};
+  },
+  changeRoleFailure: () => {
+    return { type: UsersActionTypes.CHANGEROLE_USERS_FAILURE};
   }
 };
 
@@ -60,6 +75,15 @@ export const InvitesActions = {
   },
   revokeInviteFailure: () => {
     return { type: InviteUserActionTypes.REVOKE_INVITE_FAILURE };
+  },
+  resendInviteAttempt: () => {
+    return { type: InviteUserActionTypes.RESEND_INVITE_ATTEMPT };
+  },
+  resendInviteSuccess: invites => {
+    return { type: InviteUserActionTypes.RESEND_INVITE_SUCCESS, invites: invites };
+  },
+  resendInviteFailure: () => {
+    return { type: InviteUserActionTypes.RESEND_INVITE_FAILURE };
   },
   inviteAttempt: () => {
     return { type: InviteUserActionTypes.INVITE_USER_ATTEMPT };
@@ -160,7 +184,29 @@ export const CreateRevokeInviteActionDispatcher = (UsersService, dispatch) => {
 
 /**
  * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
- * @param {UsersService} UsersService must have a getUsersInstances() method that returns a Promise
+ * @param {UsersService} UsersService must have a resendInvite() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+export const CreateResendInviteActionDispatcher = (UsersService, dispatch) => {
+  return (resend_invite_id) => {
+    dispatch(InvitesActions.resendInviteAttempt());
+
+    UsersService.resendInvite(resend_invite_id)
+      .then(invites => {
+        dispatch(NotifyActions.success("User invite has been resent."));
+        dispatch(InvitesActions.resendInviteSuccess(invites));
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error(error));
+        dispatch(InvitesActions.resendInviteFailure());
+      });
+  };
+};
+
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {UsersService} UsersService must have a deleteUser() method that returns a Promise
  * @param {function} dispatch the redux dispatch method
  * @return a getUsersInstances method that dispatches redux actions
  */
@@ -176,6 +222,28 @@ export const DeleteUserDispatcher = (UsersService, dispatch) => {
       .catch(error => {
         dispatch(NotifyActions.error(error));
         dispatch(UsersActions.deleteFailure());
+      });
+  };
+};
+
+/**
+ * Returns a method that loads users and dispatches redux actions. Delegates get request to UsersService
+ * @param {UsersService} UsersService must have a getUsersInstances() method that returns a Promise
+ * @param {function} dispatch the redux dispatch method
+ * @return a getUsersInstances method that dispatches redux actions
+ */
+export const ChangeRoleDispatcher = (UsersService, dispatch) => {
+  return (changerole_user_id) => {
+    dispatch(UsersActions.changeRoleAttempt());
+
+    UsersService.changeRole(changerole_user_id)
+      .then(users => {
+        dispatch(NotifyActions.success("User role has been changed!"));
+        dispatch(UsersActions.changeRoleSuccess(users));
+      })
+      .catch(error => {
+        dispatch(NotifyActions.error(error));
+        dispatch(UsersActions.changeRoleFailure());
       });
   };
 };

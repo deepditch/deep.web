@@ -8,7 +8,9 @@ import {
   CreateInvitesActionDispatcher,
   CreateInviteUserActionDispatcher,
   CreateRevokeInviteActionDispatcher,
-  DeleteUserDispatcher
+  CreateResendInviteActionDispatcher,
+  DeleteUserDispatcher,
+  ChangeRoleDispatcher
 } from "../actions/users.actions";
 
 import { UsersService } from "../services/users.service";
@@ -46,7 +48,9 @@ export const UsersProvider = c => {
           getUsers: CreateUsersActionDispatcher(c.UsersService, dispatch),
           getInvites: CreateInvitesActionDispatcher(c.UsersService, dispatch),
           revokeInvite: CreateRevokeInviteActionDispatcher(c.UsersService, dispatch),
-          deleteUser: DeleteUserDispatcher(c.UsersService, dispatch)
+          resendInvite: CreateResendInviteActionDispatcher(c.UsersService, dispatch),
+          deleteUser: DeleteUserDispatcher(c.UsersService, dispatch),
+          changeRole: ChangeRoleDispatcher(c.UsersService, dispatch)
         };
       }
     )(Users(c.UserInviteForm))
