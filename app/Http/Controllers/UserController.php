@@ -28,7 +28,9 @@ class UserController extends Controller
     public function getUsersJson()
     {
         return UserResource::collection(
-            User::where('organization_id', auth('api')->user()->organization_id)->get()
+            User::where('organization_id', auth('api')->user()->organization_id)
+            ->where('role', '!=', User::ML_ROLE)
+            ->get()
         );
     }
 
