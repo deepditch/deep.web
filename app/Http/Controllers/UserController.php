@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserInvite as UserInviteResource;
-use App\Mail\UserInvite as UserInviteMailable;
 use App\User;
 use App\UserInvite;
 use Illuminate\Http\Request;
@@ -81,7 +80,7 @@ class UserController extends Controller
             'token' => $token,
         ]);
 
-        Mail::to($request->input('email'))->send(new UserInviteMailable($invite));
+        $invite->sendInvite();
 
         return UserInviteResource::collection(
             UserInvite::where(
@@ -102,7 +101,7 @@ class UserController extends Controller
     {
         try {
             if ($invite = UserInvite::find($inv_id)) {
-                Mail::to($invite->email)->send(new UserInviteMailable($invite));
+                $invite->sendInvite();
             }
         } catch (\Throwable $e) {
             // It's OK.
