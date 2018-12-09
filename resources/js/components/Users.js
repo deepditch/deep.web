@@ -8,7 +8,9 @@ export default UserInviteForm =>
 
       this.handleClick = this.handleClick.bind(this);
       this.submitRevoke = this.submitRevoke.bind(this);
+      this.submitResend = this.submitResend.bind(this);
       this.submitDelete = this.submitDelete.bind(this);
+      this.submitChangeRole = this.submitChangeRole.bind(this);
     }
 
     componentDidMount() {
@@ -27,9 +29,50 @@ export default UserInviteForm =>
       this.props.revokeInvite(this.state.revoke_invite_id);
     }
 
+    submitResend(event) {
+      event.preventDefault();
+      this.props.resendInvite(this.state.resend_invite_id);
+    }
+
     submitDelete(event) {
       event.preventDefault();
       this.props.deleteUser(this.state.delete_user_id);
+    }
+
+    submitChangeRole(event) {
+      event.preventDefault();
+      this.props.changeRole(this.state.changerole_user_id);
+    }
+
+    userRowButtons(id) {
+      if(parseInt(id) != JSON.parse(localStorage.getItem("user")).id) {
+        return (
+          <div class="row center">
+            <form class="margin-center" onSubmit={this.submitChangeRole}>
+              <button
+                class="btn"
+                type="submit"
+                name="changerole_user_id"
+                value={id}
+                onClick={this.handleClick}
+              >
+                CHANGE ROLE
+              </button>
+            </form>
+            <form class="margin-center" onSubmit={this.submitDelete}>
+              <button
+                class="btn"
+                type="submit"
+                name="delete_user_id"
+                value={id}
+                onClick={this.handleClick}
+              >
+                X
+              </button>
+            </form>
+          </div>
+        );
+      }
     }
 
     render() {
@@ -56,11 +99,10 @@ export default UserInviteForm =>
               },
               {
                 Header: "Role",
-                accessor: "role"
-              },
-              {
-                Header: "Organization",
-                accessor: "organization.name"
+                accessor: "role",
+                Cell: row=> {
+                  return row.value.charAt(0).toUpperCase() + row.value.slice(1)
+                }
               },
               {
                 Header: "",
@@ -68,20 +110,9 @@ export default UserInviteForm =>
                   {
                     Header: "",
                     accessor: "id",
-                    Cell: row =>
-                      {row.value !== JSON.parse(localStorage.getItem("user")).id && (
-                      <form onSubmit={this.submitDelete}>
-                        <button
-                          class="btn"
-                          type="submit"
-                          name="delete_user_id"
-                          value={row.value}
-                          onClick={this.handleClick}
-                        >
-                          DELETE
-                        </button>
-                      </form>
-                      )}
+                    Cell: row => {
+                      return this.userRowButtons(row.value);
+                    }
                   }
                 ]
               }
@@ -111,7 +142,19 @@ export default UserInviteForm =>
                     Header: "",
                     accessor: "id",
                     Cell: row => (
-                      <form onSubmit={this.submitRevoke}>
+                      <div class="row center">
+                      <form class="margin-center" onSubmit={this.submitResend}>
+                        <button
+                          class="btn"
+                          type="submit"
+                          name="resend_invite_id"
+                          value={row.value}
+                          onClick={this.handleClick}
+                        >
+                          RESEND INVITE
+                        </button>
+                      </form>
+                      <form class="margin-center" onSubmit={this.submitRevoke}>
                         <button
                           class="btn"
                           type="submit"
@@ -119,9 +162,10 @@ export default UserInviteForm =>
                           value={row.value}
                           onClick={this.handleClick}
                         >
-                          REVOKE
+                          X
                         </button>
                       </form>
+                      </div>
                     )
                   }
                 ]

@@ -92,19 +92,42 @@ class UserController extends Controller
     }
 
     /**
-     * Revoke an invitation.
+     * Resend an invitation
      *
-     * @param Request $request
+     * @param int $inv_id
      *
      * @return App\Http\Resources\RoadDamage
      */
-    public function revokeInvite(Request $request)
+    public function resendInvite(int $inv_id)
     {
-        if ($request->get('invite_id')) {
-            $invite = UserInvite::findOrFail($request->get('invite_id'));
-            if ($invite) {
-                $invite->delete();
+        try {
+            if ($invite = UserInvite::find($inv_id)) {
+                Mail::to($invite->email)->send(new UserInviteMailable($invite));
             }
+        } catch (\Throwable $e) {
+            // It's OK.
+        }
+
+        return UserInviteResource::collection(
+            UserInvite::where(
+                'organization_id',
+                auth('api')->user()->organization_id
+            )->get()
+        );
+    }
+
+    /**
+     * Revoke an invitation.
+     *
+     * @param int $inv_id
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function revokeInvite(int $inv_id)
+    {
+        $invite = UserInvite::find($inv_id);
+        if ($invite) {
+            $invite->delete();
         }
 
         return UserInviteResource::collection(
@@ -133,6 +156,32 @@ class UserController extends Controller
             }
         } catch (\Throwable $e) {
             return response()->json(['Deletion failed'], 404);
+        }
+
+        return UserResource::collection(
+            User::where('organization_id', auth('api')->user()->organization_id)->get()
+        );
+    }
+
+    /**
+     * Change user role
+     *
+     * @param int $id
+     *
+     * @return App\Http\Resources\User
+     */
+    public function changeUserRole(int $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            if ($user->organization_id === auth('api')->user()->organization_id) {
+                $user->role = $user->role === User::USER_ROLE ? User::ADMIN_ROLE : User::USER_ROLE;
+                $user->save();
+            } else {
+                return response()->json(['You do not have permission to change role on this user.'], 403);
+            }
+        } catch (\Throwable $e) {
+            return response()->json(['Change role failed'], 404);
         }
 
         return UserResource::collection(

@@ -18,7 +18,7 @@ export class UsersService {
 
   async getInvites() {
     return this.axios
-      .get("/user/invite")
+      .get("/user-invite")
       .then(response => {
         return Promise.resolve(response.data.data);
       })
@@ -33,7 +33,7 @@ export class UsersService {
    */
   async inviteUser(email) {
     return this.axios
-      .post("/user/invite/new", {
+      .post("/user-invite/new", {
         email: email
       })
       .then(response => {
@@ -60,15 +60,44 @@ export class UsersService {
   }
 
   /**
+   * Change role on user
+   * @param {int} id of the user we are deleting
+   */
+  async changeRole(id) {
+    return this.axios
+      .get("/user/" + id + "/change-role")
+      .then(response => {
+        return response.data.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  /**
+   * Resend an invitation
+   * @param {integer} inv_id The invite id we are resending
+   */
+  async resendInvite(inv_id) {
+    return this.axios
+      .get("/user-invite/" + inv_id + "/resend")
+      .then(response => {
+        return Promise.resolve(response.data.data);
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
+
+  /**
    * Revoke an invite
    * @param {integer} id The invite id we are revoking
    */
-  async revokeInvite(invite_id) {
+  async revokeInvite(inv_id) {
     return this.axios
-      .post("/user/invite/revoke", {
-        invite_id: invite_id
-      })
+      .get("/user-invite/" + inv_id + "/revoke")
       .then(response => {
+        console.log(response);
         return Promise.resolve(response.data.data);
       })
       .catch(error => {
@@ -78,7 +107,7 @@ export class UsersService {
 
   async getInviteData(token) {
     return this.axios
-      .get(`/user/invite/${token}`)
+      .get(`/user-invite/${token}`)
       .then(response => {
         return Promise.resolve(response.data.data);
       })
