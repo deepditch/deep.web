@@ -18,7 +18,6 @@ class UserInvite extends Model
      */
     public function sendInvite() {
         return Mail::to($this->email)
-            ->from(env('MAIL_FROM_ADDRESS'), env('APP_NAME'))
             ->send(new UserInviteMailable($this));
     }
 }
