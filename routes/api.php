@@ -25,6 +25,7 @@ Route::group(['middleware' => ['api', 'token']], function ($router) {
     Route::get('logout', 'AuthController@logout');
     Route::get('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
+    Route::post('change-password', 'AuthController@changePassword');
 });
 
 Route::group(['middleware' => ['api', 'jwt.refresh', 'token']], function ($router) {

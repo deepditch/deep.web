@@ -8,6 +8,7 @@ use App\User;
 use App\UserInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -90,12 +91,59 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (!$token = auth('api')->attempt([
-            'email' => $request->input('email'),
-            'password' => $request->input('password'), ])
-        ) {
-            return response()->json(['error' => 'Invalid email or password!'], 401);
+        try {
+            $token = auth('api')->attempt([
+                'email' => $request->input('email'),
+                'password' => $request->input('password'),
+            ]);
+        } catch (\Throwable $e) {
+            //
         }
+
+        if (!$token) {
+            return response()->json(['error' => 'Invalid email or password!'], 403);
+        }
+
+        return response()->json(
+            array_merge(
+                ['user' => new UserResource(User::find(auth('api')->user()->id))],
+                $this->getTokenArray($token)
+            )
+        );
+    }
+
+    /**
+     * Change Password
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|min:8',
+            'new_password' => 'required|min:8',
+            'confirm_new_password' => 'required|min:8'
+        ]);
+
+        $user = auth('api')->user();
+
+        if (! Hash::check($request->input('current_password'), $user->password)
+        ) {
+            return response()->json(['error' => 'Current password incorrect.'], 403);
+        }
+
+        if ($request->input('new_password') !== $request->input('confirm_new_password')) {
+            return response()->json(['error' => 'New password and new password confirmation must match.'], 403);
+        }
+        $user->password = Hash::make($request->input('new_password'));
+        $user->save();
+
+        $token = auth('api')->attempt([
+            'email' => $user->email,
+            'password' => $request->input('new_password')
+        ]);
 
         return response()->json(
             array_merge(
