@@ -9,7 +9,8 @@ import {
   DamageProvider,
   TokensProvider,
   UsersProvider,
-  ForgotPasswordProvider
+  ForgotPasswordProvider,
+  SettingsProvider
 } from "../providers";
 import AuthorizedRoute from "../components/authorized-route";
 import { connect } from "react-redux";
@@ -57,7 +58,8 @@ export default function createContainer() {
           localStorage.removeItem("user");
           location.reload();
         }
-        return error;
+
+        return Promise.reject(error);
       });
 
       return instance;
@@ -92,6 +94,7 @@ export default function createContainer() {
   UsersProvider(c);
   TokensProvider(c);
   ForgotPasswordProvider(c);
+  SettingsProvider(c);
 
   return c;
 }

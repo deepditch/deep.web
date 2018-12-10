@@ -14,7 +14,7 @@ export class ForgotPasswordActionDispatcher {
       dispatch({ type: ForgotPasswordActionTypes.RESET_PASSWORD });
       dispatch(NotifyActions.success("Your password has been reset. You may now login."));
     }).catch(error => {
-      dispatch(NotifyActions.success("We failed to update your password."));
+      dispatch(NotifyActions.error("We failed to update your password."));
     });
   };
 }
