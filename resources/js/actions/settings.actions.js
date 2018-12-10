@@ -16,8 +16,6 @@ export class ChangePasswordActionDispatcher {
       }
       this.authService.changePassword(current_password, new_password, confirm_new_password)
       .then(response => {
-        console.log('response');
-        console.log(response);
         localStorage.setItem("token", response.access_token);
         localStorage.setItem("user", JSON.stringify(response.user));
         dispatch(NotifyActions.success("Your password has been changed."));
