@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserInvite as UserInviteResource;
-use App\Mail\UserInvite as UserInviteMailable;
 use App\User;
 use App\UserInvite;
 use Illuminate\Http\Request;
@@ -29,7 +28,9 @@ class UserController extends Controller
     public function getUsersJson()
     {
         return UserResource::collection(
-            User::where('organization_id', auth('api')->user()->organization_id)->get()
+            User::where('organization_id', auth('api')->user()->organization_id)
+            ->where('role', '!=', User::ML_ROLE)
+            ->get()
         );
     }
 
@@ -81,7 +82,32 @@ class UserController extends Controller
             'token' => $token,
         ]);
 
-        Mail::to($request->input('email'))->send(new UserInviteMailable($invite));
+        $invite->sendInvite();
+
+        return UserInviteResource::collection(
+            UserInvite::where(
+                'organization_id',
+                auth('api')->user()->organization_id
+            )->get()
+        );
+    }
+
+    /**
+     * Resend an invitation
+     *
+     * @param int $inv_id
+     *
+     * @return App\Http\Resources\RoadDamage
+     */
+    public function resendInvite(int $inv_id)
+    {
+        try {
+            if ($invite = UserInvite::find($inv_id)) {
+                $invite->sendInvite();
+            }
+        } catch (\Throwable $e) {
+            // It's OK.
+        }
 
         return UserInviteResource::collection(
             UserInvite::where(
@@ -94,17 +120,15 @@ class UserController extends Controller
     /**
      * Revoke an invitation.
      *
-     * @param Request $request
+     * @param int $inv_id
      *
      * @return App\Http\Resources\RoadDamage
      */
-    public function revokeInvite(Request $request)
+    public function revokeInvite(int $inv_id)
     {
-        if ($request->get('invite_id')) {
-            $invite = UserInvite::findOrFail($request->get('invite_id'));
-            if ($invite) {
-                $invite->delete();
-            }
+        $invite = UserInvite::find($inv_id);
+        if ($invite) {
+            $invite->delete();
         }
 
         return UserInviteResource::collection(
@@ -133,6 +157,32 @@ class UserController extends Controller
             }
         } catch (\Throwable $e) {
             return response()->json(['Deletion failed'], 404);
+        }
+
+        return UserResource::collection(
+            User::where('organization_id', auth('api')->user()->organization_id)->get()
+        );
+    }
+
+    /**
+     * Change user role
+     *
+     * @param int $id
+     *
+     * @return App\Http\Resources\User
+     */
+    public function changeUserRole(int $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            if ($user->organization_id === auth('api')->user()->organization_id) {
+                $user->role = $user->role === User::USER_ROLE ? User::ADMIN_ROLE : User::USER_ROLE;
+                $user->save();
+            } else {
+                return response()->json(['You do not have permission to change role on this user.'], 403);
+            }
+        } catch (\Throwable $e) {
+            return response()->json(['Change role failed'], 404);
         }
 
         return UserResource::collection(

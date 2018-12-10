@@ -6,3 +6,4 @@ export * from "./damage.provider";
 export * from "./users.provider";
 export * from "./tokens.provider";
 export * from "./forgot-password.provider";
+export * from "./settings.provider";

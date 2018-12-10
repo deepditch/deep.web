@@ -83,6 +83,20 @@ export class AuthService {
       });
   }
 
+  changePassword(current_password, new_password, confirm_new_password) {
+    return this.axios
+      .post("/change-password", {
+        current_password: current_password,
+        new_password: new_password,
+        confirm_new_password: confirm_new_password,
+      })
+      .then(response => {
+        return response.data;
+      })
+      .catch(error => {
+        throw parseErrors(error.response);
+      });
+  }
   /**
    * Registers a user or a user and an organization simultaneously
    * @param {string} userName the user's username

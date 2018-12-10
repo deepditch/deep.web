@@ -25,6 +25,7 @@ Route::group(['middleware' => ['api', 'token']], function ($router) {
     Route::get('logout', 'AuthController@logout');
     Route::get('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
+    Route::post('change-password', 'AuthController@changePassword');
 });
 
 Route::group(['middleware' => ['api', 'jwt.refresh', 'token']], function ($router) {
@@ -32,13 +33,17 @@ Route::group(['middleware' => ['api', 'jwt.refresh', 'token']], function ($route
         ->middleware('role:admin');
     Route::delete('user/{id}', 'UserController@deleteUser')
         ->middleware('role:admin');
-    Route::get('user/invite', 'UserController@getInvitesJson')
+    Route::get('user/{id}/change-role', 'UserController@changeUserRole')
         ->middleware('role:admin');
-    Route::post('user/invite/new', 'UserController@inviteUser')
+    Route::get('user-invite', 'UserController@getInvitesJson')
         ->middleware('role:admin');
-    Route::post('user/invite/revoke', 'UserController@revokeInvite')
+    Route::post('user-invite/new', 'UserController@inviteUser')
         ->middleware('role:admin');
-    Route::get('user/invite/{token}', ['as' => 'getInviteJson', 'uses' =>'UserController@getInviteJson']);
+    Route::get('user-invite/{inv_id}/revoke', 'UserController@revokeInvite')
+        ->middleware('role:admin');
+    Route::get('user-invite/{inv_id}/resend', 'UserController@resendInvite')
+        ->middleware('role:admin');
+    Route::get('user-invite/{token}', ['as' => 'getInviteJson', 'uses' =>'UserController@getInviteJson']);
     Route::get('road-damage/', 'RoadDamageController@getAllJson');
     Route::post('road-damage/new', 'RoadDamageController@insert');
     Route::get('road-damage/verified-images', 'RoadDamageController@getVerifiedImages');
